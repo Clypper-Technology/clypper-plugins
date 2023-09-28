@@ -1,0 +1,27 @@
+.final-price-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 350px;
+}
+
+.final-price-list li {
+    margin: 0!important;
+    padding: 5px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.bundled-product-total {
+    font-weight: 600;
+    border-bottom: 2px solid black; /* Thicker border */
+}
+
+.bundled-product-total-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.bundled-product-total-item:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}

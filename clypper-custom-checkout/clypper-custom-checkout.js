@@ -24,4 +24,20 @@ jQuery(document).ready(function($) {
             input.css('border-color', ''); // Reset border color if the input is empty
         }
     });
+
+    var billingCin = $('#billing_cin');
+    var cvrField = $('input[name="cpr_number"]'); // Targeting input with the name 'cpr_number'
+    var cvrWrapper = $('#cvr-checkout-field'); // Replace with the actual ID or class of your CVR field wrapper, if it exists
+
+    if(billingCin.length > 0 && cvrField.length > 0){
+        billingCin.on('input', function(){
+            if(billingCin.val().trim()){
+                cvrWrapper.hide(); // Hide the wrapper
+                cvrField.prop('required',false); // Make cvrField non-required
+            }else{
+                cvrWrapper.show(); // Show the wrapper
+                cvrField.prop('required',true); // Make cvrField required
+            }
+        });
+    }
 });

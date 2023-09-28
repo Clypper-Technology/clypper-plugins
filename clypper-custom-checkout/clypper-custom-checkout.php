@@ -2,7 +2,7 @@
 	/**
 	 * Plugin Name: Clypper Custom Checkout
 	 * Description: Clypper's handcrafted checkout fields.
-	 * Version: 1.1.9
+	 * Version: 1.2.2
 	 * Author: Clypper von H
 	 */
 
@@ -27,7 +27,7 @@
 				return;
 			}
 
-			echo '<div id="conditional_customise_checkout_field"><h2>' . __('Indregistrering af trailer') . '</h2>';
+			echo '<div id="cvr-checkout-field"><h2>' . __('Indregistrering af trailer') . '</h2>';
 
 			// CPR Number
 			woocommerce_form_field('cpr_number', array(
