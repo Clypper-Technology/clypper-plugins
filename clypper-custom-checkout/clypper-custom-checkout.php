@@ -2,7 +2,7 @@
 	/**
 	 * Plugin Name: Clypper Custom Checkout
 	 * Description: Clypper's handcrafted checkout fields.
-	 * Version: 1.2.2
+	 * Version: 1.2.8
 	 * Author: Clypper von H
 	 */
 
@@ -28,6 +28,7 @@
 			}
 
 			echo '<div id="cvr-checkout-field"><h2>' . __('Indregistrering af trailer') . '</h2>';
+			echo '<p>Du har lagt en nummerplade i din kurv, og derfor skal vi bruge enten et CVR- eller CPR-nummer til at indregistrere traileren. Repræsenterer du et firma, kan du angive firmaets CVR-nummer længere oppe på siden.</p>';
 
 			// CPR Number
 			woocommerce_form_field('cpr_number', array(
@@ -47,31 +48,32 @@
 				'required' => true,
 			), $checkout->get_value('user_agreement'));
 
+			echo '<input type="hidden" id="is_cpr_required" name="is_cpr_required" value="1" />';
+
 			echo '</div>';
 		}
 
 		public function validate_checkout_fields(): void {
-
 			if (!$this->should_display_fields()) {
 				return;
 			}
 
-			if (empty($_POST['cpr_number'])) {
-				wc_add_notice(__('Indtast dit CPR-Nummer.'), 'error');
-			}
+			$is_cpr_required = isset($_POST['is_cpr_required']) && $_POST['is_cpr_required'] === '1';
 
-			if (empty($_POST['user_agreement'])) {
-				wc_add_notice(__('Bekræft at du giver samtykke til at dele dit CPR-Nummer med os.'), 'error');
-			}
-
-			if (!empty($_POST['cpr_number'])) {
-				$cpr_number = sanitize_text_field($_POST['cpr_number']);
-
-				if (!preg_match('/^\d{6}-\d{4}$/', $cpr_number)) { // Checks the CPR number format
+			if($is_cpr_required) {
+				// Perform your existing validations
+				if (empty($_POST['cpr_number'])) {
+					wc_add_notice(__('Indtast dit CPR-Nummer.'), 'error');
+				} elseif (!preg_match('/^\d{6}-\d{4}$/', sanitize_text_field($_POST['cpr_number']))) {
 					wc_add_notice(__('Ugyldigt CPR-Nummer. Følg dette format: 123456-1234.'), 'error');
+				}
+
+				if (empty($_POST['user_agreement'])) {
+					wc_add_notice(__('Bekræft at du giver samtykke til at dele dit CPR-Nummer med os.'), 'error');
 				}
 			}
 		}
+
 
 		public function save_checkout_fields($order_id): void {
 
