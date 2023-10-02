@@ -14,7 +14,7 @@
 
 .bundled-product-total {
     font-weight: 600;
-    border-bottom: 2px solid black; /* Thicker border */
+    border-bottom: 2px solid black;
 }
 
 .bundled-product-total-item {
@@ -24,4 +24,46 @@
 
 .bundled-product-total-item:not(:last-child) {
     border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+/*
+Rest of product bundle custom styling:
+*/
+
+.product.bundled_item_optional > div.details > label > span {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.bundled_product_summary .bundled_product_optional_checkbox {
+    display: flex;
+    align-items: center;
+}
+
+.bundled_product_summary .bundled_product_optional_checkbox input, .single-product form.cart .bundled_product_summary .bundled_product_optional_checkbox input {
+    margin: 0 10px 0 0;
+    width: 18px;
+    height: 18px;
+}
+
+div.bundled_product_summary, .woocommerce div.product.bundled_product_summary {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(0,0,0,.2);
+}
+
+.bundled_product_summary .bundled_product_images img {
+    width: 100px;
+    height: 60px;
+    object-fit: contain;
+}
+
+.bundled_product_title {
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+.price {
+    display: flex;
+    flex-direction: column;
 }
