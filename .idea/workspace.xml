@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52faa793-054a-4943-ad74-7d262b96ab92" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clypper-bundle-price-calculator/clypper-bundle-price-calculator.css" beforeDir="false" afterPath="$PROJECT_DIR$/clypper-bundle-price-calculator/clypper-bundle-price-calculator.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clypper-bundle-price-calculator/clypper-bundle-price-calculator.php" beforeDir="false" afterPath="$PROJECT_DIR$/clypper-bundle-price-calculator/clypper-bundle-price-calculator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clypper-custom-checkout/clypper-custom-checkout.php" beforeDir="false" afterPath="$PROJECT_DIR$/clypper-custom-checkout/clypper-custom-checkout.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +26,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 2
+}]]></component>
   <component name="ProjectId" id="2Vt7EQxQ5MSwbZNP4IJskfWSsC6" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -35,6 +36,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
@@ -59,6 +61,7 @@
       <workItem from="1695644176080" duration="2549000" />
       <workItem from="1695926425670" duration="42000" />
       <workItem from="1696254231063" duration="1587000" />
+      <workItem from="1696399968400" duration="889000" />
     </task>
     <servers />
   </component>

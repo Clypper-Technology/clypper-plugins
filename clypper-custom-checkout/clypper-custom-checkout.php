@@ -27,6 +27,8 @@
 				return;
 			}
 
+            $persondatapolitik_link = "<a href=''>persondatapolitik</a>";
+
 			echo '<div id="cvr-checkout-field"><h2>' . __('Indregistrering af trailer') . '</h2>';
 			echo '<p>Du har lagt en nummerplade i din kurv, og derfor skal vi bruge enten et CVR- eller CPR-nummer til at indregistrere traileren. Repræsenterer du et firma, kan du angive firmaets CVR-nummer længere oppe på siden.</p>';
 
@@ -44,7 +46,7 @@
 				'type' => 'checkbox',
 				'class' => array('form-row-wide'),
 				'label' => __('Jeg bekræfter hermed at Trekantens-Trailercenter.dk må bruge mit CPR-Nummer til at indregistrere min trailer,
-				 og at mit CPR-Nummer bliver behandlet som beskrevet i Trekantens-Trailcenter.dks persondatapolitik, der kan findes her: '),
+				 og at mit CPR-Nummer bliver behandlet som beskrevet i Trekantens-trailercenter.dks ' . $persondatapolitik_link),
 				'required' => true,
 			), $checkout->get_value('user_agreement'));
 
