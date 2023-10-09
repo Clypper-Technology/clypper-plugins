@@ -1,19 +1,11 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     const ClypperBundlePriceCalculator = {
         init() {
-            this.removeExcerptElements();
-            this.addCheckboxEventListeners();
-        },
-
-        removeExcerptElements() {
-            document.querySelectorAll('.bundled_product_excerpt').forEach(element => element.remove());
-        },
-
-        addCheckboxEventListeners() {
-            document.body.addEventListener('change', (event) => {
-                const checkbox = event.target.closest('.bundled_product_checkbox');
-                if (checkbox) this.calculateTotal();
+            document.querySelectorAll('.bundled_product_excerpt').forEach(el => el.remove());
+            document.body.addEventListener('change', e => {
+                if (e.target.closest('.bundled_product_checkbox')) this.calculateTotal();
             });
+            this.calculateTotal();
         },
 
         calculateTotal() {
@@ -26,53 +18,46 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!details) return acc;
 
                 const price = this.getPrice(details);
-                const name = this.getName(details);
+                fragment.appendChild(this.createListItem(this.getName(details), price));
 
-                fragment.appendChild(this.createListItem(name, price));
                 return acc + price;
             }, basePrice);
 
-            // Clear the previous list and Append the total at the top of the list
             finalPriceList.innerHTML = '';
-            finalPriceList.appendChild(this.createTotalListItem(total));
-            finalPriceList.appendChild(fragment);
+            finalPriceList.append(this.createTotalListItem(total), fragment);
         },
 
         getPrice(details) {
-            // Try to find the <ins> tag for discounted price first
-            const discountedPriceElement = details.querySelector('.price ins .woocommerce-Price-amount.amount');
-            if (discountedPriceElement) {
-                return parseFloat(discountedPriceElement.textContent.replace(/[^0-9.,]/g, '').replace(',', '.')) || 0;
-            }
-
-            // If there is no <ins> tag, then get the regular price
-            const priceElement = details.querySelector('.price .woocommerce-Price-amount.amount');
-            return parseFloat(priceElement.textContent.replace(/[^0-9.,]/g, '').replace(',', '.')) || 0;
+            const priceElement = details.querySelector('.price ins .woocommerce-Price-amount.amount') ||
+                details.querySelector('.price .woocommerce-Price-amount.amount');
+            const priceText = priceElement.textContent.replace(/[^0-9.,]/g, '').replace('.', '').replace(',', '.');
+            return parseFloat(priceText) || 0;
         },
 
         getName(details) {
-            const nameElement = details.querySelector('.bundled_product_title_inner');
-            return nameElement.textContent.trim() || '';
-        },
-
-        createListItem(name, price) {
-            const listItem = this.createElement('li', 'bundled-product-total-item', [
-                this.createElement('span', 'item-name', name),
-                this.createElement('span', 'item-price', `${price.toFixed(2)} kr.`)
-            ]);
-            return listItem;
+            return details.querySelector('.bundled_product_title_inner').textContent.trim();
         },
 
         createElement(tag, className, content = '') {
-            const element = document.createElement(tag);
-            element.className = className;
-            if (Array.isArray(content)) content.forEach(child => element.appendChild(child));
-            else element.textContent = content;
-            return element;
+            const el = document.createElement(tag);
+            el.className = className;
+            Array.isArray(content) ? content.forEach(c => el.appendChild(c)) : el.textContent = content;
+            return el;
+        },
+
+        createListItem(name, price) {
+            return this.createElement('li', 'bundled-product-total-item', [
+                this.createElement('span', 'item-name', name),
+                this.createElement('span', 'item-price', `${this.formatPrice(price)} kr.`)
+            ]);
         },
 
         createTotalListItem(total) {
-            return this.createElement('li', 'bundled-product-total', `Total: ${total.toFixed(2)} kr. Inkl. moms`);
+            return this.createElement('li', 'bundled-product-total', `Total: ${this.formatPrice(total)} kr. Inkl. moms`);
+        },
+
+        formatPrice(number) {
+            return number.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
     };
 
