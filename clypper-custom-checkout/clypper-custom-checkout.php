@@ -27,7 +27,7 @@
 				return;
 			}
 
-            $persondatapolitik_link = "<a href=''>persondatapolitik</a>";
+            $persondatapolitik_link = "<a href='/privatlivspolitik/'>persondatapolitik</a>";
 
 			echo '<div id="cvr-checkout-field"><h2>' . __('Indregistrering af trailer') . '</h2>';
 			echo '<p>Du har lagt en nummerplade i din kurv, og derfor skal vi bruge enten et CVR- eller CPR-nummer til at indregistrere traileren. Repræsenterer du et firma, kan du angive firmaets CVR-nummer længere oppe på siden.</p>';
