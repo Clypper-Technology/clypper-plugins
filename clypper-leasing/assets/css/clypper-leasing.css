@@ -1,0 +1,13 @@
+.leasing-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.button.erhverv-button {
+    margin: 0;
+}
+
