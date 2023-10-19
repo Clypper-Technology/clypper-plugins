@@ -2,7 +2,7 @@
 <?php
 
 	// Hook into the WooCommerce product thumbnails
-	add_action('flatsome_custom_single_product_1', 'cl_select_template');
+	add_action('woocommerce_before_add_to_cart_button', 'cl_select_template', 2000);
 	function cl_select_template() {
 		global $product;
 

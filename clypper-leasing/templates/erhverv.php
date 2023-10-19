@@ -2,13 +2,13 @@
 
 	global $product;
 
-	$image_path = CL_URL . "assets/images/Leasing-link-5.png";
+	$image_path = CL_URL . "assets/images/pacta-leasing.png";
 
 ?>
 
-<div class="leasing-wrapper">
-    <a href="/trailer-leasing?trailer=<?php echo $product->get_title() ?>" target="_blank">
-        <img src="<?php echo $image_path?>">
-    </a>
-</div>
+<a href="/trailer-leasing?trailer=<?php echo $product->get_title() ?>" target="_blank" class="leasing-link">
+    <h3 class="leasing-header">Erhvervs-leasing</h3>
+    <img src="<?php echo $image_path?>" class="leasing-image">
+</a>
+
 

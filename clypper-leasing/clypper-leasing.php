@@ -2,8 +2,8 @@
 	/*
 	Plugin Name: Clypper Leasing
 	Description: Displays custom templates for WooCommerce products based on category and price selection.
-	Version: 1.0
-	Author: Your Name
+	Version: 1.0.2
+	Author: Clypper von H
 	*/
 
 // Define constants for plugin directory paths
@@ -16,7 +16,7 @@
 	require_once CL_DIR . 'shortcodes/leasing-form.php';
 
 	function cl_enqueue_plugin_styles() {
-		wp_enqueue_style('clypper-leasing-style', CL_URL . "assets/css/clypper-leasing.css");
+		wp_enqueue_style('clypper-leasing-style', CL_URL . "assets/css/clypper-leasing.css", array(), '1.0.2');
 	}
 
 	add_action('wp_enqueue_scripts', 'cl_enqueue_plugin_styles');
