@@ -18,7 +18,6 @@
     // Add a new section to the WooCommerce settings tabs.
 	function clypper_add_settings_tab($settings_tabs) {
 		$settings_tabs['clypper_tax'] = __('Clypper Tax', 'clypper-tax');
-		error_log("Adding Clypper Tax settings tab.");
 		return $settings_tabs;
 	}
 
@@ -55,6 +54,20 @@
 				'desc' => __('Label to display when tax is excluded.', 'clypper-tax'),
 				'id'   => 'wc_clypper_tax_excluded_label',
 				'default' => 'excl. vat'
+			),
+			'tax_zero_label' => array(
+				'name' => __('Zero tax Label', 'clypper-tax'),
+				'type' => 'text',
+				'desc' => __('Label to display when product is not subject to taxes.', 'clypper-tax'),
+				'id'   => 'wc_clypper_tax_zero_label',
+				'default' => ''
+			),
+			'from_label' => array(
+				'name' => __('Variable product price prefix', 'clypper-tax'),
+				'type' => 'text',
+				'desc' => __('Prefix for the price when a product is variable.', 'clypper-tax'),
+				'id'   => 'wc_clypper_from_label',
+				'default' => 'From'
 			),
 			'section_end' => array(
 				'type' => 'sectionend',
