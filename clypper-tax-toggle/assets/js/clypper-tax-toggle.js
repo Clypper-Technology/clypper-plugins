@@ -78,6 +78,20 @@ jQuery(window).on("load", function() {
 		updateElementState();
 	});
 
+	// Fired on any cart interaction.
+	jQuery( 'body' ).on(
+		'wc_fragments_loaded wc_fragments_refreshed',
+		function() {
+			setTimeout(
+				function(){
+					$( 'ul.currency_switcher li a.active' ).trigger( 'click' );
+				},
+				0
+			);
+			toggleTaxDisplay();
+		}
+	);
+
 	jQuery('.variations_form').on('show_variation', setTaxOnVariationPrice);
 	jQuery('body').on('wc_fragments_loaded wc_fragments_refreshed', toggleTaxDisplay);
 });

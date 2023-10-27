@@ -24,8 +24,6 @@
 		exit; // Exit if accessed directly.
 	}
 
-// ... (rest of the code remains unchanged) ...
-
 	/**
 	 * Plugin Initializer.
 	 */
@@ -60,7 +58,9 @@
 		function is_woocommerce_activated() {
 			include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 			if ( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
+
 				return true;
+
 			} else {
 				return false;
 			}
@@ -69,6 +69,7 @@
 
 
 	if ( is_woocommerce_activated() ) {
+		require_once __DIR__ . '/includes/options.php';
 		require_once 'includes/scripts.php';
 		require_once 'includes/toggle.php';
 		require_once 'includes/general.php';
