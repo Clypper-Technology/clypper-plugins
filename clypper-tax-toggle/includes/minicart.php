@@ -18,8 +18,9 @@
 		function get_clypper_tax_text($withTax): string {
 
 			$options = get_option('clypper_tax_options');
-			$label_incl = $options['clypper_tax_field_incl'] ?? __('Incl.', 'clypper-tax');
-			$label_excl = $options['clypper_tax_field_excl'] ?? __('Excl.', 'clypper-tax');
+
+			$label_incl = $options['clypper_tax_field_incl'] ?? __('', 'clypper-tax');
+			$label_excl = $options['clypper_tax_field_excl'] ?? __('', 'clypper-tax');
 
 			return $withTax ? $label_incl : $label_excl;
 		}

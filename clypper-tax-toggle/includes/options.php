@@ -47,14 +47,14 @@
 				'type' => 'text',
 				'desc' => __('Label to display when tax is included.', 'clypper-tax'),
 				'id'   => 'wc_clypper_tax_included_label',
-				'default' => 'incl.'
+				'default' => 'incl. vat'
 			),
 			'tax_excluded_label' => array(
 				'name' => __('Tax Excluded Label', 'clypper-tax'),
 				'type' => 'text',
 				'desc' => __('Label to display when tax is excluded.', 'clypper-tax'),
 				'id'   => 'wc_clypper_tax_excluded_label',
-				'default' => 'excl.'
+				'default' => 'excl. vat'
 			),
 			'section_end' => array(
 				'type' => 'sectionend',
