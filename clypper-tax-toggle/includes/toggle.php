@@ -1,16 +1,16 @@
 <?php
-/**
- * Toggle
- *
- * @package WordPress
- * @subpackage wc-tax
- * @since 1.2.4
- */
+	/**
+	 * Toggle
+	 *
+	 * @package WordPress
+	 * @subpackage clypper-tax
+	 * @since 1.2.4
+	 */
 
-/**
- * Output Function
- */
-	function woo_tax_output() {
+	/**
+	 * Output Function
+	 */
+	function clypper_tax_output() {
 		?>
 
         <div class="toggle-button-wrapper">
@@ -34,7 +34,7 @@
 	/**
 	 * Shortcode.
 	 */
-	function woo_tax_shortcode() {
-		woo_tax_output();
+	function clypper_tax_shortcode() {
+		clypper_tax_output();
 	}
-	add_shortcode( 'wootax', 'woo_tax_shortcode' );
+	add_shortcode( 'clypper-tax', 'clypper_tax_shortcode' );
