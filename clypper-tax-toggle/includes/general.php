@@ -14,6 +14,10 @@
 		return;
 	}
 
+	include_once 'priceformatter.php';
+
+	$price_formatter = Price_Formatter::get_instance();
+
 	function clypper_price_html($price, $product)
 	{
 		if (!wc_get_price_including_tax($product)) {
@@ -81,3 +85,21 @@
 	}
 
 	add_filter('woocommerce_get_price_html', 'clypper_price_html', 100, 99);
+
+	//Variation Prices
+	function clypper_variation_price_html($price, $variation): string {
+
+		global $price_formatter;
+
+		return $price_formatter->price_element(wc_format_decimal(wc_get_price_including_tax($variation))) . $price_formatter->price_element(wc_format_decimal(wc_get_price_excluding_tax($variation)), '','', false);
+	}
+	add_filter('woocommerce_variation_price_html', 'clypper_variation_price_html', 100, 2);
+
+//Variation Sale Price
+	function clypper_variation_sale_price_html($price, $variation): string {
+
+		global $price_formatter;
+
+		return $price_formatter->price_element(wc_format_decimal(wc_get_price_including_tax($variation))) . $price_formatter->price_element(wc_format_decimal(wc_get_price_excluding_tax($variation)), '', '', false);
+	}
+	add_filter('woocommerce_variation_sale_price_html', 'clypper_variation_sale_price_html', 100, 2);
