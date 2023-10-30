@@ -31,7 +31,7 @@
 		$plugin_dir = basename( dirname( __FILE__ ) );
 		load_plugin_textdomain( 'clypper-tax', false, $plugin_dir );
 	}
-	add_action( 'plugins_loaded', 'clypperplugin_init' );
+	add_action( 'woocommerce_init', 'clypperplugin_init' );
 
 	/**
 	 * Get version number from this plugin version.

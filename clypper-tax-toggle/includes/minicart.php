@@ -6,7 +6,7 @@
  * @since 1.2.4
  */
 
-include_once 'priceformatter.php';
+require_once 'priceformatter.php';
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
