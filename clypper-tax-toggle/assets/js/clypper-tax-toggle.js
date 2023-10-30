@@ -84,7 +84,7 @@ jQuery(window).on("load", function() {
 		function() {
 			setTimeout(
 				function(){
-					$( 'ul.currency_switcher li a.active' ).trigger( 'click' );
+					jQuery( 'ul.currency_switcher li a.active' ).trigger( 'click' );
 				},
 				0
 			);
