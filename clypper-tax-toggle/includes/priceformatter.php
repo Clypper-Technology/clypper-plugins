@@ -16,59 +16,53 @@
 			$this->from_label = get_option('wc_clypper_from_label');
 		}
 
+		private function get_price($product, $withTax = true, $args = []) {
+			return $withTax ? wc_get_price_including_tax($product, $args) : wc_get_price_excluding_tax($product, $args);
+		}
+
 		public function format_price_cart($product, $quantity): string
 		{
 			// Calculate base prices (not multiplied by quantity)
-			$base_value = wc_format_decimal(wc_get_price_including_tax($product));
-			$base_value_ex = wc_format_decimal(wc_get_price_excluding_tax($product));
+			$base_value = $this->get_price($product);
+			$base_value_ex = $this->get_price($product,false);
 
 			return $this->price_element($base_value, $quantity . 'x', '') . $this->price_element($base_value_ex, $quantity . 'x', '', false);
 		}
 
-		private function get_price_with_tax($product, $args = []) {
-			$dp = wc_get_price_decimals();
-			return wc_format_decimal(wc_get_price_including_tax($product, $args), $dp);
-		}
-
-		private function get_price_without_tax($product, $args = []) {
-			$dp = wc_get_price_decimals();
-			return wc_format_decimal(wc_get_price_excluding_tax($product, $args), $dp);
-		}
-
 		public function format_price($product) {
-			// Check if the product is taxable and get the tax class.
-			$tax_status = $product->is_taxable();
-			$product_tax_class = $product->get_tax_class();
 
 			// Calculate prices with and without tax.
-			$price_tax = $this->get_price_with_tax($product);
-			$price_excl_tax = $this->get_price_without_tax($product);
-
-			// Default Toggle Tax display.
-			$default = $this->price_element($price_tax, '', $this->label_incl) . $this->price_element($price_excl_tax, '', $this->label_excl, false);
+			$price_tax = $this->get_price($product);
+			$price_excl_tax = $this->get_price($product, false);
 
 			// Handle variable products and sale prices.
-			if ($product->is_type('variable') && (!$tax_status || in_array($product_tax_class, ['zero-rate', 'shipping']))) {
+			if ($product->is_type('variable')) {
 				return $this->price_element($price_tax, $this->from_label, $this->label_excl) . $this->price_element($price_excl_tax, $this->from_label, $this->label_excl, false);
 			} elseif($product->get_sale_price()) {
 				return $this->sale_price_element($product);
 			}
 
-			return $default;
+			return $this->price_element($price_tax, '', $this->label_incl) . $this->price_element($price_excl_tax, '', $this->label_excl, false);
 		}
 
 		private function sale_price_element($product) {
+
 			$price_args = ['qty' => 1, 'price' => $product->get_regular_price()];
 
 			// Calculate sale prices with and without tax.
-			$sale_price_tax = $this->get_price_with_tax($product);
-			$sale_price_excl_tax = $this->get_price_without_tax($product);
-			$regular_price_tax = $this->get_price_with_tax($product, $price_args);
-			$regular_price_excl_tax = $this->get_price_without_tax($product, $price_args);
+			$sale_price_tax = $this->get_price($product);
+			$sale_price_excl_tax = $this->get_price($product, false);
+			$regular_price_tax = $this->get_price($product, true, $price_args);
+			$regular_price_excl_tax = $this->get_price($product, false, $price_args);
 
 			// HTML for sale and regular prices.
-			$regular_prices_html = $this->price_element($regular_price_tax, '', $this->label_incl) . $this->price_element($regular_price_excl_tax, '', $this->label_excl, false);
-			$sale_prices_html = $this->price_element($sale_price_tax, '', $this->label_incl) . $this->price_element($sale_price_excl_tax, '', $this->label_excl, false);
+			if($product->is_type('variable')) {
+				$regular_prices_html = $this->price_element($regular_price_tax, $this->from_label, $this->label_incl) . $this->price_element($regular_price_excl_tax, $this->from_label, $this->label_excl, false);
+				$sale_prices_html = $this->price_element($sale_price_tax, $this->from_label, $this->label_incl) . $this->price_element($sale_price_excl_tax, $this->from_label, $this->label_excl, false);
+			} else {
+				$regular_prices_html = $this->price_element($regular_price_tax, '', $this->label_incl) . $this->price_element($regular_price_excl_tax, '', $this->label_excl, false);
+				$sale_prices_html = $this->price_element($sale_price_tax, '', $this->label_incl) . $this->price_element($sale_price_excl_tax, '', $this->label_excl, false);
+			}
 
 			return "<del>{$regular_prices_html}</del><ins>{$sale_prices_html}</ins>";
 		}
