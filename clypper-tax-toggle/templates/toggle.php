@@ -7,9 +7,6 @@
 	 * @since 1.2.4
 	 */
 
-	/**
-	 * Output Function
-	 */
 	function clypper_tax_output() {
 		?>
 

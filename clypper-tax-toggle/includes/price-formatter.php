@@ -6,7 +6,7 @@
 		private $label_excl;
 		private $from_label;
 
-		public static function get_instance() {
+		public static function get_instance(): Price_Formatter {
 			return self::$instance ?? self::$instance = new self();
 		}
 
@@ -26,10 +26,21 @@
 			$base_value = $this->get_price($product);
 			$base_value_ex = $this->get_price($product,false);
 
-			return $this->price_element($base_value, $quantity . 'x', '') . $this->price_element($base_value_ex, $quantity . 'x', '', false);
+			return $this->single_price_element($base_value, $quantity . 'x', '') . $this->single_price_element($base_value_ex, $quantity . 'x', '', false);
 		}
 
-		public function format_price($product) {
+		public function format_cart_subtotal($subtotal_tax, $subtotal_excl_tax, $suffixes = false) {
+
+			$subtotal_tax = wc_format_decimal($subtotal_tax);
+			$subtotal_excl_tax = wc_format_decimal($subtotal_excl_tax);
+
+			if($suffixes) {
+				$this->single_price_element($subtotal_tax, '', $this->label_incl) . $this->single_price_element($subtotal_excl_tax, '', $this->label_excl, false);
+			}
+			return $this->single_price_element($subtotal_tax) . $this->single_price_element($subtotal_excl_tax, '', '', false);
+		}
+
+		public function format_price($product): string {
 
 			// Calculate prices with and without tax.
 			$price_tax = $this->get_price($product);
@@ -37,15 +48,15 @@
 
 			// Handle variable products and sale prices.
 			if ($product->is_type('variable')) {
-				return $this->price_element($price_tax, $this->from_label, $this->label_excl) . $this->price_element($price_excl_tax, $this->from_label, $this->label_excl, false);
+				return $this->price_element($price_tax, $price_excl_tax);
 			} elseif($product->get_sale_price()) {
 				return $this->sale_price_element($product);
 			}
 
-			return $this->price_element($price_tax, '', $this->label_incl) . $this->price_element($price_excl_tax, '', $this->label_excl, false);
+			return $this->price_element($price_tax, $price_excl_tax);
 		}
 
-		private function sale_price_element($product) {
+		private function sale_price_element($product): string {
 
 			$price_args = ['qty' => 1, 'price' => $product->get_regular_price()];
 
@@ -55,19 +66,22 @@
 			$regular_price_tax = $this->get_price($product, true, $price_args);
 			$regular_price_excl_tax = $this->get_price($product, false, $price_args);
 
-			// HTML for sale and regular prices.
 			if($product->is_type('variable')) {
-				$regular_prices_html = $this->price_element($regular_price_tax, $this->from_label, $this->label_incl) . $this->price_element($regular_price_excl_tax, $this->from_label, $this->label_excl, false);
-				$sale_prices_html = $this->price_element($sale_price_tax, $this->from_label, $this->label_incl) . $this->price_element($sale_price_excl_tax, $this->from_label, $this->label_excl, false);
+				$regular_prices_html = $this->price_element($sale_price_tax, $sale_price_excl_tax, $this->from_label);
+				$sale_prices_html = $this->price_element($regular_price_tax, $regular_price_excl_tax, $this->from_label);
 			} else {
-				$regular_prices_html = $this->price_element($regular_price_tax, '', $this->label_incl) . $this->price_element($regular_price_excl_tax, '', $this->label_excl, false);
-				$sale_prices_html = $this->price_element($sale_price_tax, '', $this->label_incl) . $this->price_element($sale_price_excl_tax, '', $this->label_excl, false);
+				$regular_prices_html = $this->price_element($sale_price_tax, $sale_price_excl_tax);
+				$sale_prices_html = $this->price_element($regular_price_tax, $regular_price_excl_tax);
 			}
 
 			return "<del>{$regular_prices_html}</del><ins>{$sale_prices_html}</ins>";
 		}
 
-		public function price_element($price, $prefix = '', $suffix ='', $withTax = true): string
+		private function price_element($price_tax, $price_excl_tax, $prefix = ''): string {
+			return $this->single_price_element($price_tax, $prefix, $this->label_incl) . $this->single_price_element($price_excl_tax, $prefix, $this->label_excl, false);
+		}
+
+		private function single_price_element($price, $prefix = '', $suffix ='', $withTax = true): string
 		{
 			$class = $withTax ? 'product-tax-on' : 'product-tax-off';
 			return '<span class="amount ' . $class . ' product-tax">' . $prefix . ' ' . wc_price($price) . ' ' . $suffix . '</span>';

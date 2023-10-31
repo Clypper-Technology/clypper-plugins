@@ -1,59 +1,48 @@
 <?php
-	/**
-	 * Widget
-	 *
-	 * @package WordPress
-	 * @subpackage clypper-tax
-	 * @since 1.2.4
-	 */
 
-	if ( ! defined( 'ABSPATH' ) ) {
-		die( 'No direct access allowed' );
-	}
+	if (!defined('ABSPATH')) exit;
 
 	class Clypper_Tax_Toggle_Widget extends WP_Widget {
 
-		/**
-		 * Construct
-		 */
 		function __construct() {
 			parent::__construct(
-				'',
-				__( 'Tax Toggle', 'clypper-tax' ),
+				'clypper_tax_toggle_widget',
+				esc_html__('Tax Toggle', 'clypper-tax'),
 				array(
 					'classname' => 'clypperVATWidget',
-					'description' => __( 'Shows Tax Toggle for WooCommerce button', 'clypper-tax' ),
+					'description' => esc_html__('Shows a Tax Toggle for WooCommerce button', 'clypper-tax'),
 				)
 			);
 		}
 
-		/**
-		 * Widget
-		 */
-		function widget( $args, $instance ) {
-			extract( $args, EXTR_SKIP );
-			echo $before_widget;
-			$title = empty( $instance['title'] ) ? ' ' : apply_filters( 'widget_title', $instance['title'] );
-			if ( ! empty( $title ) ) {
-				echo $before_title . $title . $after_title;
-			};
-			clypper_tax_output();
-			echo $after_widget;
+		function widget($args, $instance) {
+			echo $args['before_widget'];
+			if (!empty($instance['title'])) {
+				echo $args['before_title'] . esc_html($instance['title']) . $args['after_title'];
+			}
+			echo get_clypper_tax_output(); // Made changes here for better clarity.
+			echo $args['after_widget'];
 		}
 
-		/**
-		 * Update
-		 */
-		function update( $new_instance, $old_instance ) {
-			$instance = $old_instance;
-			$instance['title'] = $new_instance['title'];
+		function form($instance) {
+			// Admin panel widget settings form.
+		}
+
+		function update($new_instance, $old_instance) {
+			$instance = array();
+			$instance['title'] = sanitize_text_field($new_instance['title']);
 			return $instance;
 		}
 
 	}
-	add_action(
-		'widgets_init',
-		function() {
-			return register_widget( 'Clypper_Tax_Toggle_Widget' );
-		}
-	);
+
+	add_action('widgets_init', function() {
+		register_widget('Clypper_Tax_Toggle_Widget');
+	});
+
+// Introduced a helper function for widget output.
+	function get_clypper_tax_output() {
+		ob_start();
+		clypper_tax_output();
+		return ob_get_clean();
+	}

@@ -1,11 +1,5 @@
 <?php
 
-	/**
-	 * @package WordPress
-	 * @subpackage clypper-tax
-	 * @since 1.2.4
-	 */
-
 	if (!defined('ABSPATH')) {
 		exit; // Exit if accessed directly
 	}
@@ -14,7 +8,7 @@
 		return;
 	}
 
-	require_once 'priceformatter.php';
+	require_once 'price-formatter.php';
 
 	$price_formatter = Price_Formatter::get_instance();
 
