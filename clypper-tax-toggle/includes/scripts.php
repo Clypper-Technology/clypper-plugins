@@ -16,3 +16,12 @@
 		wp_enqueue_script( 'clypper-tax-toggle', CLYPPER_TAX_URL . '/assets/js/clypper-tax-toggle.js', array( 'jquery' ), CLYPPER_TAX_VERSION_NUM, true );
 	}
 	add_action( 'wp_enqueue_scripts', 'clypper_scripts', 99 );
+
+	function clypper_enqueue_admin_scripts($hook) {
+		if ('woocommerce_page_wc-settings' !== $hook) {
+			return;
+		}
+		wp_enqueue_script('clypper-tax-toggle-admin-js', CLYPPER_TAX_URL . '/assets/js/clypper-tax-toggle-admin.js', array('jquery'), CLYPPER_TAX_VERSION_NUM, true);
+	}
+	add_action('admin_enqueue_scripts', 'clypper_enqueue_admin_scripts');
+

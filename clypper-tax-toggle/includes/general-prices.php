@@ -8,9 +8,7 @@
 		return;
 	}
 
-	require_once 'price-formatter.php';
-
-	$price_formatter = Price_Formatter::get_instance();
+	require_once __DIR__ . '/price-formatter.php';
 
 	function clypper_price_html($price, $product)
 	{
@@ -18,7 +16,7 @@
 			return $price;
 		}
 
-		global $price_formatter;
+		$price_formatter = Price_Formatter::get_instance();
 
 		return $price_formatter->format_price($product);
 	}
@@ -28,7 +26,7 @@
 	//Variation Prices
 	function clypper_variation_price_html($price, $variation): string {
 
-		global $price_formatter;
+		$price_formatter = Price_Formatter::get_instance();
 
 		return $price_formatter->format_price($variation);
 	}
@@ -37,7 +35,7 @@
 //Variation Sale Price
 	function clypper_variation_sale_price_html($price, $variation): string {
 
-		global $price_formatter;
+		$price_formatter = Price_Formatter::get_instance();
 
 		return $price_formatter->format_price($variation);
 	}
