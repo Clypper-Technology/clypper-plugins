@@ -8,24 +8,23 @@
 	 */
 
 	function clypper_tax_output() {
+
+        $label_incl = get_option('wc_clypper_tax_included_label');
+        $label_excl = get_option('wc_clypper_tax_excluded_label');
+        $popup = filter_var(get_option('wc_clypper_popup_enabled'), FILTER_VALIDATE_BOOL);
+
 		?>
 
         <div class="toggle-button-wrapper">
-            <span class="tax-button active-tax-button">Ekskl. moms</span>
-            <span class="tax-button">Inkl. moms</span>
-        </div>
-
-        <div class="business-toggle-wrapper-background"></div>
-        <div class="business-toggle-wrapper">
-            <h2>Privat eller erhverv</h2>
-            <h3 style="font-weight: 400;">Se priser med eller uden moms</h3>
-            <div class="vat-button-wrapper">
-                <button class="button private">Privat</button>
-                <button class="button business">Erhverv</button>
-            </div>
+            <span class="tax-button active-tax-button"><?php echo $label_excl ?></span>
+            <span class="tax-button"><?php echo $label_incl ?></span>
         </div>
 
 		<?php
+
+        if($popup) {
+            include 'popup.php';
+        }
 	}
 
 	/**

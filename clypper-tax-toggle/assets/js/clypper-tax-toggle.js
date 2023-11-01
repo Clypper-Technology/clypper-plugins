@@ -10,7 +10,7 @@ jQuery(window).on("load", function() {
 
 	// Function declarations
 	function toggleVatPopup() {
-		jQuery('.business-toggle-wrapper, .business-toggle-wrapper-background').slideToggle(200);
+		jQuery('.tax-popup-wrapper, .tax-popup-background').slideToggle(200);
 	}
 
 	function updateElementState() {
@@ -46,21 +46,30 @@ jQuery(window).on("load", function() {
 	let showTax;
 
 	if (cookieValue === undefined) {
+
+		if(jQuery('.tax-popup-background').length === 0) {
+			showTax = true;
+			toggleTaxDisplay();
+			updateElementState();
+			return;
+		}
+
 		toggleVatPopup();
-		jQuery('.business-toggle-wrapper-background').on('click', function() {
+
+		jQuery('.tax-popup-background').on('click', function() {
 			toggleVatPopup();
 			showTax = true;
 			toggleTaxDisplay();
 			updateElementState();
 		});
 
-		jQuery('.business').on('click', function() {
+		jQuery('.no-vat').on('click', function() {
 			toggleVatPopup();
 			showTax = false;
 			toggleTaxDisplay();
 		});
 
-		jQuery('.private').on('click', function() {
+		jQuery('.vat').on('click', function() {
 			toggleVatPopup();
 			showTax = true;
 			toggleTaxDisplay();

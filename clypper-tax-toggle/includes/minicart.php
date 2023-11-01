@@ -18,7 +18,6 @@
 
 	$price_formatter = Price_Formatter::get_instance();
 
-	//Mini Cart
 	function clypper_cart_override($product_price, $cart_item): string {
 
 		global $price_formatter;
@@ -27,7 +26,6 @@
 	}
 	add_filter('woocommerce_widget_cart_item_quantity', 'clypper_cart_override', 100, 3);
 
-//Cart Subtotal
 	function clypper_cart_subtotal_html($cart_subtotal, $compound, $cart): string {
 
 		if (is_cart() || is_checkout() || defined('WOOCOMMERCE_CHECKOUT')) {

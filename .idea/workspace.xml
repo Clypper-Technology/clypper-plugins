@@ -6,13 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="52faa793-054a-4943-ad74-7d262b96ab92" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clypper-leasing/assets/css/clypper-leasing.css" beforeDir="false" afterPath="$PROJECT_DIR$/clypper-leasing/assets/css/clypper-leasing.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clypper-leasing/clypper-leasing.php" beforeDir="false" afterPath="$PROJECT_DIR$/clypper-leasing/clypper-leasing.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clypper-leasing/shortcodes/leasing-form.php" beforeDir="false" afterPath="$PROJECT_DIR$/clypper-leasing/shortcodes/leasing-form.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clypper-leasing/template-selection.php" beforeDir="false" afterPath="$PROJECT_DIR$/clypper-leasing/template-selection.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clypper-leasing/templates/erhverv.php" beforeDir="false" afterPath="$PROJECT_DIR$/clypper-leasing/templates/erhverv.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clypper-leasing/templates/privat-erhverv.php" beforeDir="false" afterPath="$PROJECT_DIR$/clypper-leasing/templates/privat-erhverv.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clypper-leasing/templates/privat.php" beforeDir="false" afterPath="$PROJECT_DIR$/clypper-leasing/templates/privat.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clypper-tax-toggle/translation-example.php" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,21 +34,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Administrator/Documents/GitHub/Clypper-Plugins&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "//wsl.localhost/docker-desktop-data/data/docker/volumes/DevKinsta/public/trekantenstrailercenterdk",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -70,6 +64,8 @@
       <workItem from="1696399968400" duration="889000" />
       <workItem from="1697710841381" duration="1164000" />
       <workItem from="1697713617820" duration="1000" />
+      <workItem from="1698827028562" duration="166000" />
+      <workItem from="1698827399653" duration="300000" />
     </task>
     <servers />
   </component>
