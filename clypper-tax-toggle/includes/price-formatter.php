@@ -22,14 +22,19 @@
 			return $withTax ? wc_get_price_including_tax($product, $args) : wc_get_price_excluding_tax($product, $args);
 		}
 
-		public function format_price_cart($product, $quantity): string
+		public function format_price_cart($product, $quantity, $suffixes = false): string
 		{
 			// Calculate base prices (not multiplied by quantity)
 			$base_value = $this->get_price($product);
 			$base_value_ex = $this->get_price($product,false);
 
-			return $this->single_price_element($base_value, $quantity . 'x', '') .
-			       $this->single_price_element($base_value_ex, $quantity . 'x', '', false);
+			if($suffixes) {
+				return $this->single_price_element($base_value, $quantity . 'x', $this->label_incl) .
+				       $this->single_price_element($base_value_ex, $quantity . 'x', $this->label_excl, false);
+			} else {
+				return $this->single_price_element($base_value, $quantity . 'x', '') .
+				       $this->single_price_element($base_value_ex, $quantity . 'x', '', false);
+			}
 		}
 
 		public function format_cart_subtotal($subtotal_tax, $subtotal_excl_tax, $suffixes = false): string {
@@ -38,8 +43,8 @@
 			$subtotal_excl_tax = wc_format_decimal($subtotal_excl_tax);
 
 			if($suffixes) {
-				$this->single_price_element($subtotal_tax, '', $this->label_incl) .
-				$this->single_price_element($subtotal_excl_tax, '', $this->label_excl, false);
+				return $this->single_price_element($subtotal_tax, '', $this->label_incl) .
+				       $this->single_price_element($subtotal_excl_tax, '', $this->label_excl, false);
 			}
 			return $this->single_price_element($subtotal_tax) .
 			       $this->single_price_element($subtotal_excl_tax, '', '', false);

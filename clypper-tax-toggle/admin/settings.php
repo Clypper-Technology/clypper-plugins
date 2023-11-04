@@ -64,6 +64,14 @@
 				'id'   => 'wc_clypper_tax_zero_label',
 				'default' => 'No VAT'
 			),
+
+			'tax_suffixes_in_cart' => array(
+				'name' => __('Show Tax Suffixes in Cart', 'clypper-tax'),
+				'type' => 'checkbox',
+				'desc' => __('Check this box to show tax suffixes (e.g., "incl. VAT", "excl. VAT") next to prices and subtotal in the cart.', 'clypper-tax'),
+				'id'   => 'wc_clypper_tax_suffixes_in_cart',
+				'default' => 'false'
+			),
 			// End of Label Settings Section
 			'section_end_labels' => array(
 				'type' => 'sectionend',

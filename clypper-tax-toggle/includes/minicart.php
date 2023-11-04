@@ -21,6 +21,12 @@
 // Override WooCommerce cart item quantity HTML.
 	function clypper_cart_override($product_price, $cart_item, $cart_item_key) {
 		$price_formatter = Price_Formatter::get_instance();
+
+		$suffixes = filter_var(get_option('wc_clypper_tax_suffixes_in_cart'), FILTER_VALIDATE_BOOL);
+
+		if($suffixes) {
+			return $price_formatter->format_price_cart($cart_item['data'], $cart_item['quantity'], true);
+		}
 		return $price_formatter->format_price_cart($cart_item['data'], $cart_item['quantity']);
 	}
 	add_filter('woocommerce_widget_cart_item_quantity', 'clypper_cart_override', 100, 3);
@@ -34,8 +40,14 @@
 
 		$price_formatter = Price_Formatter::get_instance();
 
+		$suffixes = filter_var(get_option('wc_clypper_tax_suffixes_in_cart'), FILTER_VALIDATE_BOOL);
+
 		$value = ($compound) ? $cart->cart_contents_total + $cart->shipping_total + $cart->get_taxes_total(false, false) : $cart->subtotal;
 		$value_ex = ($compound) ? $cart->cart_contents_total + $cart->shipping_total - $cart->get_taxes_total(false, false) : $cart->subtotal_ex_tax;
+
+		if($suffixes) {
+			return $price_formatter->format_cart_subtotal($value, $value_ex, true);
+		}
 		return $price_formatter->format_cart_subtotal($value, $value_ex);
 	}
 	add_filter('woocommerce_cart_subtotal', 'clypper_cart_subtotal_html', 100, 3);

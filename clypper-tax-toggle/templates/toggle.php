@@ -23,7 +23,7 @@
 		<?php
 
         if($popup) {
-            include 'popup.php';
+	        include __DIR__ . '/popup.php';
         }
 	}
 

@@ -19,8 +19,8 @@ jQuery(window).on("load", function() {
 
 	function toggleTaxDisplay() {
 		const taxElementsStates = {
-			true: { show: ".product-tax-on, .cart-contents .product-tax-on", hide: ".product-tax-off, .cart-contents .product-tax-off" },
-			false: { show: ".product-tax-off, .cart-contents .product-tax-off", hide: ".product-tax-on, .cart-contents .product-tax-on" }
+			true: { show: ".product-tax-on", hide: ".product-tax-off, .product-tax-off" },
+			false: { show: ".product-tax-off", hide: ".product-tax-on, .product-tax-on" }
 		};
 		const currentState = taxElementsStates[showTax];
 		jQuery(currentState.show).show();
