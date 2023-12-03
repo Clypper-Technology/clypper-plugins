@@ -1,12 +1,31 @@
-.no-vat {
-	color: #000!important;
-	background-color: #fff!important;
-	border: solid 1px #000!important;
+.no-vat-button {
+	color: var(--clypper-without-tax-button-text-color)!important;
+	background-color: var(--clypper-without-tax-button-color)!important;
+}
+
+.with-vat-button {
+	color: var(--clypper-with-tax-button-color)!important;
+	background-color: var(--clypper-with-tax-button-text-color)!important;
+}
+
+.active-tax-button {
+	background-color: var(--clypper-active-toggle-element-color);
+}
+
+.tax-button {
+	color: var(--clypper-toggle-text-color)!important;
+	padding: 5px;
+	text-align: center;
+	font-size: 12px;
+	border-radius: 30px;
+	display: inline-block;
+	transition-duration: 0.3s;
+	transition-timing-function: ease;
 }
 
 .tax-popup-background {
 	display: none;
-	background-color: rgba(0, 0, 0, 0.3);
+	background-color: rgba(0,0,0,0.3);
 	height: 100vh;
 	width: 100vw;
 	position: fixed;
@@ -17,7 +36,7 @@
 
 .tax-popup-wrapper {
 	display: none;
-	background-color: #fff;
+	background-color: var(--clypper-popup-background-color);
 	padding: 20px;
 	height: fit-content;
 	position: fixed;
@@ -35,25 +54,10 @@
 	width: 100%;
 }
 
-.tax-button {
-	color: #fff;
-	padding: 5px;
-	text-align: center;
-	font-size: 12px;
-	border-radius: 30px;
-	display: inline-block;
-	transition-duration: 0.3s;
-	transition-timing-function: ease;
-}
-
-.active-tax-button {
-	background-color: #4b4a4a;
-}
-
 .toggle-button-wrapper {
 	cursor: pointer;
 	padding:2px;
-	background-color: #000;
+	background-color: var(--clypper-toggle-wrapper-background-color);
 	border-radius: 30px;
 	display: inline-block;
 	flex-wrap: wrap;
@@ -62,7 +66,7 @@
 }
 
 @media screen and (max-width: 548px) {
-	.vat, .no-vat {
+	.with-vat-button, .no-vat-button {
 		width: 100%;
 		margin-top: 10px!important;
 		margin-right: 0px!important;

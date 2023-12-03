@@ -63,13 +63,13 @@ jQuery(window).on("load", function() {
 			updateElementState();
 		});
 
-		jQuery('.no-vat').on('click', function() {
+		jQuery('.no-vat-button').on('click', function() {
 			toggleVatPopup();
 			showTax = false;
 			toggleTaxDisplay();
 		});
 
-		jQuery('.vat').on('click', function() {
+		jQuery('.with-vat-button').on('click', function() {
 			toggleVatPopup();
 			showTax = true;
 			toggleTaxDisplay();

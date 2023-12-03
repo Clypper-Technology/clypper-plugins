@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52faa793-054a-4943-ad74-7d262b96ab92" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/clypper-tax-toggle/assets/js/clypper-tax-toggle-admin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clypper-tax-toggle/admin/settings.php" beforeDir="false" afterPath="$PROJECT_DIR$/clypper-tax-toggle/admin/settings.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clypper-tax-toggle/includes/price-formatter.php" beforeDir="false" afterPath="$PROJECT_DIR$/clypper-tax-toggle/includes/price-formatter.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clypper-tax-toggle/includes/scripts.php" beforeDir="false" afterPath="$PROJECT_DIR$/clypper-tax-toggle/includes/scripts.php" afterDir="false" />
-    </list>
+    <list default="true" id="52faa793-054a-4943-ad74-7d262b96ab92" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -50,6 +44,7 @@
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -71,6 +66,8 @@
       <workItem from="1698827028562" duration="166000" />
       <workItem from="1698827399653" duration="300000" />
       <workItem from="1698870300706" duration="189000" />
+      <workItem from="1701616529750" duration="762000" />
+      <workItem from="1701617304155" duration="86000" />
     </task>
     <servers />
   </component>
