@@ -29,7 +29,7 @@
 		}
 		return $price_formatter->format_price_cart($cart_item['data'], $cart_item['quantity']);
 	}
-	add_filter('woocommerce_widget_cart_item_quantity', 'clypper_cart_override', 100, 3);
+	add_filter('woocommerce_widget_cart_item_quantity', 'clypper_cart_override', 10, 3);
 
 // Modify the cart subtotal HTML.
 	function clypper_cart_subtotal_html($cart_subtotal, $compound, $cart) {
@@ -50,4 +50,4 @@
 		}
 		return $price_formatter->format_cart_subtotal($value, $value_ex);
 	}
-	add_filter('woocommerce_cart_subtotal', 'clypper_cart_subtotal_html', 100, 3);
+	add_filter('woocommerce_cart_subtotal', 'clypper_cart_subtotal_html', 10, 3);

@@ -103,6 +103,6 @@
 		private function single_price_element($price, $prefix = '', $suffix ='', $withTax = true): string
 		{
 			$class = $withTax ? 'product-tax-on' : 'product-tax-off';
-			return '<span class="amount ' . $class . ' product-tax">' . $prefix . ' ' . wc_price($price) . ' ' . $suffix . '</span>';
+			return '<span class="price ' . $class . ' product-tax">' . $prefix . ' ' . wc_price($price) . ' ' . $suffix . '</span>';
 		}
 	}

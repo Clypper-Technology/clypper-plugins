@@ -1,11 +1,11 @@
-.no-vat-button {
+button.no-vat-button {
 	color: var(--clypper-without-tax-button-text-color)!important;
 	background-color: var(--clypper-without-tax-button-color)!important;
 }
 
-.with-vat-button {
-	color: var(--clypper-with-tax-button-color)!important;
-	background-color: var(--clypper-with-tax-button-text-color)!important;
+button.with-vat-button {
+	color: var(--clypper-with-tax-button-text-color)!important;
+	background-color: var(--clypper-with-tax-button-color)!important;
 }
 
 .active-tax-button {
