@@ -43,6 +43,7 @@
 	top: 30%;
 	left: 50%;
 	transform: translate(-50%, -20%);
+	max-width: 500px;
 }
 
 .vat-button-wrapper {
@@ -65,10 +66,21 @@
 	align-items: center;
 }
 
-@media screen and (max-width: 548px) {
+span .amount {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+
+@media screen and (max-width: 950px) {
 	.with-vat-button, .no-vat-button {
 		width: 100%;
 		margin-top: 10px!important;
 		margin-right: 0px!important;
+	}
+
+	.tax-popup-wrapper {
+		width: 90vw;
 	}
 }

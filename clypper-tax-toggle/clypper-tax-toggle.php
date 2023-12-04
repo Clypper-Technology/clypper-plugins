@@ -3,7 +3,7 @@
 	/**
 	 * Plugin Name: Clypper Tax Toggle
 	 * Description: Adds a Tax Toggle to WooCommerce Sites to show prices with and without tax.
-	 * Version: 1.4.1
+	 * Version: 1.4.2
 	 * Author: Clypper von H
 	 * License: GPLv2 or later
 	 * Text Domain: clypper-tax
@@ -28,7 +28,7 @@
 	define('CLYPPER_TAX_NAME', trim(dirname(plugin_basename(__FILE__)), '/'));
 	define('CLYPPER_TAX_DIR', plugin_dir_url(__FILE__) . '/' . CLYPPER_TAX_NAME);
 	define('CLYPPER_TAX_URL', plugins_url() . '/' . CLYPPER_TAX_NAME);
-	define('CLYPPER_TAX_VERSION_NUM', '1.4.1'); // Set the version number manually.
+	define('CLYPPER_TAX_VERSION_NUM', '1.4.2'); // Set the version number manually.
 
 // Check for WooCommerce and load additional files if active.
 	add_action('plugins_loaded', function() {
