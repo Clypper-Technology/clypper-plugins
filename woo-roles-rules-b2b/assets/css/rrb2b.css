@@ -1,0 +1,215 @@
+.rrb2b-r-row{
+	margin-top: 50px;
+	max-width: 1600px;
+}
+#rrb2b-list td{
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.rrb2b-r-row:after {
+	content: "";
+	display: table !important;
+	clear: both;
+}
+.col-left{
+	width: 40%;
+	float: left;
+    padding: 6px;
+}
+.col-right{
+	width: 57%;
+	float: left;
+    padding: 6px;
+}
+.cas-logo{
+	width: 20px;
+	opacity: 0.7;
+	padding-left: 5px;
+}
+.cas-logo:hover{
+	opacity: 1;
+}
+.cas-number{
+	/*max-width: 200px;*/
+	width: 50%;
+}
+.input-date{
+	/*max-width: 200px;*/
+	width: 183px;
+	padding: 10px !important;
+	margin-top: 10px;
+	height: 28px !important;
+	border-radius: 5px !important;
+	border: 1px solid silver !important;
+}
+.cas-check-cat{
+	margin-top: 4px !important;
+	margin-bottom: 4px !important;
+}
+.cas-checkbox{
+	/*
+	margin-left: 20px !important;
+    margin-bottom: 2px !important;
+	*/
+}
+
+.cas-div-check-list{
+	max-width: 500px;
+    height: 200px;
+    border: 1px solid silver;
+    display: block;
+	border-radius: 4px;
+	overflow-y: scroll;
+	padding-left: 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.cas-div-check-list-cat {
+	height: 400px;
+}
+.cas-cat-list{
+	font-size: smaller;
+}
+.cas-edit-button{
+	padding: 4px;
+    border: 1px solid silver;
+    border-radius: 4px;
+    position: relative;
+    bottom: 10px;
+}
+
+.cas-white-bg-border{
+	background:white;
+	margin-bottom:5px;
+	border-radius:10px;
+	padding:10px;
+	border:1px solid silver;
+}
+
+.cas-notice1, .cas-notice2, .cas-notice3 {
+	display: none;
+}
+
+.cas-qty-row {
+	background-color: gainsboro;
+	border-bottom: 1px solid whitesmoke;
+}
+
+.submit_rule{
+	position: absolute; 
+    bottom: 0px; 
+}
+.rrb2b-select{
+	margin-bottom: 3px;
+	width: 170px;
+}
+/*
+.rrb2b-table{
+	max-width: 1600px;
+}*/
+.rrb2b-table_ td{
+	vertical-align: middle;
+}
+.rrb2b-table_ th, 
+.rrb2b-table_ td, 
+.rrb2b-table_ input, 
+.rrb2b-table_ select {
+	font-size: 0.75rem !important;
+}
+
+.rrb2b-circle-green{
+	color: green;
+	font-size: 14px;
+}
+.rrb2b-circle-green-h3 {
+	font-size: medium;
+	color:green;
+}
+.rrb2b-circle-gray{
+	color: silver;
+	font-size: 14px;
+}
+.rrb2b-circle-gray-h3 {
+	font-size: medium;
+	color:red;
+}
+.ui-autocomplete {
+	background-color: #fff;
+	border: 1px solid #ccc;
+	max-height: 200px;
+	overflow-y: auto;
+	/* Add other styling as needed */
+}
+
+.rrb2b-prod-val {
+	width: 100%;
+}
+.rrb2b-product-select {
+	width: 100%;
+}
+.rrb2b-thumb{
+	height: 28px;
+	transition: transform .2s;
+	border-radius: 2px;
+	position: relative;
+	z-index: 10;
+}
+.rrb2b-thumb:hover{
+	transform: scale(2.5);
+	z-index: 999;
+	border-radius: 0;
+}
+.dropdown_product_cat{
+	width: 209px;
+}
+.rrb2b-saving{
+	display: none;
+}
+.rrb2b-saving-show{
+	display: block;
+	text-align: left;
+}
+.pbar-saving{
+	font-size: 20px;
+	height: 36px;
+	width: 70%;
+}
+.rrb2b-collapsible {
+	display: none;
+	overflow: hidden;
+}
+.rrb2b-collapsible-show{
+	display: block;
+}
+.rrb2b-expand-list{
+	border:0;
+	padding:2px;
+	background:none;
+}
+.rrb2b-expand-list:hover{
+	color: green;
+	font-size: large;
+}
+
+.ui-multiselect {
+    height: 30px;
+    width: fit-content;
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
+.cas-action-box {
+    border: 1px solid silver;
+    margin-bottom: 2px;
+    /*background: gainsboro;*/
+	background-color: #f9f8f8;
+    padding: 12px;
+    border-radius: 8px;
+}
+.cas-coupon-box {
+	background:gainsboro;
+}
+
+.duplicate-row {
+	background-color: rgb(253, 140, 140) !important; 
+}
