@@ -1,10 +1,14 @@
 <?php
-	$image_path = CL_URL . "assets/images/ikano-bank.png";
+
 ?>
-
-
-<a href="https://ikanobank.dk/partner?mcred=REF20&merchNumber=16501779&partner=false" target="_blank" class="leasing-link">
-    <h3 class="leasing-header">Privat-finansiering</h3>
-    <img src="<?php echo $image_path?>" class="leasing-image">
-</a>
-
+<div class="payever-widget-finexp" data-widgetid="04abea71-c635-4a6f-aded-bf12b8b8d19f" data-checkoutid="fc43d431-338a-5a00-a828-8210cbb1ac3b" data-business="c96a3831-7d73-46e2-91dd-4719b604a261" data-type="dropdownCalculator" data-reference="order-id" data-amount="67500.00"></div>
+ <script>
+      var script = document.createElement('script');
+      script.src = 'https://widgets.payever.org/finance-express/widget.min.js';
+      script.onload = function() {
+          PayeverPaymentWidgetLoader.init(
+              '.payever-widget-finexp'
+          );
+      };
+      document.head.appendChild(script);
+ </script>

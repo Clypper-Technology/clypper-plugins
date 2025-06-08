@@ -1,10 +1,11 @@
 <?php
 	/**
-	 * Plugin Name: Clypper Custom Checkout
+	 * Plugin Name: Clypper's Custom Checkout
 	 * Description: Clypper's handcrafted checkout fields.
 	 * Version: 1.2.8
-	 * Author: Clypper von H
-	 */
+     * Author: Clypper Technology
+     * Author URI: https://clyppertechnology.com
+     */
 
 	if (!defined('ABSPATH')) {
 		exit; // Exit if accessed directly
