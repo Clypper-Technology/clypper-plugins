@@ -31,8 +31,7 @@ class Rrb2b_Functions {
 
 		$this->logger  = wc_get_logger();
 		$this->context = array( 'source' => 'woo_roles_rules_b2b' );
-
-	}
+    }
 
 	/**
 	 * Get roles
@@ -1762,169 +1761,83 @@ class Rrb2b_Functions {
 	 * Create registration form
 	 */
 	public function rrb2b_create_registration_form( $data ) {
-		
-		$options = get_option( 'rrb2b_options' );
-		
-		//Labels
-		$first_name = ( isset( $options['rrb2b_reg_lbl_first_name'] ) && ! empty( $options['rrb2b_reg_lbl_first_name'] ) ) ? $options['rrb2b_reg_lbl_first_name'] : __( 'First name', 'woocommerce' );
-		$last_name  = ( isset( $options['rrb2b_reg_lbl_last_name'] ) && ! empty( $options['rrb2b_reg_lbl_last_name'] ) ) ? $options['rrb2b_reg_lbl_last_name'] : __( 'Last name', 'woocommerce' );
-		$phone      = ( isset( $options['rrb2b_reg_lbl_phone'] ) && ! empty( $options['rrb2b_reg_lbl_phone'] ) ) ? $options['rrb2b_reg_lbl_phone'] : __( 'Phone', 'woocommerce' );
-		$company    = ( isset( $options['rrb2b_reg_lbl_company'] ) && ! empty( $options['rrb2b_reg_lbl_company'] ) ) ? $options['rrb2b_reg_lbl_company'] : __( 'Company', 'woocommerce' );
-		$address1   = ( isset( $options['rrb2b_reg_lbl_address1'] ) && ! empty( $options['rrb2b_reg_lbl_address1'] ) ) ? $options['rrb2b_reg_lbl_address1'] : __( 'Address line 1', 'woocommerce' );
-		$address2   = ( isset( $options['rrb2b_reg_lbl_address2'] ) && ! empty( $options['rrb2b_reg_lbl_address2'] ) ) ? $options['rrb2b_reg_lbl_address2'] : __( 'Address line 2', 'woocommerce' );
-		$city       = ( isset( $options['rrb2b_reg_lbl_city'] ) && ! empty( $options['rrb2b_reg_lbl_city'] ) ) ? $options['rrb2b_reg_lbl_city'] : __( 'City', 'woocommerce' );
-		$postcode   = ( isset( $options['rrb2b_reg_lbl_postcode'] ) && ! empty( $options['rrb2b_reg_lbl_postcode'] ) ) ? $options['rrb2b_reg_lbl_postcode'] : __( 'Postcode / ZIP', 'woocommerce' );
-		$country    = ( isset( $options['rrb2b_reg_lbl_country'] ) && ! empty( $options['rrb2b_reg_lbl_country'] ) ) ? $options['rrb2b_reg_lbl_country'] : __( 'Country', 'woocommerce' );
-		$state      = ( isset( $options['rrb2b_reg_lbl_state'] ) && ! empty( $options['rrb2b_reg_lbl_state'] ) ) ? $options['rrb2b_reg_lbl_state'] : __( 'State / County', 'woocommerce' );
-		$usr_role   = ( isset( $options['rrb2b_reg_lbl_usr_roles'] ) && ! empty( $options['rrb2b_reg_lbl_usr_roles'] ) ) ? $options['rrb2b_reg_lbl_usr_roles'] : __( 'User role', 'woo-roles-rules-b2b' );
-		$message    = ( isset( $options['rrb2b_reg_lbl_message'] ) && ! empty( $options['rrb2b_reg_lbl_message'] ) ) ? $options['rrb2b_reg_lbl_message'] : __( 'Message', 'woo-roles-rules-b2b' );
-		
 
 		wp_nonce_field( 'rrb2b_reg_form', 'rrb2b_reg_form_nonce' );
 		?>
 
-		<?php if ( 'yes' === $options['rrb2b_reg_roles_first_name'] ) : ?>
-		<p class="form-row form-row-wide">
-			<label for="reg_billing_first_name"><?php echo esc_attr( $first_name ); ?>
-			<?php if ( 'yes' === $options['rrb2b_reg_roles_first_name_req'] ) : ?>
+		<p class="form-row form-row-first">
+			<label for="reg_first_name">Fornavn
 				<span class="required">*</span>
-			<?php endif; ?>
 			</label>
-			<input type="text" class="input-text" name="billing_first_name" id="reg_billing_first_name" value="<?php echo esc_attr( isset( $data['billing_first_name'] ) ? $data['billing_first_name'] : '' ); ?>" />
+			<input required autocomplete="on" type="text" class="input-text" name="first_name" id="reg_first_name" value="<?php echo esc_attr($data['first_name'] ?? ''); ?>" />
 		</p>
-		<?php endif; ?>
 
-		<?php if ( 'yes' === $options['rrb2b_reg_form_last_name'] ) : ?>
+        <p class="form-row form-row-last">
+            <label for="reg_last_name">Efternavn
+                <span class="required">*</span>
+            </label>
+            <input required autocomplete="on" type="text" class="input-text" name="last_name" id="reg_last_name" value="<?php echo esc_attr($data['last_name'] ?? ''); ?>" />
+        </p>
+
+        <p class="form-row form-row-wide">
+            <label for="reg_phone">Telenfonnummer
+                <span class="required">*</span>
+            </label>
+            <input required autocomplete="on" type="tel" class="input-text" name="phone" id="reg_phone" value="<?php echo esc_attr($data['phone'] ?? ''); ?>" />
+        </p>
+
 		<p class="form-row form-row-wide">
-			<label for="reg_billing_last_name"><?php echo esc_attr( $last_name ); ?>
-			<?php if ( 'yes' === $options['rrb2b_reg_form_last_name_req'] ) : ?>
+			<label for="reg_company_name">Firmanavn
 				<span class="required">*</span>
-			<?php endif; ?>
 			</label>
-			<input type="text" class="input-text" name="billing_last_name" id="reg_billing_last_name" value="<?php echo esc_attr( isset( $data['billing_last_name'] ) ? $data['billing_last_name'] : '' ); ?>" />
+			<input required autocomplete="on" type="text" class="input-text" name="company_name" id="reg_company_name" value="<?php echo esc_attr($data['company_name'] ?? ''); ?>" />
 		</p>
-		<?php endif; ?>
 
-		<?php if ( 'yes' === $options['rrb2b_reg_form_company'] ) : ?>
-		<p class="form-row form-row-wide">
-			<label for="reg_billing_company"><?php echo esc_attr( $company ); ?>
-			<?php if ( 'yes' === $options['rrb2b_reg_form_company_req'] ) : ?>
-				<span class="required">*</span>
-			<?php endif; ?>
-			</label>
-			<input type="text" class="input-text" name="billing_company" id="reg_billing_company" value="<?php echo esc_attr( isset( $data['billing_company'] ) ? $data['billing_company'] : '' ); ?>" />
-		</p>
-		<?php endif; ?>
+        <p class="form-row form-row-first">
+            <label for="reg_company_type">Branche
+                <span class="required">*</span>
+            </label>
+            <input required autocomplete="on" type="text" class="input-text" name="company_type" id="reg_company_type" value="<?php echo esc_attr($data['company_type'] ?? ''); ?>" />
+        </p>
 
-		<?php if ( 'yes' === $options['rrb2b_reg_form_phone'] ) : ?>
-		<p class="form-row form-row-wide">
-			<label for="reg_billing_phone"><?php echo esc_attr( $phone ); ?>
-			<?php if ( 'yes' === $options['rrb2b_reg_form_phone_req'] ) : ?>
-				<span class="required">*</span>
-			<?php endif; ?>
-			</label>
-			<input type="text" class="input-text" name="billing_phone" id="reg_billing_phone" value="<?php echo esc_attr( isset( $data['billing_phone'] ) ? $data['billing_phone'] : '' ); ?>" />
-		</p>
-		<?php endif; ?>
+        <p class="form-row form-row-last">
+            <label for="reg_company_cvr">CVR
+                <span class="required">*</span>
+            </label>
+            <input required autocomplete="on" type="number" class="input-text" name="company_cvr" id="reg_company_cvr" value="<?php echo esc_attr($data['company_cvr'] ?? ''); ?>" />
+        </p>
 
-		<?php if ( 'yes' === $options['rrb2b_reg_form_address_1'] ) : ?>
-		<p class="form-row form-row-wide">
-			<label for="reg_billing_address_1"><?php echo esc_attr( $address1 ); ?>
-			</label>
-			<input type="text" class="input-text" name="billing_address_1" id="reg_billing_address_1" value="<?php echo esc_attr( isset( $data['billing_address_1'] ) ? $data['billing_address_1'] : '' ); ?>" />
-		</p>
-		<?php endif; ?>
+        <p class="form-row form-row-wide">
+            <label for="reg_company_address">Firmaadresse
+                <span class="required">*</span>
+            </label>
+            <input required autocomplete="on" type="text" class="input-text" name="company_address" id="reg_company_address" value="<?php echo esc_attr($data['company_address'] ?? ''); ?>" />
+        </p>
 
-		<?php if ( 'yes' === $options['rrb2b_reg_form_address_2'] ) : ?>
-		<p class="form-row form-row-wide">
-			<label for="reg_billing_address_2"><?php echo esc_attr( $address2 ); ?>
-			</label>
-			<input type="text" class="input-text" name="billing_address_2" id="reg_billing_address_2" value="<?php echo esc_attr( isset( $data['billing_address_2'] ) ? $data['billing_address_2'] : '' ); ?>" />
-		</p>
-		<?php endif; ?>
+        <p class="form-row form-row-first">
+            <label for="reg_company_city">By
+                <span class="required">*</span>
+            </label>
+            <input required autocomplete="on" type="text" class="input-text" name="company_city" id="reg_company_city" value="<?php echo esc_attr($data['company_city'] ?? ''); ?>" />
+        </p>
 
-		<?php if ( 'yes' === $options['rrb2b_reg_form_city'] ) : ?>
-		<p class="form-row form-row-wide">
-			<label for="reg_billing_city"><?php echo esc_attr( $city ); ?>
-			</label>
-			<input type="text" class="input-text" name="billing_city" id="reg_billing_city" value="<?php echo esc_attr( isset( $data['billing_city'] ) ? $data['billing_city'] : '' ); ?>" />
-		</p>
-		<?php endif; ?>
-
-		<?php if ( 'yes' === $options['rrb2b_reg_form_postcode'] ) : ?>
-		<p class="form-row form-row-wide">
-			<label for="reg_billing_postcode"><?php echo esc_attr( $postcode ); ?>
-			</label>
-			<input type="text" class="input-text" name="billing_postcode" id="reg_billing_postcode" value="<?php echo esc_attr( isset( $data['billing_postcode'] ) ? $data['billing_postcode'] : '' ); ?>" />
-		</p>
-		<?php endif; ?>
-
-		<?php if ( 'yes' === $options['rrb2b_reg_form_country'] ) : ?>
-		<p class="form-row form-row-wide">
-			<label for="reg_billing_country"><?php echo esc_attr( $country ); ?>
-			</label>
-			<select name="billing_country" id="reg_billing_country" style="height: 35px;" class="js_field-country">
-			<?php 
-			$allowed_countries = WC()->countries->get_allowed_countries();
-			foreach ( $allowed_countries as $key => $value ) {
-				?>
-				<option value="<?php echo esc_attr( $key ); ?>" <?php echo esc_attr( ( ( isset( $data['billing_country'] ) ? $data['billing_country'] : '' ) === $key ) ? 'selected="selected"' : '' ); ?>><?php echo esc_attr( $value ); ?></option>
-				<?php
-			}
-			?>
-			</select>
-		</p>
-		<?php endif; ?>
-
-		<?php if ( 'yes' === $options['rrb2b_reg_form_state'] ) : ?>
-		<p class="form-row form-row-wide">
-			<label for="reg_billing_state"><?php echo esc_attr( $state ); ?>
-			</label>
-			<input type="text" class="input-text" name="billing_state" id="reg_billing_state" value="<?php echo esc_attr( isset( $data['billing_state'] ) ? $data['billing_state'] : '' ); ?>" />
-		</p>
-		<?php endif; ?>
-
-		<?php if ( is_array( $options['rrb2b_reg_form_roles'] ) && count( $options['rrb2b_reg_form_roles'] ) > 0 ) : ?>
-		<p class="form-row form-row-wide">
-			<label for="reg_requested_role"><?php echo esc_attr( $usr_role ); ?>
-			</label>
-			<select name="requested_role" id="reg_requested_role" style="height: 35px;">
-			<option value="" selected="selected"><?php echo esc_attr__( 'Select', 'woo-roles-rules-b2b' ); ?></option>
-			<?php
-			$wp_roles   = wp_roles();
-			$roles      = $wp_roles->roles;
-			$user_roles = $options['rrb2b_reg_form_roles'];
-			foreach ( $roles as $key => $role ) {
-				if ( in_array( $key, $user_roles, true ) ) {
-					?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php echo esc_attr( ( ( isset( $data['requested_role'] ) ? $data['requested_role'] : '' ) === $key ) ? 'selected="selected"' : '' ); ?>><?php echo esc_attr( translate_user_role(  $role['name'] ) ); ?></option>
-					<?php
-				}
-			}
-			?>
-			</select>
-		</p>
-		<?php endif; ?>
-
-		<?php if ( 'yes' === $options['rrb2b_reg_form_message'] ) : ?>
-		<p class="form-row form-row-wide">
-			<label for="rrb2b_reg_message"><?php echo esc_attr( $message ); ?>
-			</label>
-			<textarea type="text" class="input-text" name="rrb2b_reg_message" id="rrb2b_reg_message"><?php echo esc_attr( isset( $data['rrb2b_reg_message'] ) ? $data['rrb2b_reg_message'] : '' ); ?></textarea>
-		</p>
-		<?php endif; ?>
+        <p class="form-row form-row-last">
+            <label for="reg_company_postal">Postnummer
+                <span class="required">*</span>
+            </label>
+            <input required autocomplete="on" type="number" class="input-text" name="company_postal" id="reg_company_postal" value="<?php echo esc_attr($data['company_postal'] ?? ''); ?>" />
+        </p>
 
 		<?php
-	
+
 	}
 
 	/**
 	 * Validate registration form
 	 */
-	public function rrb2b_validate_registration_form( $username, $email, $validation_errors, $data ) {
-		
-		$options = get_option( 'rrb2b_options' );
-		$logger  = $this->logger;
+	public function rrb2b_validate_registration_form( $username, $email, $validation_errors, $data ): void
+    {
+        $logger  = $this->logger;
 		$context = $this->context;
 
 		// Verify nonce
@@ -1934,90 +1847,125 @@ class Rrb2b_Functions {
 			return;
 		}
 
-		if ( 'yes' === $options['rrb2b_reg_roles_first_name_req'] && isset( $data['billing_first_name'] ) && empty( $data['billing_first_name'] ) ) {
-			$validation_errors->add( 'billing_first_name_error', __( '<strong>Error</strong>: First name is required!', 'woo-roles-rules-b2b' ) );
+		if ( empty( $data['first_name'] ) ) {
+			$validation_errors->add( 'first_name_error', __( 'Fornavn skal udfyldes!', 'woo-roles-rules-b2b' ) );
 		}
 
-		if ( 'yes' === $options['rrb2b_reg_form_last_name_req'] && isset( $data['billing_last_name'] ) && empty( $data['billing_last_name'] ) ) {
-			$validation_errors->add( 'billing_last_name_error', __( '<strong>Error</strong>: Last name is required!', 'woo-roles-rules-b2b' ) );
-		}
+        if ( empty( $data['last_name'] ) ) {
+            $validation_errors->add( 'last_name_error', __( 'Efternavn skal udfyldes!', 'woo-roles-rules-b2b' ) );
+        }
 
-		if ( 'yes' === $options['rrb2b_reg_form_company_req'] && isset( $data['billing_company'] ) && empty( $data['billing_company'] ) ) {
-			$validation_errors->add( 'billing_company_error', __( '<strong>Error</strong>: Company is required!', 'woo-roles-rules-b2b' ) );
-		}
+        if ( empty( $data['phone'] ) ) {
+            $validation_errors->add( 'phone_error', __( 'Telefonnummer skal udfyldes!', 'woo-roles-rules-b2b' ) );
+        }
 
-		if ( 'yes' === $options['rrb2b_reg_form_phone_req'] && isset( $data['billing_phone'] ) && empty( $data['billing_phone'] ) ) {
-			$validation_errors->add( 'billing_phone_error', __( '<strong>Error</strong>: Phone is required!', 'woo-roles-rules-b2b' ) );
-		}
+        if ( empty( $data['company_name'] ) ) {
+            $validation_errors->add( 'company_name_error', __( 'Firmanavn skal udfyldes!', 'woo-roles-rules-b2b' ) );
+        }
 
+        if ( empty( $data['company_type'] ) ) {
+            $validation_errors->add( 'company_type_error', __( 'Branche skal udfyldes!', 'woo-roles-rules-b2b' ) );
+        }
+
+        if ( empty( $data['company_cvr'] ) ) {
+            $validation_errors->add( 'company_cvr_error', __( 'CVR skal udfyldes!', 'woo-roles-rules-b2b' ) );
+        } else {
+            $cvr = trim( $data['company_cvr'] );
+
+            // Check if exactly 8 digits
+            if ( !preg_match('/^\d{8}$/', $cvr) ) {
+                $validation_errors->add( 'company_cvr_error', __( 'CVR skal være præcis 8 cifre!', 'woo-roles-rules-b2b' ) );
+            } else {
+                // Modulus 11 validation
+                if ( !$this->validate_cvr_modulus11( $cvr ) ) {
+                    $validation_errors->add( 'company_cvr_error', __( 'Ugyldigt CVR-nummer!', 'woo-roles-rules-b2b' ) );
+                }
+            }
+        }
+
+        if ( empty( $data['company_address'] ) ) {
+            $validation_errors->add( 'company_address_error', __( 'Firmaadresse skal udfyldes!', 'woo-roles-rules-b2b' ) );
+        }
+
+        if ( empty( $data['company_city'] ) ) {
+            $validation_errors->add( 'company_city_error', __( 'By skal udfyldes!', 'woo-roles-rules-b2b' ) );
+        }
+
+        if ( empty( $data['company_postal'] ) ) {
+            $validation_errors->add( 'company_postal_error', __( 'Postnummer skal udfyldes!', 'woo-roles-rules-b2b' ) );
+        } else {
+            $postal_number = $data['company_postal'];
+
+            if(strlen($postal_number) < 4) {
+                $validation_errors->add( 'company_postal_error', __( 'Postnummer skal indeholde 4 cifre!', 'woo-roles-rules-b2b' ) );
+            }
+        }
 	}
 
-	/**
-	 * Save registration form data
-	 */
-	public function rrb2b_save_registration_form( $customer_id, $data ) {
+    private function validate_cvr_modulus11( $cvr ): bool
+    {
+        $weights = [2, 7, 6, 5, 4, 3, 2, 1];
+        $sum = 0;
 
-		$logger  = $this->logger;
-		$context = $this->context;
+        for ( $i = 0; $i < 8; $i++ ) {
+            $sum += (int)$cvr[$i] * $weights[$i];
+        }
 
-		if ( isset( $data['billing_first_name'] ) ) {
-			update_user_meta( $customer_id, 'first_name', sanitize_text_field( $data['billing_first_name'] ) );
-			update_user_meta( $customer_id, 'billing_first_name', sanitize_text_field( $data['billing_first_name'] ) );
-		}
+        return $sum % 11 === 0;
+    }
 
-		if ( isset( $data['billing_last_name'] ) ) {
-			update_user_meta( $customer_id, 'last_name', sanitize_text_field( $data['billing_last_name'] ) );
-			update_user_meta( $customer_id, 'billing_last_name', sanitize_text_field( $data['billing_last_name'] ) );
-		}
+    /**
+     * Save registration form data
+     */
+    public function rrb2b_save_registration_form( $customer_id, $data ): void {
+        if ( isset( $data['first_name'] ) ) {
+            update_user_meta( $customer_id, 'first_name', sanitize_text_field( $data['first_name'] ) );
+            update_user_meta( $customer_id, 'billing_first_name', sanitize_text_field( $data['first_name'] ) );
+        }
 
-		if ( isset( $data['billing_company'] ) ) {
-			update_user_meta( $customer_id, 'billing_company', sanitize_text_field( $data['billing_company'] ) );
-		}
+        if ( isset( $data['last_name'] ) ) {
+            update_user_meta( $customer_id, 'last_name', sanitize_text_field( $data['last_name'] ) );
+            update_user_meta( $customer_id, 'billing_last_name', sanitize_text_field( $data['last_name'] ) );
+        }
 
-		if ( isset( $data['billing_phone'] ) ) {
-			update_user_meta( $customer_id, 'billing_phone', sanitize_text_field( $data['billing_phone'] ) );
-		}
+        if ( isset( $data['phone'] ) ) {
+            update_user_meta( $customer_id, 'phone', sanitize_text_field( $data['phone'] ) );
+            update_user_meta( $customer_id, 'billing_phone', sanitize_text_field( $data['phone'] ) );
+        }
 
-		if ( isset( $data['billing_address_1'] ) ) {
-			update_user_meta( $customer_id, 'billing_address_1', sanitize_text_field( $data['billing_address_1'] ) );
-		}
+        // Company Information
+        if ( isset( $data['company_name'] ) ) {
+            update_user_meta( $customer_id, 'company_name', sanitize_text_field( $data['company_name'] ) );
+            update_user_meta( $customer_id, 'billing_company', sanitize_text_field( $data['company_name'] ) );
+        }
 
-		if ( isset( $data['billing_address_2'] ) ) {
-			update_user_meta( $customer_id, 'billing_address_2', sanitize_text_field( $data['billing_address_2'] ) );
-		}
+        if ( isset( $data['company_type'] ) ) {
+            update_user_meta( $customer_id, 'company_type', sanitize_text_field( $data['company_type'] ) );
+        }
 
-		if ( isset( $data['billing_city'] ) ) {
-			update_user_meta( $customer_id, 'billing_city', sanitize_text_field( $data['billing_city'] ) );
-		}
+        if ( isset( $data['company_cvr'] ) ) {
+            update_user_meta( $customer_id, 'company_cvr', sanitize_text_field( $data['company_cvr'] ) );
+        }
 
-		if ( isset( $data['billing_postcode'] ) ) {
-			update_user_meta( $customer_id, 'billing_postcode', sanitize_text_field( $data['billing_postcode'] ) );
-		}
+        // Address Information
+        if ( isset( $data['company_address'] ) ) {
+            update_user_meta( $customer_id, 'company_address', sanitize_text_field( $data['company_address'] ) );
+            update_user_meta( $customer_id, 'billing_address_1', sanitize_text_field( $data['company_address'] ) );
+        }
 
-		if ( isset( $data['billing_country'] ) ) {
-			update_user_meta( $customer_id, 'billing_country', sanitize_text_field( $data['billing_country'] ) );
-		}
+        if ( isset( $data['company_city'] ) ) {
+            update_user_meta( $customer_id, 'company_city', sanitize_text_field( $data['company_city'] ) );
+            update_user_meta( $customer_id, 'billing_city', sanitize_text_field( $data['company_city'] ) );
+        }
 
-		if ( isset( $data['billing_state'] ) ) {
-			update_user_meta( $customer_id, 'billing_state', sanitize_text_field( $data['billing_state'] ) );
-		}
+        if ( isset( $data['company_postal'] ) ) {
+            update_user_meta( $customer_id, 'company_postal', sanitize_text_field( $data['company_postal'] ) );
+            update_user_meta( $customer_id, 'billing_postcode', sanitize_text_field( $data['company_postal'] ) );
+        }
 
-		if ( isset( $data['requested_role'] ) ) {
-			
-			$user = get_user_by( 'id', $customer_id );
-			if ( $user ) {
-				$user->set_role( $data['requested_role'] );
-			} else {
-				$logger->error( 'User creation failed, ID not found.', $context );
-			}
-			
-		}
-
-		if ( isset( $data['rrb2b_reg_message'] ) ) {
-			update_user_meta( $customer_id, 'rrb2b_reg_message', gmdate( 'Y-m-d h:i:s' ) . ': ' . sanitize_text_field( $data['rrb2b_reg_message'] ) );
-		}
-	
-	}
+        // Set default country to Denmark since this is a Danish B2B form
+        update_user_meta( $customer_id, 'billing_country', 'DK' );
+    }
 
 }
 

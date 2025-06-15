@@ -96,7 +96,113 @@ class Rrb2b_Woo {
 		add_action( 'personal_options_update', array( __CLASS__, 'rrb2b_save_user_profile_field' ) );
 		add_action( 'edit_user_profile_update', array( __CLASS__, 'rrb2b_save_user_profile_field' ) );
 		add_filter( 'gettext', array( __CLASS__, 'rrb2b_change_default_labels' ), 10, 3 );
+
+        // Add CVR column to admin users list
+        add_filter( 'manage_users_columns', array( __CLASS__, 'add_cvr_column' ) );
+        add_action( 'manage_users_custom_column', array( __CLASS__, 'show_cvr_column_content' ), 10, 3 );
+
+// Add company info to customer account dashboard
+        add_action( 'woocommerce_account_dashboard', array( __CLASS__, 'display_company_info_dashboard' ) );
+
+// Add company info to order emails
+        add_action( 'woocommerce_email_customer_details', array( __CLASS__, 'add_company_to_emails' ), 15, 4 );
+
+// Add company info to new user admin notification email
+        add_filter( 'wp_new_user_notification_email_admin', array( __CLASS__, 'add_company_info_to_admin_email' ), 10, 3 );
+
+        // Add custom fields to admin user edit page
+        add_action( 'show_user_profile', array( __CLASS__, 'show_custom_customer_fields' ) );
+        add_action( 'edit_user_profile', array( __CLASS__, 'show_custom_customer_fields' ) );
 	}
+
+    public static function show_custom_customer_fields( $user ) {
+        $company_name = get_user_meta( $user->ID, 'company_name', true );
+        $company_cvr = get_user_meta( $user->ID, 'company_cvr', true );
+        $company_type = get_user_meta( $user->ID, 'company_type', true );
+
+        // Only show if user has company information
+        if ( $company_name || $company_cvr || $company_type ) {
+            ?>
+            <h3><?php _e( 'B2B Company Information', 'woo-roles-rules-b2b' ); ?></h3>
+            <table class="form-table">
+                <?php if ( $company_name ) : ?>
+                    <tr>
+                        <th><label><?php _e( 'Company Name', 'woo-roles-rules-b2b' ); ?></label></th>
+                        <td><?php echo esc_html( $company_name ); ?></td>
+                    </tr>
+                <?php endif; ?>
+
+                <?php if ( $company_cvr ) : ?>
+                    <tr>
+                        <th><label><?php _e( 'CVR Number', 'woo-roles-rules-b2b' ); ?></label></th>
+                        <td><?php echo esc_html( $company_cvr ); ?></td>
+                    </tr>
+                <?php endif; ?>
+
+                <?php if ( $company_type ) : ?>
+                    <tr>
+                        <th><label><?php _e( 'Industry', 'woo-roles-rules-b2b' ); ?></label></th>
+                        <td><?php echo esc_html( $company_type ); ?></td>
+                    </tr>
+                <?php endif; ?>
+            </table>
+            <?php
+        }
+    }
+
+    public static function add_cvr_column( $columns ) {
+        $columns['company_cvr'] = __( 'CVR', 'woo-roles-rules-b2b' );
+        return $columns;
+    }
+
+    public static function show_cvr_column_content( $value, $column_name, $user_id ) {
+        if ( $column_name === 'company_cvr' ) {
+            return get_user_meta( $user_id, 'company_cvr', true );
+        }
+        return $value;
+    }
+
+    public static function display_company_info_dashboard() {
+        $customer_id = get_current_user_id();
+        $company_cvr = get_user_meta( $customer_id, 'company_cvr', true );
+        $company_type = get_user_meta( $customer_id, 'company_type', true );
+
+        if ( $company_cvr || $company_type ) {
+            ?>
+            <div class="woocommerce-MyAccount-content">
+                <h3><?php _e( 'Company Information', 'woo-roles-rules-b2b' ); ?></h3>
+                <?php if ( $company_cvr ) : ?>
+                    <p><strong><?php _e( 'CVR:', 'woo-roles-rules-b2b' ); ?></strong> <?php echo esc_html( $company_cvr ); ?></p>
+                <?php endif; ?>
+                <?php if ( $company_type ) : ?>
+                    <p><strong><?php _e( 'Industry:', 'woo-roles-rules-b2b' ); ?></strong> <?php echo esc_html( $company_type ); ?></p>
+                <?php endif; ?>
+            </div>
+            <?php
+        }
+    }
+
+    public static function add_company_info_to_admin_email( $wp_new_user_notification_email, $user, $blogname ) {
+        $company_cvr = get_user_meta( $user->ID, 'company_cvr', true );
+        $company_type = get_user_meta( $user->ID, 'company_type', true );
+
+        if ( $company_cvr || $company_type ) {
+            $company_info = "\n\n" . __( 'Company Information:', 'woo-roles-rules-b2b' ) . "\n";
+
+            if ( $company_cvr ) {
+                $company_info .= __( 'CVR Number:', 'woo-roles-rules-b2b' ) . ' ' . $company_cvr . "\n";
+            }
+
+            if ( $company_type ) {
+                $company_info .= __( 'Industry:', 'woo-roles-rules-b2b' ) . ' ' . $company_type . "\n";
+            }
+
+            // Add company info to the email message
+            $wp_new_user_notification_email['message'] .= $company_info;
+        }
+
+        return $wp_new_user_notification_email;
+    }
 
 	/**
 	 * Add settings
@@ -330,27 +436,27 @@ class Rrb2b_Woo {
 
 			$data    = wp_unslash( $_POST );
 			$user_id = isset( $data['user_id'] ) ? absint( $data['user_id'] ) : 0;
-			
+
 			if ( ! $user_id ) {
 				wp_send_json_error();
 			}
-		
+
 			$user_info = get_userdata( $user_id );
 			if ( ! $user_info ) {
 				wp_send_json_error();
 			}
-		
+
 			// Get user roles
 			$user_roles = $user_info->roles;
 			if ( ! empty( $user_roles ) ) {
-				// Send the first role 
+				// Send the first role
 				wp_send_json_success( array( 'role' => $user_roles[0] ) );
 			}
-		
+
 		} else {
 			wp_send_json_error();
 		}
-		
+
 	}
 
 	/**
@@ -1005,31 +1111,50 @@ class Rrb2b_Woo {
 		wp_die();
 	}
 
-	/**
-	 * Add register form
-	 */
-	public static function rrb2b_register_form() {
+    /**
+     * Add register form
+     */
+    public static function rrb2b_register_form() {
+        $data = array();
 
-		$data      = isset( $_POST ) && wp_verify_nonce( 'rrb2b_reg_form' ) ? wp_unslash( $_POST ) : array();
-		$functions = new Rrb2b_Functions();
-		$functions->rrb2b_create_registration_form( $data );
-	
-	}
+        // First priority: Check for stored data from validation errors
+        if ( WC()->session ) {
+            $stored_data = WC()->session->get( 'registration_form_data' );
+            if ( $stored_data ) {
+                $data = $stored_data;
+                // Clear after use
+                WC()->session->__unset( 'registration_form_data' );
+            }
+        }
 
-	/**
-	 * Validate register form
-	 */
-	public static function rrb2b_validate_register_form( $username, $email, $validation_errors ) {
+        // Secondary: If this is a direct POST (shouldn't happen with validation errors)
+        if ( empty( $data ) && isset( $_POST['rrb2b_reg_form_nonce'] ) &&
+            wp_verify_nonce( $_POST['rrb2b_reg_form_nonce'], 'rrb2b_reg_form' ) ) {
+            $data = wp_unslash( $_POST );
+        }
 
-		if ( ! isset( $_POST['rrb2b_reg_form_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( $_POST['rrb2b_reg_form_nonce'] ), 'rrb2b_reg_form' ) ) {
-			return;
-		}
+        $functions = new Rrb2b_Functions();
+        $functions->rrb2b_create_registration_form( $data );
+    }
 
-		$data      = wp_unslash( $_POST );
-		$functions = new Rrb2b_Functions();
-		$functions->rrb2b_validate_registration_form( $username, $email, $validation_errors, $data );
+    /**
+     * Validate register form
+     */
+    public static function rrb2b_validate_register_form( $username, $email, $validation_errors ) {
 
-	}
+        if ( ! isset( $_POST['rrb2b_reg_form_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( $_POST['rrb2b_reg_form_nonce'] ), 'rrb2b_reg_form' ) ) {
+            return;
+        }
+
+        $data      = wp_unslash( $_POST );
+        $functions = new Rrb2b_Functions();
+        $functions->rrb2b_validate_registration_form( $username, $email, $validation_errors, $data );
+
+        // ADD THIS: Store form data if there are validation errors
+        if ( $validation_errors->has_errors() && WC()->session ) {
+            WC()->session->set( 'registration_form_data', $data );
+        }
+    }
 
 	/**
 	 * Save register form data
