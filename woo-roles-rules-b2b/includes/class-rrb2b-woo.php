@@ -10,13 +10,14 @@ defined( 'ABSPATH' ) || exit;
 use Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController;
 
 require_once __DIR__ . '/class-rrb2b-functions.php';
-
+require_once __DIR__ . '/class-ajax-handler.php';
 
 /**
  * Admin class
  */
 class Rrb2b_Woo {
 
+    private Ajax_Handler $ajax_handler;
 
 	/**
 	 * Make admin hooks
@@ -34,11 +35,8 @@ class Rrb2b_Woo {
 
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'rrb2b_header_scripts' ) );
 			add_action( 'admin_post_rrb2b_create_role', array( __CLASS__, 'rrb2b_create_role' ) );
-			add_action( 'admin_post_rrb2b_add_rule', array( __CLASS__, 'rrb2b_add_rule' ) );
-			add_action( 'admin_post_rrb2b_update_rule', array( __CLASS__, 'rrb2b_update_rule' ) );
 			add_action( 'admin_head', array( __CLASS__, 'rrb2b_add_button_users' ) );
 			add_action( 'admin_notices', array( __CLASS__, 'rrb2b_admin_activation_notice_success' ) );
-			add_action( 'admin_menu', array( __CLASS__, 'rrb2b_create_admin_menu' ) );
 			add_filter( 'woocommerce_get_settings_pages', array( __CLASS__, 'cas_rrb2b_settings' ) );
 
 		}
@@ -64,28 +62,9 @@ class Rrb2b_Woo {
 		
 		//Add roles to orders
 		add_action( 'admin_footer', array( __CLASS__, 'rrb2b_admin_order_scripts' ) );
-		add_action( 'wp_ajax_rrb2b_get_user_role', array( __CLASS__, 'rrb2b_get_user_role' ) );
-		add_action( 'wp_ajax_nopriv_rrb2b_get_user_role', array( __CLASS__, 'rrb2b_get_user_role' ) );
 		add_action( 'woocommerce_process_shop_order_meta', array( __CLASS__, 'rrb2b_save_selected_role_on_order' ) );
-		add_action( 'wp_ajax_rrb2b_recalculate_prices', array( __CLASS__, 'rrb2b_recalculate_prices_callback' ) );
 
-		//Actions - Ajax
-		add_action( 'wp_ajax_rrb2b_delete_rule_callback', array(__CLASS__, 'rrb2b_delete_rule_callback' ) );
-		add_action( 'wp_ajax_nopriv_rrb2b_delete_rule_callback', array( __CLASS__, 'rrb2b_delete_rule_callback' ) );
-		add_action( 'wp_ajax_rrb2b_ajax_get_products', array( __CLASS__, 'rrb2b_ajax_get_products' ) );
-		add_action( 'wp_ajax_nopriv_rrb2b_ajax_get_products', array( __CLASS__, 'rrb2b_ajax_get_products' ) );
-		add_action( 'wp_ajax_rrb2b_ajax_update_product_rule', array( __CLASS__, 'rrb2b_ajax_update_product_rule' ) );
-		add_action( 'wp_ajax_nopriv_rrb2b_ajax_update_product_rule', array( __CLASS__, 'rrb2b_ajax_update_product_rule' ) );
-		add_action( 'wp_ajax_rrb2b_ajax_update_single_category_rule', array( __CLASS__, 'rrb2b_ajax_update_single_category_rule' ) );
-		add_action( 'wp_ajax_nopriv_rrb2b_ajax_update_single_category_rule', array( __CLASS__, 'rrb2b_ajax_update_single_category_rule' ) );
-		add_action( 'wp_ajax_rrb2b_ajax_get_products_category', array( __CLASS__, 'rrb2b_ajax_get_products_category' ) );
-		add_action( 'wp_ajax_nopriv_rrb2b_ajax_get_products_category', array( __CLASS__, 'rrb2b_ajax_get_products_category' ) );
-		add_action( 'wp_ajax_rrb2b_delete_role', array( __CLASS__, 'rrb2b_ajax_delete_role' ) );
-		add_action( 'wp_ajax_nopriv_rrb2b_delete_role', array( __CLASS__, 'rrb2b_ajax_delete_role' ) );
-
-		//Copy rules to
-		add_action( 'wp_ajax_rrb2b_copy_rules_to', array( __CLASS__, 'rrb2b_copy_rules_to_callback' ) );
-		add_action( 'wp_ajax_nopriv_rrb2b_copy_rules_to', array( __CLASS__, 'rrb2b_copy_rules_to_callback' ) );
+        new Ajax_Handler();
 
 		//Filters
 		add_filter( 'admin_footer_text', array( __CLASS__, 'rrb2b_set_footer_text' ) );
@@ -101,13 +80,13 @@ class Rrb2b_Woo {
         add_filter( 'manage_users_columns', array( __CLASS__, 'add_cvr_column' ) );
         add_action( 'manage_users_custom_column', array( __CLASS__, 'show_cvr_column_content' ), 10, 3 );
 
-// Add company info to customer account dashboard
+        // Add company info to customer account dashboard
         add_action( 'woocommerce_account_dashboard', array( __CLASS__, 'display_company_info_dashboard' ) );
 
-// Add company info to order emails
+        // Add company info to order emails
         add_action( 'woocommerce_email_customer_details', array( __CLASS__, 'add_company_to_emails' ), 15, 4 );
 
-// Add company info to new user admin notification email
+        // Add company info to new user admin notification email
         add_filter( 'wp_new_user_notification_email_admin', array( __CLASS__, 'add_company_info_to_admin_email' ), 10, 3 );
 
         // Add custom fields to admin user edit page
@@ -427,78 +406,6 @@ class Rrb2b_Woo {
 		<?php
 	}
 
-	/**
-	 * Get user role on Order page
-	 */
-	public static function rrb2b_get_user_role() {
-
-		if ( check_ajax_referer( 'rrb2b_nonce_id', 'nonce' )  ) {
-
-			$data    = wp_unslash( $_POST );
-			$user_id = isset( $data['user_id'] ) ? absint( $data['user_id'] ) : 0;
-
-			if ( ! $user_id ) {
-				wp_send_json_error();
-			}
-
-			$user_info = get_userdata( $user_id );
-			if ( ! $user_info ) {
-				wp_send_json_error();
-			}
-
-			// Get user roles
-			$user_roles = $user_info->roles;
-			if ( ! empty( $user_roles ) ) {
-				// Send the first role
-				wp_send_json_success( array( 'role' => $user_roles[0] ) );
-			}
-
-		} else {
-			wp_send_json_error();
-		}
-
-	}
-
-	/**
-	 * Recalculate order items based on role prices
-	 */
-	public static function rrb2b_recalculate_prices_callback() {
-		
-		if ( check_ajax_referer( 'rrb2b_nonce_id', 'nonce' )  ) {
-
-			$data     = wp_unslash( $_POST );
-			$order_id = isset( $data['order_id'] ) ? absint( $data['order_id'] ) : 0;
-			$role     = isset( $data['role'] ) ? sanitize_text_field( $data['role'] ) : '';
-
-			if ( ! $order_id || ! $role ) {
-				wp_send_json_error( array( 'message' => 'Invalid order ID or role.' ) );
-			}
-
-			$order = wc_get_order( $order_id );
-			if ( ! $order ) {
-				wp_send_json_error( array( 'message' => 'Order not found.' ) );
-			}
-
-			// Update prices for each order item based on the role
-			foreach ( $order->get_items() as $item_id => $item ) {
-				if ( $item->is_type( 'line_item' ) ) {
-					$product = $item->get_product();
-					if ( $product ) {
-						$new_price = apply_filters( 'rrb2b_rule_get_price_api_and_admin', $product->get_price(), $product, $item->get_quantity(), $role, false );
-						$item->set_subtotal( $new_price * $item->get_quantity() );
-						$item->set_total( $new_price * $item->get_quantity() );
-						$item->save();
-					}
-				}
-			}
-
-			$order->calculate_totals(); // Recalculate totals for the order
-			wp_send_json_success();
-
-		} else {
-			wp_send_json_error();
-		}
-	}
 
 	/**
 	 * Hook into the WooCommerce order creation process via API.
@@ -670,19 +577,6 @@ class Rrb2b_Woo {
 		
 	}
 
-	/**
-	 * Delete rule
-	 */
-	public static function rrb2b_delete_rule_callback() {
-		
-		if ( check_ajax_referer( 'rrb2b_id', 'nonce' ) === 1 ) {
-			$data      = wp_unslash( $_POST );
-			$functions = new Rrb2b_Functions();
-			$functions->rrb2b_delete_rule( $data );
-		}
-		wp_safe_redirect( admin_url( 'admin.php?page=rrb2b&tab=rules' ) );
-		exit;
-	}
 
 	/**
 	 * Create role
@@ -728,30 +622,6 @@ class Rrb2b_Woo {
 
 		wp_safe_redirect( admin_url( 'admin.php?page=rrb2b&tab=rules' ) );
 		exit;
-	}
-
-	/**
-	 * Update rule
-	 */
-	public static function rrb2b_update_rule() {
-
-		$data = null;
-		if ( isset( $_POST ) ) {
-			$data = wp_unslash( $_POST );
-		}
-		
-		if ( ! wp_verify_nonce( $data['_wpnonce'], 'rrb2b_id' ) ) {
-			wp_die();
-		}
-
-		if ( $data ) {
-			$functions = new Rrb2b_Functions();
-			$functions->rrb2b_update_rule( $data );
-		} 
-
-		wp_safe_redirect( admin_url( 'admin.php?page=rrb2b&tab=rules' ) );
-		exit;
-		
 	}
 
 
@@ -815,23 +685,6 @@ class Rrb2b_Woo {
 		wp_enqueue_script( 'rrb2b_scripts' );
 
 	}
-
-	/**
-	 * Create menu
-	 */
-	public static function rrb2b_create_admin_menu() {
-
-		add_submenu_page(
-			'woocommerce',
-			__( 'Roles & Rules B2B', 'woo-roles-rules-b2b' ),
-			__( 'Roles & Rules B2B', 'woo-roles-rules-b2b' ),
-			'manage_woocommerce',
-			'rrb2b',
-			'rrb2b_plugin_roles_page',
-			30
-		);
-
-	}
 	
 
 	/**
@@ -868,248 +721,6 @@ class Rrb2b_Woo {
 		);
 	}
 
-	/**
-	 * Get products
-	 */
-	public static function rrb2b_ajax_get_products() {
-		
-		check_ajax_referer( 'rrb2b_id', 'nonce' );
-		$data = wp_unslash( $_REQUEST );
-		$txt  = sanitize_text_field( $data['search'] );
-
-		$args_s = array(
-			's'       => $txt,
-			'limit'   => 20,
-			'return'  => 'ids',
-		);
-
-		$args_sku = array(
-			'sku'     => $txt,
-			'limit'   => 20,
-			'return'  => 'ids',
-		);
-
-		$arr_s   = wc_get_products( $args_s );
-		$arr_sku = wc_get_products( $args_sku );
-		$arr     = array_merge( $arr_s, $arr_sku ); 
-		$list    = implode( ',', $arr );
-		$items   = array_map( 'intval', explode( ',', $list ) );
-
-		$args = array(
-			'include'  => $items,
-			'limit'    => 40,
-			'orderby'  => 'title',
-			'order'    => 'ASC',
-		);
-		
-		$products    = wc_get_products( $args );
-		$product_arr = array();
-
-		foreach ( $products as $product ) {
-			
-			if ( count( $product->get_children() ) > 0 ) {
-				
-				$children = $product->get_children();
-			
-				foreach ( $children as $value ) {
-					
-					$child        = wc_get_product( $value );
-					$attributes   = $child->get_attributes();
-					$product_name = $child->get_title();
-					
-					if ( isset( $attributes ) && is_array( $attributes ) ) {
-						foreach ( $attributes as $key => $val ) {
-							if ( isset( $val ) && is_string( $val ) && strlen( $val ) > 0 ) {
-								$product_name .= ', ' . ucfirst( $val );
-							}
-						}
-					}
-
-					$p_arr = array(
-						'value' => $product_name,
-						'data'  => $child->get_id(),
-					);
-		
-					array_push( $product_arr, $p_arr );
-				}
-
-			} else {
-				
-				$p_arr = array(
-					'value' => $product->get_title(),
-					'data'  => $product->get_id(),
-					
-				);
-	
-				array_push( $product_arr, $p_arr );
-			}
-
-		}
-		
-		echo wp_json_encode( $product_arr );
-		die();
-	}
-
-	/**
-	 * Get products by category
-	 */
-	public static function rrb2b_ajax_get_products_category() {
-		
-		check_ajax_referer( 'rrb2b_id', 'nonce' );
-		
-		$data = null;
-		if ( isset( $_POST ) ) {
-			$data = wp_unslash( $_POST );
-		}
-
-		$functions = new Rrb2b_Functions();
-		
-		if ( isset( $data ) && ! empty( $data['category'] ) ) {
-		
-			//Query products by category
-			$products = wc_get_products( array( 'category' => $data['category'], 'status' => 'publish', 'limit' => -1 ) );
-
-			//Loop and add to rule
-			foreach ( $products as $product ) {
-
-				$variations = ( count( $product->get_children() ) > 0 ) ? $product->get_children()  : array();
-
-				if ( 'true' === $data['variations'] && count( $variations ) > 0 ) {
-					foreach ( $variations as $product_variation ) {
-						$p            = wc_get_product( $product_variation ); 
-						$attributes   = $p->get_attributes();
-						$product_name = $p->get_name();
-
-						if ( isset( $attributes ) && is_array( $attributes ) ) {
-							foreach ( $attributes as $key => $val ) {
-								if ( isset( $val ) && is_string( $val ) && strlen( $val ) > 0 ) {
-									$product_name .= ', ' . $val;
-								}
-							}
-						}
-
-						$functions->rrb2b_add_rule_product( $product_variation, $product_name, $data['id'] );
-					}
-				} else {
-					$functions->rrb2b_add_rule_product( $product->get_id(), $product->get_name(), $data['id'] );
-				}
-
-			}
-
-		}
-
-		die();
-	}
-
-	/**
-	 * Update products to current rule
-	 */
-	public static function rrb2b_ajax_update_product_rule() {
-		
-		check_ajax_referer( 'rrb2b_id', 'nonce' );
-		$data = null;
-		if ( isset( $_POST ) ) {
-			$data = wp_unslash( $_POST );
-		}
-
-		if ( isset( $data ) ) {
-			$functions = new Rrb2b_Functions();
-			$functions->rrb2b_update_product_rule( $data );
-		} 
-
-		die();
-
-	}
-
-	/**
-	 * Update single category rules
-	 */
-	public static function rrb2b_ajax_update_single_category_rule() {
-		
-		check_ajax_referer( 'rrb2b_id', 'nonce' );
-		$data = null;
-		if ( isset( $_POST ) ) {
-			$data = wp_unslash( $_POST );
-		}
-
-		if ( isset( $data ) ) {
-			$functions = new Rrb2b_Functions();
-			$functions->rrb2b_update_single_category_rule( $data );
-		} 
-
-		die();
-
-	}
-
-
-	/**
-	 * Delete role and role in rrb2b db
-	 */
-	public static function rrb2b_ajax_delete_role() {
-
-		check_ajax_referer( 'rrb2b_id', 'nonce' );
-
-		$logger  = wc_get_logger();
-		$context = array( 'source' => 'rrb2b-role-log' );
-
-		$data = isset( $_POST ) ? wp_unslash( $_POST ) : array();
-		$role = isset( $data['the_role'] ) ? sanitize_text_field( $data['the_role'] ) : '';
-
-		if ( empty( $role ) ) {
-			$logger->warning( 'No role provided for deletion.', $context );
-			wp_send_json_error( __( 'Role missing.', 'woo-roles-rules-b2b' ) );
-			wp_die();
-		}
-
-		// Delete any matching rules (by title search)
-		$args = array(
-			'post_status' => 'publish',
-			'post_type'   => 'rrb2b',
-			'orderby'     => 'title',
-			's'           => $role,
-		);
-
-		$rules = get_posts( $args );
-
-		if ( ! empty( $rules ) ) {
-			foreach ( $rules as $rule ) {
-				wp_delete_post( $rule->ID, true );
-				$logger->info( 'Deleted rule post ID ' . $rule->ID . ' for role "' . $role . '".', $context );
-			}
-		} else {
-			$logger->info( 'No rules found to delete for role "' . $role . '".', $context );
-		}
-
-		// Try to remove the actual role
-		if ( get_role( $role ) ) {
-			remove_role( $role );
-			$logger->info( 'Role "' . $role . '" removed from WordPress.', $context );
-			wp_send_json_success( __( 'Role and rules deleted.', 'woo-roles-rules-b2b' ) );
-		} else {
-			$logger->warning( 'Role "' . $role . '" not found during deletion.', $context );
-			wp_send_json_error( __( 'Role not found.', 'woo-roles-rules-b2b' ) );
-		}
-
-		wp_die();
-	}
-
-
-	/**
-	 * Copy rule from to (several)
-	 */
-	public static function rrb2b_copy_rules_to_callback() {
-
-		check_ajax_referer( 'rrb2b_id', 'nonce' );
-		$data = null;
-		if ( isset( $_POST ) ) {
-			$data = wp_unslash( $_POST );
-		}
-
-		$functions = new Rrb2b_Functions();
-		$functions->rrb2b_copy_rules( $data );
-
-		wp_die();
-	}
 
     /**
      * Add register form

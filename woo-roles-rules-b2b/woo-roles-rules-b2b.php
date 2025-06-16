@@ -40,6 +40,12 @@ register_uninstall_hook( __FILE__, 'rrb2b_uninstall' );
 require_once dirname( __FILE__ ) . '/includes/class-rrb2b-woo.php';
 require_once dirname( __FILE__ ) . '/includes/class-rrb2b-rules.php';
 
+if(is_admin()) {
+    require_once __DIR__ . '/includes/class-admin.php';
+
+    new Admin();
+}
+
 /**
  * Install
  */
@@ -52,69 +58,11 @@ function rrb2b_install() {
 	}
 
 	$rrb2b_options_arr = array(
-		'rrb2b_hide_prices'              => '',
-		'rrb2b_hide_price_text'          => '',
-		'rrb2b_hide_retail_price'        => '',
-		'rrb2b_retail_price_text'        => '',
-		'rrb2b_b2b_price_text'           => '',
-		'rrb2b_b2b_show_discount'        => '',
-		'rrb2b_b2b_discount_text'        => '',
-		'rrb2b_b2b_discount_text_after'  => '',
-		'rrb2b_b2b_coupon_text'          => '',
-		'rrb2b_hide_variable_price'      => '',
-		'rrb2b_variable_price_text'      => '',
 		'rrb2b_net_price_b2b'            => '',
-		'rrb2b_b2b_msg_label_start'      => '',
-		'rrb2b_b2b_msg_percent'          => '',
-		'rrb2b_b2b_msg_fixed'            => '',
-		'rrb2b_b2b_msg_fixed_price'      => '',
-		'rrb2b_b2b_msg_font_size'        => '',
-		'rrb2b_b2b_msg_font_color'       => '',
-		'rrb2b_b2b_msg_bg_color'         => '',
-		'rrb2b_hide_dynamic_labels'      => '',
 		'rrb2b_net_price_b2b_list'       => array(),
-		'rrb2b_ex_vat_totals'			 => '',
-		'rrb2b_reg_roles_first_name'	 => '',
-		'rrb2b_reg_roles_first_name_req' => '',
-		'rrb2b_reg_form_last_name'	     => '',
-		'rrb2b_reg_form_last_name_req'	 => '',
-		'rrb2b_reg_form_phone'	         => '',
-		'rrb2b_reg_form_phone_req'	     => '',
-		'rrb2b_reg_form_company'	     => '',
-		'rrb2b_reg_form_company_req'	 => '',
-		'rrb2b_reg_form_address_1'	     => '',
-		'rrb2b_reg_form_address_2'	     => '',
-		'rrb2b_reg_form_city'	         => '',
-		'rrb2b_reg_form_postcode'	     => '',
-		'rrb2b_reg_form_country'	     => '',
-		'rrb2b_reg_form_state'	         => '',
-		'rrb2b_reg_form_roles'	         => '',
 		'rrb2b_auth_new_customer'        => '',
-		'rrb2b_b2b_ex_vat_price_text'    => '',
-		'rrb2b_reg_lbl_first_name'	     => '',
-		'rrb2b_reg_lbl_last_name'	     => '',
-		'rrb2b_reg_lbl_phone'	         => '',
-		'rrb2b_reg_lbl_company'	         => '',
-		'rrb2b_reg_lbl_email'   	     => '',
-		'rrb2b_reg_lbl_address1'	     => '',
-		'rrb2b_reg_lbl_address2'	     => '',
-		'rrb2b_reg_lbl_city'    	     => '',
-		'rrb2b_reg_lbl_postcode'	     => '',
-		'rrb2b_reg_lbl_country'  	     => '',
-		'rrb2b_reg_lbl_state'   	     => '',
-		'rrb2b_reg_lbl_usr_roles'	     => '',
-		'rrb2b_reg_lbl_message' 	     => '',
-		'rrb2b_reg_form_message'	     => '',
 		'rrb2b_tax_exempt_list'          => '',
-		'rrb2b_b2b_msg_padding'          => '',
-		'rrb2b_b2b_msg_border'           => '',
-		'rrb2b_b2b_msg_border_radius'    => '',
-		'rrb2b_b2b_msg_font_family'      => '',
-		'rrb2b_b2b_msg_font_weight'      => '',
-		'rrb2b_b2b_msg_font_transform'   => '',
-		'rrb2b_use_dark_mode'            => '',
 		'rrb2b_force_b2b_variable_price' => '',
-
 	);
 
 	update_option( 'rrb2b_options', $rrb2b_options_arr );

@@ -138,21 +138,6 @@ class Rrb2b_Functions {
 		
 	}
 
-	/**
-	 * Add role (like VIP Customer)
-	 */
-	public function rrb2b_add_role_OLD( $data ) {
-		
-		$wp_roles = wp_roles();
-		$name     = $data['role-name'];
-		$slug     = $data['role-slug'];
-		$cap      = $data['role-cap'];
-
-		if ( ! empty( $name ) && ! empty( $slug ) ) {
-			$wp_roles->add_role( strtolower( $slug ), $name, get_role( $cap )->capabilities );
-		}
-
-	}
 
 	/**
 	 * Add role (like VIP Customer)
@@ -220,23 +205,12 @@ class Rrb2b_Functions {
 	 * 
 	 * @return string
 	 */
-	public function rrb2b_count_users_for_role( $role ) {
+    public function rrb2b_count_users_for_role( $role ): int|string
+    {
+        $users = count_users();
 
-		$count = 0;
-		$users = count_users();
-
-		if ( isset( $role ) && ! is_null( $role ) && count( $users ) > 0 ) {
-			foreach ( $users['avail_roles'] as $usr => $usr_count ) {
-				if ( $role['name'] === $usr ) {
-					$count = $usr_count;
-					break;
-				}
-			}
-		}
-		
-		return strval( $count );
-
-	}
+        return $users['avail_roles'][ $role['name'] ] ?? 0;
+    }
 
 	/**
 	 * Get general rules
@@ -1156,32 +1130,6 @@ class Rrb2b_Functions {
 	
 	}
 
-	/**
-	 * Add rule
-	 *
-	 * @param var $data post data.
-	 */
-	public function rrb2b_add_rule( $data ) {
-		
-		$name = sanitize_text_field( $data['role'] );
-		
-		if ( ! empty( $name ) ) {
-
-			$rule = array(
-				'post_title'   => $name,
-				'post_content' => '',
-				'post_status'  => 'publish',
-				'post_type'    => 'rrb2b',
-				'post_author'  => get_current_user_id(),
-			);
-	
-			if ( ! post_exists( $name, '', '', 'rrb2b' ) ) {
-				wp_insert_post( apply_filters( 'rrb2b_create_rule', $rule ) );
-			}
-
-		}
-
-	}
 
 	/**
 	 * Add rules for single categories 
@@ -1263,214 +1211,7 @@ class Rrb2b_Functions {
 		wp_update_post( $args, false );
 	}
 
-	/**
-	 * Update single category rules
-	 */
-	public function rrb2b_update_single_category_rule( $data ) {
-		
-		$rule_id            = sanitize_text_field( $data['rule_id'] );
-		$rule_obj           = get_post( intval( $rule_id ) );
-		$content            = json_decode( $rule_obj->post_content, true );
-		$categories         = ( isset ( $content['categories'] ) ) ? $content['categories'] : array();
-		$single_categories  = array();
-		$_single_categories = ( isset ( $data['rows'] ) ) ? $data['rows'] : array();
-		$products           = ( isset ( $content['products'] ) ) ? $content['products'] : array();
 
-		foreach ( $_single_categories as $item ) {
-			
-			$remove = sanitize_text_field( $item['remove'] );
-
-			if ( 'false' === $remove ) {
-
-				$category = array(
-					'id'               => sanitize_text_field( $item['id'] ),
-					'slug'             => sanitize_text_field( $item['slug'] ),
-					'name'             => sanitize_text_field( $item['name'] ),
-					'active'           => true,
-					'adjust_type'      => sanitize_text_field( $item['reduce_type'] ),
-					'adjust_value'     => sanitize_text_field( $item['reduce_value'] ),
-					'adjust_type_qty'  => sanitize_text_field( $item['reduce_type_qty'] ),
-					'adjust_value_qty' => sanitize_text_field( $item['reduce_value_qty'] ),
-					'min_qty'          => sanitize_text_field( $item['min_qty'] ),
-					'hidden'           => sanitize_text_field( $item['hidden'] ),
-					'on_sale'          => sanitize_text_field( $item['sale'] ),
-				);
-
-				array_push( $single_categories, $category );
-			}
-		}
-
-		$jsonObj = $this->rrb2b_get_json_content_obj( $content, $rule_id, $categories, $products, $single_categories );
-
-		$args = array(
-			'ID'           => $content['id'],
-			'post_content' => wp_json_encode( $jsonObj, JSON_UNESCAPED_UNICODE ),
-			'post_author'  => get_current_user_id(),
-		);
-
-		wp_update_post( $args, false );
-	}
-
-	/**
-	 * Update products to rule
-	 */
-	public function rrb2b_update_product_rule( $data ) {
-
-		$rule_id           = sanitize_text_field( $data['rule_id'] );
-		$rule_obj          = get_post( intval( $rule_id ) );
-		$content           = json_decode( $rule_obj->post_content, true );
-		$categories        = ( isset ( $content['categories'] ) ) ? $content['categories'] : array();
-		$single_categories = ( isset ( $content['single_categories'] ) ) ? $content['single_categories'] : array();
-		$products          = array();
-		$_products         = ( isset ( $data['rows'] ) ) ? $data['rows'] : array();
-
-		foreach ( $_products as $item ) {
-			
-			$remove = sanitize_text_field( $item['remove'] );
-
-			if ( 'false' === $remove ) {
-
-				$product = array(
-					'id'               => sanitize_text_field( $item['product_id'] ),
-					'name'             => sanitize_text_field( esc_attr( $item['product_name'] ) ),
-					'active'           => ( ! empty( $item['reduce_value'] ) ) ? true : false,
-					'adjust_type'      => sanitize_text_field( $item['reduce_type'] ),
-					'adjust_value'     => sanitize_text_field( $item['reduce_value'] ),
-					'adjust_type_qty'  => sanitize_text_field( $item['reduce_type_qty'] ),
-					'adjust_value_qty' => sanitize_text_field( $item['reduce_value_qty'] ),
-					'min_qty'          => sanitize_text_field( $item['min_qty'] ),
-					'hidden'           => sanitize_text_field( $item['product_hidden'] ),
-				);
-				
-				array_push( $products, $product );
-			}	
-		}
-
-		$jsonObj = $this->rrb2b_get_json_content_obj( $content, $rule_id, $categories, $products, $single_categories );
-		
-		$args = array(
-			'ID'           => $content['id'],
-			'post_content' => wp_json_encode( $jsonObj, JSON_UNESCAPED_UNICODE ),
-			'post_author'  => get_current_user_id(),
-		);
-
-		wp_update_post( $args, false );
-	
-	}
-
-	/**
-	 * Copy rules from - to multiple
-	 */
-	public function rrb2b_copy_rules( $data ) {
-		
-		$type = $data['type'];
-		$from = $data['from'];
-		$to   = ( ! empty( $data['to'] ) ) ? explode( ',', $data['to'] ) : array();
-
-		if ( empty( $from ) ) {
-			wp_send_json( 'No from rule found' );
-			wp_die();
-		} 
-
-		$from_rule  = get_post( intval( $from ) );
-		$content    = json_decode( $from_rule->post_content, true );
-		$cat_rules  = ( isset ( $content['single_categories'] ) ) ? $content['single_categories'] : array();
-		$prod_rules = ( isset ( $content['products'] ) ) ? $content['products'] : array();
-
-		if ( 'category' === $type ) {
-
-			foreach ( $to as $id ) {
-				$item         = get_post( intval( $id ) );
-				$item_content = json_decode( $item->post_content, true );
-				$jsonObj      = $this->rrb2b_get_json_content_obj( $item_content, $id, $item_content['categories'], $item_content['products'], $cat_rules );
-
-				$args = array(
-					'ID'           => $id,
-					'post_content' => wp_json_encode( $jsonObj, JSON_UNESCAPED_UNICODE ),
-					'post_author'  => get_current_user_id(),
-				);
-		
-				wp_update_post( $args, false );
-			}
-
-
-		} else { //Products
-
-			foreach ( $to as $id ) {
-				$item         = get_post( intval( $id ) );
-				$item_content = json_decode( $item->post_content, true );
-				$jsonObj      = $this->rrb2b_get_json_content_obj( $item_content, $id, $item_content['categories'], $prod_rules, $item_content['single_categories'] );
-
-				$args = array(
-					'ID'           => $id,
-					'post_content' => wp_json_encode( $jsonObj, JSON_UNESCAPED_UNICODE ),
-					'post_author'  => get_current_user_id(),
-				);
-		
-				wp_update_post( $args, false );
-			}
-
-		}
-
-	}
-
-	/**
-	 * Update rule
-	 * 
-	 * @param var $data post object.
-	 */
-	public function rrb2b_update_rule( $data ) {
-
-		$rule_obj          = get_post( intval( $data['id'] ) );
-		$content           = json_decode( $rule_obj->post_content, true );
-		$products          = ( isset( $content['products'] ) ) ? $content['products'] : array();
-		$single_categories = ( isset ( $content['single_categories'] ) ) ? $content['single_categories'] : array();
-		$categories        = array();
-
-		/*
-		foreach ( $data as $key => $value ) {
-
-			if ( preg_match( '/^__/', $key ) === 1 ) {
-				$key = str_replace( '__', '', $key );
-				array_push( $categories, array( $key => $value ) );
-			}
-			
-		}*/
-
-		$categories_arr = explode( ',', $data['selected_categories'] );
-	
-		foreach ( $categories_arr as $catId ) {
-			array_push( $categories, array( $catId => $catId ) );
-		}
-
-		$jsonObj = array(
-			'id'                      => $data['id'],
-			'rule_active'             => ( isset( $data['rule_active'] ) ) ? $data['rule_active'] : '',
-			'reduce_regular_type'     => $data['reduce_regular_type'],
-			'reduce_regular_value'    => $data['reduce_regular_value'],
-			'reduce_categories_value' => $data['reduce_categories_value'],
-			'reduce_sale_type'        => $data['reduce_sale_type'],
-			'reduce_sale_value'       => $data['reduce_sale_value'],
-			'coupon'                  => $data['coupon'],
-			'date_from'               => $data['date_from'],
-			'date_to'                 => $data['date_to'],
-			'time_from'               => $data['time_from'],
-			'time_to'                 => $data['time_to'],
-			'categories'              => $categories,
-			'categories_on_sale'      => ( isset ( $data['categories_on_sale'] ) && 'on' === $data['categories_on_sale'] ) ? 'on' : 'off',
-			'products'                => $products,
-			'single_categories'       => $single_categories,
-		);
-		
-		$args = array(
-			'ID'           => $data['id'],
-			'post_content' => wp_json_encode( $jsonObj, JSON_UNESCAPED_UNICODE ),
-			'post_author'  => get_current_user_id(),
-		);
-
-		wp_update_post( $args, false );
-		
-	}
 
 	/**
 	 * Get content object
@@ -1499,16 +1240,6 @@ class Rrb2b_Functions {
 		return $jsonObj;
 	}
 
-	/**
-	 * Delete rule
-	 */
-	public function rrb2b_delete_rule( $data ) {
-
-		$rule_id = $data['role_id'];
-
-		wp_delete_post( $rule_id, true );
-
-	}
 
 	/**
 	 * Get dropdown for all roles (not administrator).
