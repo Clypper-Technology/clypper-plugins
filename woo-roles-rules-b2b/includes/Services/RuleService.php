@@ -1,10 +1,72 @@
 <?php
 
-class Rule_Service {
+namespace ClypperTechnology\RolePricing\Services;
+
+use WP_Post;
+
+defined( 'ABSPATH' ) || exit;
+
+class RuleService {
 
     public function __construct()
     {
 
+    }
+
+
+    /**
+     * Add rules for single categories
+     */
+    public function add_rule_to_categories($cat_list, $rule ): void {
+        $rule_obj          = get_post( intval( $rule ) );
+        $content           = json_decode( $rule_obj->post_content, true );
+        $categories        = ( isset ( $content['categories'] ) ) ? $content['categories'] : array();
+        $products          = ( isset ( $content['products'] ) ) ? $content['products'] : array();
+        $single_categories = ( isset ( $content['single_categories'] ) ) ? $content['single_categories'] : array();
+
+        foreach ( $cat_list as $slug_name ) {
+
+            $cat = get_term_by( 'slug', $slug_name, 'product_cat' );
+
+            $category = array(
+                'id'               => $cat->term_id,
+                'slug'             => $slug_name,
+                'name'             => esc_attr( $cat->name ),
+                'active'           => false,
+                'adjust_type'      => '',
+                'adjust_value'     => '',
+                'adjust_type_qty'  => '',
+                'adjust_value_qty' => '',
+                'min_qty'          => 0,
+                'hidden'           => 'false',
+                'on_sale'          => 'false',
+            );
+
+            $single_categories[] = $category;
+        }
+
+        $jsonObj = $this->get_json_content_obj( $content, $rule, $categories, $products, $single_categories );
+
+        $args = array(
+            'ID'           => $rule,
+            'post_content' => wp_json_encode( $jsonObj, JSON_UNESCAPED_UNICODE ),
+            'post_author'  => get_current_user_id(),
+        );
+
+        wp_update_post( $args, false );
+    }
+
+    /**
+     * @return WP_Post[]
+     */
+    public function get_all_rules(): array {
+        return get_posts([
+            'post_type'   => 'rrb2b',
+            'numberposts' => -1,
+            'orderby'     => 'title',
+            'order'       => 'ASC',
+            'post_status' => 'any'
+        ]);
     }
 
     /**
@@ -15,10 +77,10 @@ class Rule_Service {
         $rule_id            = sanitize_text_field( $data['rule_id'] );
         $rule_obj           = get_post( intval( $rule_id ) );
         $content            = json_decode( $rule_obj->post_content, true );
-        $categories         = ( isset ( $content['categories'] ) ) ? $content['categories'] : array();
+        $categories         = $content['categories'] ?? array();
         $single_categories  = array();
-        $_single_categories = ( isset ( $data['rows'] ) ) ? $data['rows'] : array();
-        $products           = ( isset ( $content['products'] ) ) ? $content['products'] : array();
+        $_single_categories = $data['rows'] ?? array();
+        $products           = $content['products'] ?? array();
 
         foreach ( $_single_categories as $item ) {
 
@@ -60,10 +122,10 @@ class Rule_Service {
         $rule_id           = sanitize_text_field( $data['rule_id'] );
         $rule_obj          = get_post( intval( $rule_id ) );
         $content           = json_decode( $rule_obj->post_content, true );
-        $categories        = ( isset ( $content['categories'] ) ) ? $content['categories'] : array();
-        $single_categories = ( isset ( $content['single_categories'] ) ) ? $content['single_categories'] : array();
+        $categories        = $content['categories'] ?? array();
+        $single_categories = $content['single_categories'] ?? array();
         $products          = array();
-        $_products         = ( isset ( $data['rows'] ) ) ? $data['rows'] : array();
+        $_products         = $data['rows'] ?? array();
 
         foreach ( $_products as $item ) {
 
@@ -74,7 +136,7 @@ class Rule_Service {
                 $product = array(
                     'id'               => sanitize_text_field( $item['product_id'] ),
                     'name'             => sanitize_text_field( esc_attr( $item['product_name'] ) ),
-                    'active'           => ( ! empty( $item['reduce_value'] ) ) ? true : false,
+                    'active'           => ! empty( $item['reduce_value'] ),
                     'adjust_type'      => sanitize_text_field( $item['reduce_type'] ),
                     'adjust_value'     => sanitize_text_field( $item['reduce_value'] ),
                     'adjust_type_qty'  => sanitize_text_field( $item['reduce_type_qty'] ),
@@ -108,7 +170,7 @@ class Rule_Service {
     /**
      * Copy rules from - to multiple
      */
-    public function copy_rules( $data ) {
+    public function copy_rules( $data ): void {
 
         $type = $data['type'];
         $from = $data['from'];
@@ -121,8 +183,8 @@ class Rule_Service {
 
         $from_rule  = get_post( intval( $from ) );
         $content    = json_decode( $from_rule->post_content, true );
-        $cat_rules  = ( isset ( $content['single_categories'] ) ) ? $content['single_categories'] : array();
-        $prod_rules = ( isset ( $content['products'] ) ) ? $content['products'] : array();
+        $cat_rules  = $content['single_categories'] ??  array();
+        $prod_rules = $content['products'] ?? array();
 
         if ( 'category' === $type ) {
 
@@ -238,7 +300,7 @@ class Rule_Service {
     /**
      * Add product to rule
      */
-    public function add_rule_product( $id, $name, $rule ) {
+    public function add_rule_to_product($id, $name, $rule ) {
 
         $rule_obj          = get_post( intval( $rule ) );
         $content           = json_decode( $rule_obj->post_content, true );

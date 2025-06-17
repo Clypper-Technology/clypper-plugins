@@ -1,16 +1,24 @@
 <?php
 
+use ClypperTechnology\RolePricing\Services\RoleService;
+use ClypperTechnology\RolePricing\Services\RuleService;
+
+defined( 'ABSPATH' ) || exit;
+
 class Admin {
 
-    private Rule_Service $rule_service;
+    private RuleService $rule_service;
+    private RoleService $role_service;
 
     public function __construct()
     {
-        $this->rule_service = new Rule_Service();
+        $this->rule_service = new RuleService();
+        $this->role_service = new RoleService();
 
         add_action( 'admin_post_rrb2b_add_rule', array( $this, 'add_rule' ) );
         add_action( 'admin_post_rrb2b_update_rule', array( $this, 'update_rule' ) );
         add_action( 'admin_menu', array( $this, 'create_admin_menu' ) );
+        add_action( 'admin_post_rrb2b_create_role', array( $this, 'create_role' ) );
     }
 
     /**
@@ -81,6 +89,19 @@ class Admin {
             ) );
             exit;
         }
+    }
+
+    /**
+     * Create role
+     */
+    public function create_role(): void {
+        $this->verify_admin_request();
+
+        $data = wp_unslash( $_POST );
+
+        $this->role_service->add_role( $data );
+
+        wp_safe_redirect( admin_url( 'admin.php?page=rrb2b&tab=roles' ) );
     }
 
     /**

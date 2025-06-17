@@ -24,6 +24,9 @@
 
  */
 
+require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
+
+
 const CAS_ROLES_RULES_VS   = '2.5.5';
 const CAS_ROLES_RULES_PROD = 'true';
 

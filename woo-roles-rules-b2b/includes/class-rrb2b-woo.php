@@ -8,43 +8,42 @@
 defined( 'ABSPATH' ) || exit;
 
 use Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController;
+use ClypperTechnology\RolePricing\AjaxHandler;
+use ClypperTechnology\RolePricing\RegistrationForm;
 
 require_once __DIR__ . '/class-rrb2b-functions.php';
-require_once __DIR__ . '/class-ajax-handler.php';
 
 /**
  * Admin class
  */
 class Rrb2b_Woo {
 
-    private Ajax_Handler $ajax_handler;
+    private AjaxHandler $ajax_handler;
 
-	/**
+    public function __construct()
+    {
+
+    }
+
+    /**
 	 * Make admin hooks
 	 */
 	public static function rrb2b_admin_hooks() {
 
 		if ( ! class_exists( 'WooCommerce' ) ) {
 			return;
-		}	
+		}
 
 		$options = get_option( 'rrb2b_options' );
 
 		//Actions
 		if ( is_admin() ) {
-
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'rrb2b_header_scripts' ) );
-			add_action( 'admin_post_rrb2b_create_role', array( __CLASS__, 'rrb2b_create_role' ) );
 			add_action( 'admin_head', array( __CLASS__, 'rrb2b_add_button_users' ) );
 			add_action( 'admin_notices', array( __CLASS__, 'rrb2b_admin_activation_notice_success' ) );
 			add_filter( 'woocommerce_get_settings_pages', array( __CLASS__, 'cas_rrb2b_settings' ) );
 
 		}
-
-		//Register form
-		add_action( 'woocommerce_register_form_start', array( __CLASS__, 'rrb2b_register_form' ) );
-		add_action( 'woocommerce_register_post', array( __CLASS__, 'rrb2b_validate_register_form' ), 10, 3 );
-		add_action( 'woocommerce_created_customer', array( __CLASS__, 'rrb2b_save_register_form_data' ) );
 
 		//Prevent automatic login on registration
 		if ( 'yes' === $options['rrb2b_auth_new_customer'] ) {
@@ -64,17 +63,12 @@ class Rrb2b_Woo {
 		add_action( 'admin_footer', array( __CLASS__, 'rrb2b_admin_order_scripts' ) );
 		add_action( 'woocommerce_process_shop_order_meta', array( __CLASS__, 'rrb2b_save_selected_role_on_order' ) );
 
-        new Ajax_Handler();
+        new AjaxHandler();
+        new RegistrationForm();
 
 		//Filters
 		add_filter( 'admin_footer_text', array( __CLASS__, 'rrb2b_set_footer_text' ) );
-		
-		//Extra user data from registration form
-		add_action( 'show_user_profile', array( __CLASS__, 'rrb2b_show_user_profile' ) );
-		add_action( 'edit_user_profile', array( __CLASS__, 'rrb2b_show_user_profile' ) );
-		add_action( 'personal_options_update', array( __CLASS__, 'rrb2b_save_user_profile_field' ) );
-		add_action( 'edit_user_profile_update', array( __CLASS__, 'rrb2b_save_user_profile_field' ) );
-		add_filter( 'gettext', array( __CLASS__, 'rrb2b_change_default_labels' ), 10, 3 );
+
 
         // Add CVR column to admin users list
         add_filter( 'manage_users_columns', array( __CLASS__, 'add_cvr_column' ) );
@@ -83,8 +77,6 @@ class Rrb2b_Woo {
         // Add company info to customer account dashboard
         add_action( 'woocommerce_account_dashboard', array( __CLASS__, 'display_company_info_dashboard' ) );
 
-        // Add company info to order emails
-        add_action( 'woocommerce_email_customer_details', array( __CLASS__, 'add_company_to_emails' ), 15, 4 );
 
         // Add company info to new user admin notification email
         add_filter( 'wp_new_user_notification_email_admin', array( __CLASS__, 'add_company_info_to_admin_email' ), 10, 3 );
@@ -224,39 +216,6 @@ class Rrb2b_Woo {
 			'default'
 		);
 	
-	}
-
-	/**
-	 * Show extra field on user
-	 */
-	public static function rrb2b_show_user_profile( $user ) {
-
-		wp_nonce_field( 'update-user_' . $user->ID );
-
-		$message_txt = get_user_meta( $user->ID, 'rrb2b_reg_message' );
-
-		if ( empty( $message_txt ) ) {
-			//return;
-			$message_txt = '';
-		} else {
-			$message_txt = $message_txt[0];
-		}
-
-		?>
-		<h2><?php esc_attr_e( 'Customer information', 'woo-roles-rules-b2b' ); ?></h2>
-		<table class="form-table">
-			<tr>
-				<th>
-					<label for="rrb2b_reg_message"><?php esc_html_e( 'Registration message', 'woo-roles-rules-b2b' ); ?></label>
-				</th>
-				<td>
-					<textarea id="rrb2b_reg_message" name="rrb2b_reg_message" rows="6"><?php echo esc_attr( $message_txt ); ?></textarea>
-				</td>
-			</tr>
-		</table>
-
-		<?php
-
 	}
 
 	/**
@@ -455,48 +414,6 @@ class Rrb2b_Woo {
 
 	}
 
-	/**
-	 * Save extra field
-	 */
-	public static function rrb2b_save_user_profile_field( $user_id ) {
-
-		if ( ! current_user_can( 'edit_user', $user_id ) ) {
-			return false;
-		}
-		
-		// Verify nonce
-		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( $_POST['_wpnonce'] ), 'update-user_' . $user_id ) ) {
-			wp_die();
-		}
-
-		$data = wp_unslash( $_POST );
-
-		if ( isset( $data['rrb2b_reg_message'] ) && ! empty( $data['rrb2b_reg_message'] ) ) {
-			update_user_meta( $user_id, 'rrb2b_reg_message', $data['rrb2b_reg_message'] );
-		}
-
-	}
-
-	/**
-	 * Change default (i.e email to translated label)
-	 */
-	public static function rrb2b_change_default_labels( $translation, $text, $domain ) {
-
-		if ( is_account_page() && ! is_wc_endpoint_url() ) {
-
-			$options = get_option( 'rrb2b_options' );
-
-			if ( isset( $options['rrb2b_reg_lbl_email'] ) && strlen( $options['rrb2b_reg_lbl_email'] ) > 0 ) {
-				if ( 'Email address' === $text ) {
-					$translation = $options['rrb2b_reg_lbl_email'];
-				}
-			}
-
-		}
-
-		return $translation;
-
-	}
 
 	/**
 	 * On activation notice
@@ -576,54 +493,6 @@ class Rrb2b_Woo {
 		<?php
 		
 	}
-
-
-	/**
-	 * Create role
-	 */
-	public static function rrb2b_create_role() {
-		
-		$data = null;
-		if ( isset( $_POST ) ) {
-			$data = wp_unslash( $_POST );
-		}
-		
-		if ( ! wp_verify_nonce( $data['_wpnonce'], 'rrb2b_id' ) ) {
-			wp_die();
-		}
-		
-		if ( $data ) {
-			$functions = new Rrb2b_Functions();
-			$functions->rrb2b_add_role( $data );
-		}
-
-		wp_safe_redirect( admin_url( 'admin.php?page=rrb2b&tab=roles' ) );
-		exit;
-	}
-
-	/**
-	 * Create rule
-	 */
-	public static function rrb2b_add_rule() {
-
-		$data = null;
-		if ( isset( $_POST ) ) {
-			$data = wp_unslash( $_POST );
-		}
-
-		if ( ! wp_verify_nonce( $data['_wpnonce'], 'rrb2b_id' ) ) {
-			wp_die();
-		}
-
-		if ( $data ) {
-			$functions = new Rrb2b_Functions();
-			$functions->rrb2b_add_rule( $data );
-		}
-
-		wp_safe_redirect( admin_url( 'admin.php?page=rrb2b&tab=rules' ) );
-		exit;
-	}
-
 
 	/**
 	 * Add scripts and style
@@ -720,77 +589,6 @@ class Rrb2b_Woo {
 			)
 		);
 	}
-
-
-    /**
-     * Add register form
-     */
-    public static function rrb2b_register_form() {
-        $data = array();
-
-        // First priority: Check for stored data from validation errors
-        if ( WC()->session ) {
-            $stored_data = WC()->session->get( 'registration_form_data' );
-            if ( $stored_data ) {
-                $data = $stored_data;
-                // Clear after use
-                WC()->session->__unset( 'registration_form_data' );
-            }
-        }
-
-        // Secondary: If this is a direct POST (shouldn't happen with validation errors)
-        if ( empty( $data ) && isset( $_POST['rrb2b_reg_form_nonce'] ) &&
-            wp_verify_nonce( $_POST['rrb2b_reg_form_nonce'], 'rrb2b_reg_form' ) ) {
-            $data = wp_unslash( $_POST );
-        }
-
-        $functions = new Rrb2b_Functions();
-        $functions->rrb2b_create_registration_form( $data );
-    }
-
-    /**
-     * Validate register form
-     */
-    public static function rrb2b_validate_register_form( $username, $email, $validation_errors ) {
-
-        if ( ! isset( $_POST['rrb2b_reg_form_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( $_POST['rrb2b_reg_form_nonce'] ), 'rrb2b_reg_form' ) ) {
-            return;
-        }
-
-        $data      = wp_unslash( $_POST );
-        $functions = new Rrb2b_Functions();
-        $functions->rrb2b_validate_registration_form( $username, $email, $validation_errors, $data );
-
-        // ADD THIS: Store form data if there are validation errors
-        if ( $validation_errors->has_errors() && WC()->session ) {
-            WC()->session->set( 'registration_form_data', $data );
-        }
-    }
-
-	/**
-	 * Save register form data
-	 */
-	public static function rrb2b_save_register_form_data( $customer_id ) {
-
-		$referrer = isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( $_SERVER['HTTP_REFERER'] ) : 'unknown';
-	
-		// Check if registration comes from WooCommerce checkout
-		$is_checkout_registration = ( strpos( $referrer, 'checkout' ) !== false );
-
-		if ( ! $is_checkout_registration ) { // Skip nonce check for checkout
-			if ( ! isset( $_POST['rrb2b_reg_form_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( $_POST['rrb2b_reg_form_nonce'] ), 'rrb2b_reg_form' ) ) {
-				error_log('RRB2B: Nonce verification failed on My Account registration.');
-				return;
-			}
-		}
-		
-		$data      = wp_unslash( $_POST );
-		$functions = new Rrb2b_Functions();
-		$functions->rrb2b_save_registration_form( $customer_id, $data );
-
-	}
-
-
 }
 add_action( 'init', array( 'Rrb2b_Woo', 'rrb2b_admin_hooks' ) );
 

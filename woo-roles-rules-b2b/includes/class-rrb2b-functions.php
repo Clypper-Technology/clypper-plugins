@@ -5,6 +5,9 @@
  * @package Roles&RulesB2B/includes
  */
 
+use ClypperTechnology\RolePricing\Services\RoleService;
+use ClypperTechnology\RolePricing\Services\RuleService;
+
 defined( 'ABSPATH' ) || exit;
 
 
@@ -24,11 +27,15 @@ class Rrb2b_Functions {
 	 */
 	public $context;
 
+    private RuleService $rule_service;
+    private RoleService $role_service;
+
 	/**
 	 * Constructor
 	 */
 	public function __construct() {
-
+        $this->rule_service = new RuleService();
+        $this->role_service = new RoleService();
 		$this->logger  = wc_get_logger();
 		$this->context = array( 'source' => 'woo_roles_rules_b2b' );
     }
@@ -140,85 +147,12 @@ class Rrb2b_Functions {
 
 
 	/**
-	 * Add role (like VIP Customer)
-	 */
-	public function rrb2b_add_role( $data ) {
-		$logger   = wc_get_logger();
-		$context  = array( 'source' => 'rrb2b-role-log' );
-		$wp_roles = wp_roles();
-		$name     = sanitize_text_field( $data['role-name'] );
-		$slug     = sanitize_title( $data['role-slug'] );
-		$cap      = sanitize_text_field( $data['role-cap'] );
-	
-		if ( empty( $name ) || empty( $slug ) ) {
-			$logger->warning( 'Missing role name or slug.', $context );
-			return;
-		}
-	
-		// Check if role already exists
-		if ( get_role( $slug ) ) {
-			$logger->info( 'Role "' . $slug . '" already exists.', $context );
-			return;
-		}
-	
-		// Validate capability base role
-		$cap_role = get_role( $cap );
-		if ( ! $cap_role ) {
-			$logger->error( 'Base capability role "' . $cap . '" not found.', $context );
-			return;
-		}
-	
-		$result = $wp_roles->add_role( $slug, $name, $cap_role->capabilities );
-	
-		if ( null === $result ) {
-			$logger->error( 'Failed to add role "' . $slug . '".', $context );
-		} else {
-			$logger->info( 'Role "' . $slug . '" successfully added.', $context );
-		}
-	}
-	
-
-	/**
-	 * Get query rules
-	 */
-	public function rrb2b_query_rules() {
-		
-		$order = ( ! empty( filter_input( INPUT_GET, 'order', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ) )
-				? filter_input( INPUT_GET, 'order', FILTER_SANITIZE_FULL_SPECIAL_CHARS )
-				: 'ASC';
-		
-		$args = array(
-			'post_type'      => 'rrb2b',
-			'posts_per_page' => -1,
-			'orderby'        => array( 'title' => 'ASC', 'date' => 'DESC' ),
-			'order'          => 'ASC',
-			'post_status'    => array( 'publish', 'private', 'draft', 'pending' )
-		);
-
-		$rules = new WP_Query( $args );
-
-		return $rules->get_posts();
-	}
-
-	/**
-	 * Count users for role
-	 * 
-	 * @return string
-	 */
-    public function rrb2b_count_users_for_role( $role ): int|string
-    {
-        $users = count_users();
-
-        return $users['avail_roles'][ $role['name'] ] ?? 0;
-    }
-
-	/**
 	 * Get general rules
 	 */
 	public function rrb2b_get_rules() {
 		
 		$wp_roles    = wp_roles();
-		$rules       = $this->rrb2b_query_rules();
+		$rules       = $this->rule_service->get_all_rules();
 		$options     = get_option( 'rrb2b_options' );
 		$filter_rule = filter_input( 1, 'filter', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
@@ -259,7 +193,7 @@ class Rrb2b_Functions {
 
 				$user_count = ( $is_guest )
 					? __( 'Regular guests (B2C)', 'woo-roles-rules-b2b' )
-					: $this->rrb2b_count_users_for_role( (array) $role );
+					: $this->role_service->users_in_role( (array) $role );
 				
 			}
 
@@ -378,7 +312,6 @@ class Rrb2b_Functions {
 						</div>
 						<div class="cas-action-box cas-coupon-box">
 							<label for="coupon" style="line-height: 25px;"><?php esc_html_e( 'Automatically apply a coupon for checkout discounts', 'woo-roles-rules-b2b' ); ?></label><br/>
-							<?php $this->rrb2b_get_coupons( $coupon_selected, $rule->ID ); ?>
 							<a class="button" href="<?php echo esc_url( admin_url( 'edit.php?post_type=shop_coupon' ) ); ?>"><i class="fa-solid fa-ticket"></i> <?php esc_attr_e( 'Edit Coupons', 'woo-roles-rules-b2b' ); ?></a>
 						</div>
 					</div>
@@ -521,7 +454,7 @@ class Rrb2b_Functions {
 			exit;
 		} else {
 			//Add empty product rule
-			$this->rrb2b_add_rule_product( $id, $name, $rule );
+			$this->rule_service->add_rule_to_product( $id, $name, $rule );
 		}
 		
 		wp_safe_redirect( $url );
@@ -536,7 +469,7 @@ class Rrb2b_Functions {
 		
 		//Add empty single categories rule
 		$single_categories = explode( ',', $categories );
-		$this->rrb2b_add_rule_single_categories( $single_categories, $rule );
+		$this->rule_service->add_rule_to_categories( $single_categories, $rule );
 		
 		$filter_rule = filter_input( 1, 'filter', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		$url         = admin_url( 'admin.php?page=rrb2b&tab=categories&eid=' . $rule );
@@ -556,7 +489,7 @@ class Rrb2b_Functions {
 	public function rrb2b_get_rules_categories() {
 
 		$wp_roles    = wp_roles();
-		$rules       = $this->rrb2b_query_rules();
+		$rules       = $this->rule_service->get_all_rules();
 		$add_slugs   = filter_input( 1, 'add', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		$add_rule    = filter_input( 1, 'rule', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		$filter_rule = filter_input( 1, 'filter', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
@@ -595,7 +528,7 @@ class Rrb2b_Functions {
 
 				$user_count = ( $is_guest )
 					? __( 'Regular guests (B2C)', 'woo-roles-rules-b2b' )
-					: $this->rrb2b_count_users_for_role( (array) $role );
+					: $this->role_service->users_in_role( (array) $role );
 				
 			}
 
@@ -819,7 +752,7 @@ class Rrb2b_Functions {
 	public function rrb2b_get_rules_products() {
 
 		$wp_roles    = wp_roles();
-		$rules       = $this->rrb2b_query_rules();
+		$rules       = $this->rule_service->get_all_rules();
 		$add_id      = filter_input( 1, 'add', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		$add_name    = filter_input( 1, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		$add_rule    = filter_input( 1, 'rule', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
@@ -859,7 +792,7 @@ class Rrb2b_Functions {
 
 				$user_count = ( $is_guest )
 					? __( 'Regular guests (B2C)', 'woo-roles-rules-b2b' )
-					: $this->rrb2b_count_users_for_role( (array) $role );
+					: $this->role_service->users_in_role( (array) $role );
 				
 			}
 			
@@ -1132,116 +1065,6 @@ class Rrb2b_Functions {
 
 
 	/**
-	 * Add rules for single categories 
-	 */
-	public function rrb2b_add_rule_single_categories( $cat_list, $rule ) {
-		
-		$rule_obj          = get_post( intval( $rule ) );
-		$content           = json_decode( $rule_obj->post_content, true );
-		$categories        = ( isset ( $content['categories'] ) ) ? $content['categories'] : array();
-		$products          = ( isset ( $content['products'] ) ) ? $content['products'] : array();
-		$single_categories = ( isset ( $content['single_categories'] ) ) ? $content['single_categories'] : array();
-
-		foreach ( $cat_list as $slug_name ) {
-
-			$cat = get_term_by( 'slug', $slug_name, 'product_cat' ); 
-
-			$category = array(
-				'id'               => $cat->term_id,
-				'slug'             => $slug_name,
-				'name'             => esc_attr( $cat->name ),
-				'active'           => false,
-				'adjust_type'      => '',
-				'adjust_value'     => '',
-				'adjust_type_qty'  => '',
-				'adjust_value_qty' => '',
-				'min_qty'          => 0,
-				'hidden'           => 'false',
-				'on_sale'          => 'false',
-			);
-
-			array_push( $single_categories, $category );
-		}
-
-		$jsonObj = $this->rrb2b_get_json_content_obj( $content, $rule, $categories, $products, $single_categories );
-
-		$args = array(
-			'ID'           => $rule,
-			'post_content' => wp_json_encode( $jsonObj, JSON_UNESCAPED_UNICODE ),
-			'post_author'  => get_current_user_id(),
-		);
-		
-		wp_update_post( $args, false );
-
-	}
-
-	/**
-	 * Add product to rule
-	 */
-	public function rrb2b_add_rule_product( $id, $name, $rule ) {
-		
-		$rule_obj          = get_post( intval( $rule ) );
-		$content           = json_decode( $rule_obj->post_content, true );
-		$categories        = ( isset ( $content['categories'] ) ) ? $content['categories'] : array();
-		$products          = ( isset ( $content['products'] ) ) ? $content['products'] : array();
-		$single_categories = ( isset ( $content['single_categories'] ) ) ? $content['single_categories'] : array();
-
-		$product = array(
-			'id'               => $id,
-			'name'             => esc_attr( $name ),
-			'active'           => false,
-			'adjust_type'      => '',
-			'adjust_value'     => '',
-			'adjust_type_qty'  => '',
-			'adjust_value_qty' => '',
-			'min_qty'          => 0,
-			'hidden'           => 'false',
-		);
-
-		array_push( $products, $product );
-
-		$jsonObj = $this->rrb2b_get_json_content_obj( $content, $rule, $categories, $products, $single_categories );
-
-		$args = array(
-			'ID'           => $rule,
-			'post_content' => wp_json_encode( $jsonObj, JSON_UNESCAPED_UNICODE ),
-			'post_author'  => get_current_user_id(),
-		);
-		
-		wp_update_post( $args, false );
-	}
-
-
-
-	/**
-	 * Get content object
-	 */
-	public function rrb2b_get_json_content_obj( $content, $rule, $categories, $products, $single_categories ) {
-		
-		$jsonObj = array(
-			'id'                      => ( isset( $content ) ) ? $content['id'] : $rule, 
-			'rule_active'             => ( isset( $content ) ) ? $content['rule_active'] : '',
-			'reduce_regular_type'     => ( isset( $content ) ) ? $content['reduce_regular_type'] : '',
-			'reduce_regular_value'    => ( isset( $content ) ) ? $content['reduce_regular_value'] : '',
-			'reduce_categories_value' => ( isset( $content ) ) ? $content['reduce_categories_value'] : '',
-			'reduce_sale_type'        => ( isset( $content ) ) ? $content['reduce_sale_type'] : '',
-			'reduce_sale_value'       => ( isset( $content ) ) ? $content['reduce_sale_value'] : '',
-			'coupon'                  => ( isset( $content ) ) ? $content['coupon'] : '',
-			'date_from'               => ( isset( $content ) ) ? $content['date_from'] : '',
-			'date_to'                 => ( isset( $content ) ) ? $content['date_to'] : '',
-			'time_from'               => ( isset( $content ) ) ? $content['time_from'] : '',
-			'time_to'                 => ( isset( $content ) ) ? $content['time_to'] : '',
-			'categories'              => $categories,
-			'categories_on_sale'      => ( isset( $content ) ) ? $content['categories_on_sale'] : '',
-			'products'                => $products,
-			'single_categories'       => $single_categories,
-		);
-
-		return $jsonObj;
-	}
-
-
-	/**
 	 * Get dropdown for all roles (not administrator).
 	 *
 	 * @param string $selected Role slug to preselect.
@@ -1284,44 +1107,13 @@ class Rrb2b_Functions {
 
 
 	/**
-	 * Get cupons
-	 */
-	public function rrb2b_get_coupons( $selected_id, $id ) {
-		
-		$args = array(
-			'posts_per_page'   => -1,
-			'orderby'          => 'title',
-			'order'            => 'asc',
-			'post_type'        => 'shop_coupon',
-			'post_status'      => 'publish',
-		);
-			
-		$coupons = get_posts( $args );
-
-		if ( $coupons ) {
-			?>
-			<select oninput="formChanged(<?php echo esc_js( $id ); ?>);" name="coupon" class="rrb2b-select" style="margin-top: 11px;">
-			<option value=""></option>
-			<?php
-			foreach ( $coupons as $coupon ) {
-				?>
-				<option value="<?php esc_attr_e( $coupon->ID ); ?>" <?php echo ( $coupon->ID === $selected_id ) ? 'selected="selected"' : ''; ?>><?php esc_attr_e( $coupon->post_title ); ?></option>
-				<?php
-			}
-			?>
-			</select>
-			<?php
-		}
-	}
-
-	/**
 	 * Get select filter by role
 	 */
 	public function rrb2b_get_filter_roles() {
 
 		$wp_roles    = wp_roles();
 		$roles       = $wp_roles->roles;
-		$saved_roles = $this->rrb2b_query_rules();
+		$saved_roles = $this->rule_service->get_all_rules();
 		$filter_rule = filter_input( 1, 'filter', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
 		foreach ( $saved_roles as $role ) {
@@ -1487,216 +1279,5 @@ class Rrb2b_Functions {
 		</form>
 		<?php
 	}
-
-	/**
-	 * Create registration form
-	 */
-	public function rrb2b_create_registration_form( $data ) {
-
-		wp_nonce_field( 'rrb2b_reg_form', 'rrb2b_reg_form_nonce' );
-		?>
-
-		<p class="form-row form-row-first">
-			<label for="reg_first_name">Fornavn
-				<span class="required">*</span>
-			</label>
-			<input required autocomplete="on" type="text" class="input-text" name="first_name" id="reg_first_name" value="<?php echo esc_attr($data['first_name'] ?? ''); ?>" />
-		</p>
-
-        <p class="form-row form-row-last">
-            <label for="reg_last_name">Efternavn
-                <span class="required">*</span>
-            </label>
-            <input required autocomplete="on" type="text" class="input-text" name="last_name" id="reg_last_name" value="<?php echo esc_attr($data['last_name'] ?? ''); ?>" />
-        </p>
-
-        <p class="form-row form-row-wide">
-            <label for="reg_phone">Telenfonnummer
-                <span class="required">*</span>
-            </label>
-            <input required autocomplete="on" type="tel" class="input-text" name="phone" id="reg_phone" value="<?php echo esc_attr($data['phone'] ?? ''); ?>" />
-        </p>
-
-		<p class="form-row form-row-wide">
-			<label for="reg_company_name">Firmanavn
-				<span class="required">*</span>
-			</label>
-			<input required autocomplete="on" type="text" class="input-text" name="company_name" id="reg_company_name" value="<?php echo esc_attr($data['company_name'] ?? ''); ?>" />
-		</p>
-
-        <p class="form-row form-row-first">
-            <label for="reg_company_type">Branche
-                <span class="required">*</span>
-            </label>
-            <input required autocomplete="on" type="text" class="input-text" name="company_type" id="reg_company_type" value="<?php echo esc_attr($data['company_type'] ?? ''); ?>" />
-        </p>
-
-        <p class="form-row form-row-last">
-            <label for="reg_company_cvr">CVR
-                <span class="required">*</span>
-            </label>
-            <input required autocomplete="on" type="number" class="input-text" name="company_cvr" id="reg_company_cvr" value="<?php echo esc_attr($data['company_cvr'] ?? ''); ?>" />
-        </p>
-
-        <p class="form-row form-row-wide">
-            <label for="reg_company_address">Firmaadresse
-                <span class="required">*</span>
-            </label>
-            <input required autocomplete="on" type="text" class="input-text" name="company_address" id="reg_company_address" value="<?php echo esc_attr($data['company_address'] ?? ''); ?>" />
-        </p>
-
-        <p class="form-row form-row-first">
-            <label for="reg_company_city">By
-                <span class="required">*</span>
-            </label>
-            <input required autocomplete="on" type="text" class="input-text" name="company_city" id="reg_company_city" value="<?php echo esc_attr($data['company_city'] ?? ''); ?>" />
-        </p>
-
-        <p class="form-row form-row-last">
-            <label for="reg_company_postal">Postnummer
-                <span class="required">*</span>
-            </label>
-            <input required autocomplete="on" type="number" class="input-text" name="company_postal" id="reg_company_postal" value="<?php echo esc_attr($data['company_postal'] ?? ''); ?>" />
-        </p>
-
-		<?php
-
-	}
-
-	/**
-	 * Validate registration form
-	 */
-	public function rrb2b_validate_registration_form( $username, $email, $validation_errors, $data ): void
-    {
-        $logger  = $this->logger;
-		$context = $this->context;
-
-		// Verify nonce
-		if ( ! isset( $data['rrb2b_reg_form_nonce'] ) || ! wp_verify_nonce( $data['rrb2b_reg_form_nonce'], 'rrb2b_reg_form' ) ) {
-			$validation_errors->add( 'nonce_error', __( 'Nonce verification failed.', 'woo-roles-rules-b2b' ) );
-			$logger->info( 'Nonce error in registration form (validate reg form)', $context );
-			return;
-		}
-
-		if ( empty( $data['first_name'] ) ) {
-			$validation_errors->add( 'first_name_error', __( 'Fornavn skal udfyldes!', 'woo-roles-rules-b2b' ) );
-		}
-
-        if ( empty( $data['last_name'] ) ) {
-            $validation_errors->add( 'last_name_error', __( 'Efternavn skal udfyldes!', 'woo-roles-rules-b2b' ) );
-        }
-
-        if ( empty( $data['phone'] ) ) {
-            $validation_errors->add( 'phone_error', __( 'Telefonnummer skal udfyldes!', 'woo-roles-rules-b2b' ) );
-        }
-
-        if ( empty( $data['company_name'] ) ) {
-            $validation_errors->add( 'company_name_error', __( 'Firmanavn skal udfyldes!', 'woo-roles-rules-b2b' ) );
-        }
-
-        if ( empty( $data['company_type'] ) ) {
-            $validation_errors->add( 'company_type_error', __( 'Branche skal udfyldes!', 'woo-roles-rules-b2b' ) );
-        }
-
-        if ( empty( $data['company_cvr'] ) ) {
-            $validation_errors->add( 'company_cvr_error', __( 'CVR skal udfyldes!', 'woo-roles-rules-b2b' ) );
-        } else {
-            $cvr = trim( $data['company_cvr'] );
-
-            // Check if exactly 8 digits
-            if ( !preg_match('/^\d{8}$/', $cvr) ) {
-                $validation_errors->add( 'company_cvr_error', __( 'CVR skal være præcis 8 cifre!', 'woo-roles-rules-b2b' ) );
-            } else {
-                // Modulus 11 validation
-                if ( !$this->validate_cvr_modulus11( $cvr ) ) {
-                    $validation_errors->add( 'company_cvr_error', __( 'Ugyldigt CVR-nummer!', 'woo-roles-rules-b2b' ) );
-                }
-            }
-        }
-
-        if ( empty( $data['company_address'] ) ) {
-            $validation_errors->add( 'company_address_error', __( 'Firmaadresse skal udfyldes!', 'woo-roles-rules-b2b' ) );
-        }
-
-        if ( empty( $data['company_city'] ) ) {
-            $validation_errors->add( 'company_city_error', __( 'By skal udfyldes!', 'woo-roles-rules-b2b' ) );
-        }
-
-        if ( empty( $data['company_postal'] ) ) {
-            $validation_errors->add( 'company_postal_error', __( 'Postnummer skal udfyldes!', 'woo-roles-rules-b2b' ) );
-        } else {
-            $postal_number = $data['company_postal'];
-
-            if(strlen($postal_number) < 4) {
-                $validation_errors->add( 'company_postal_error', __( 'Postnummer skal indeholde 4 cifre!', 'woo-roles-rules-b2b' ) );
-            }
-        }
-	}
-
-    private function validate_cvr_modulus11( $cvr ): bool
-    {
-        $weights = [2, 7, 6, 5, 4, 3, 2, 1];
-        $sum = 0;
-
-        for ( $i = 0; $i < 8; $i++ ) {
-            $sum += (int)$cvr[$i] * $weights[$i];
-        }
-
-        return $sum % 11 === 0;
-    }
-
-    /**
-     * Save registration form data
-     */
-    public function rrb2b_save_registration_form( $customer_id, $data ): void {
-        if ( isset( $data['first_name'] ) ) {
-            update_user_meta( $customer_id, 'first_name', sanitize_text_field( $data['first_name'] ) );
-            update_user_meta( $customer_id, 'billing_first_name', sanitize_text_field( $data['first_name'] ) );
-        }
-
-        if ( isset( $data['last_name'] ) ) {
-            update_user_meta( $customer_id, 'last_name', sanitize_text_field( $data['last_name'] ) );
-            update_user_meta( $customer_id, 'billing_last_name', sanitize_text_field( $data['last_name'] ) );
-        }
-
-        if ( isset( $data['phone'] ) ) {
-            update_user_meta( $customer_id, 'phone', sanitize_text_field( $data['phone'] ) );
-            update_user_meta( $customer_id, 'billing_phone', sanitize_text_field( $data['phone'] ) );
-        }
-
-        // Company Information
-        if ( isset( $data['company_name'] ) ) {
-            update_user_meta( $customer_id, 'company_name', sanitize_text_field( $data['company_name'] ) );
-            update_user_meta( $customer_id, 'billing_company', sanitize_text_field( $data['company_name'] ) );
-        }
-
-        if ( isset( $data['company_type'] ) ) {
-            update_user_meta( $customer_id, 'company_type', sanitize_text_field( $data['company_type'] ) );
-        }
-
-        if ( isset( $data['company_cvr'] ) ) {
-            update_user_meta( $customer_id, 'company_cvr', sanitize_text_field( $data['company_cvr'] ) );
-        }
-
-        // Address Information
-        if ( isset( $data['company_address'] ) ) {
-            update_user_meta( $customer_id, 'company_address', sanitize_text_field( $data['company_address'] ) );
-            update_user_meta( $customer_id, 'billing_address_1', sanitize_text_field( $data['company_address'] ) );
-        }
-
-        if ( isset( $data['company_city'] ) ) {
-            update_user_meta( $customer_id, 'company_city', sanitize_text_field( $data['company_city'] ) );
-            update_user_meta( $customer_id, 'billing_city', sanitize_text_field( $data['company_city'] ) );
-        }
-
-        if ( isset( $data['company_postal'] ) ) {
-            update_user_meta( $customer_id, 'company_postal', sanitize_text_field( $data['company_postal'] ) );
-            update_user_meta( $customer_id, 'billing_postcode', sanitize_text_field( $data['company_postal'] ) );
-        }
-
-        // Set default country to Denmark since this is a Danish B2B form
-        update_user_meta( $customer_id, 'billing_country', 'DK' );
-    }
-
 }
 

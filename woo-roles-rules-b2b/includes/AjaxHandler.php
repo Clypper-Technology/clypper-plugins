@@ -1,16 +1,18 @@
 <?php
 
+namespace ClypperTechnology\RolePricing;
+
+use ClypperTechnology\RolePricing\Services\RuleService;
+
 defined( 'ABSPATH' ) || exit;
 
-require_once __DIR__ . '/class-rule-service.php';
+class AjaxHandler {
 
-class Ajax_Handler {
-
-    private Rule_Service $rule_service;
+    private RuleService $rule_service;
 
     public function __construct()
     {
-        $this->rule_service = new Rule_Service();
+        $this->rule_service = new RuleService();
 
         add_action( 'wp_ajax_rrb2b_get_user_role', array( $this, 'rrb2b_get_user_role' ) );
         add_action( 'wp_ajax_nopriv_rrb2b_get_user_role', array( $this, 'rrb2b_get_user_role' ) );
@@ -251,10 +253,10 @@ class Ajax_Handler {
                         }
                     }
 
-                    $this->rule_service->add_rule_product( $product_variation, $product_name, $data['id'] );
+                    $this->rule_service->add_rule_to_product( $product_variation, $product_name, $data['id'] );
                 }
             } else {
-                $this->rule_service->add_rule_product( $product->get_id(), $product->get_name(), $data['id'] );
+                $this->rule_service->add_rule_to_product( $product->get_id(), $product->get_name(), $data['id'] );
             }
 
         }
