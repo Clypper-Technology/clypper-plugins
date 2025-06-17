@@ -132,6 +132,10 @@ class AjaxHandler {
     public function rrb2b_ajax_get_products() {
         $this->check_nonce('rrb2b_id');
 
+        error_log('AJAX Search - Session exists: ' . (WC()->session ? 'YES' : 'NO'));
+        error_log('AJAX Search - User logged in: ' . (is_user_logged_in() ? 'YES' : 'NO'));
+
+
         $data = wp_unslash( $_REQUEST );
         $txt  = sanitize_text_field( $data['search'] );
 
@@ -253,10 +257,10 @@ class AjaxHandler {
                         }
                     }
 
-                    $this->rule_service->add_rule_to_product( $product_variation, $product_name, $data['id'] );
+                    $this->rule_service->add_product_to_rule( $product_variation, $product_name, $data['id'] );
                 }
             } else {
-                $this->rule_service->add_rule_to_product( $product->get_id(), $product->get_name(), $data['id'] );
+                $this->rule_service->add_product_to_rule( $product->get_id(), $product->get_name(), $data['id'] );
             }
 
         }

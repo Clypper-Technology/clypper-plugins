@@ -5,6 +5,8 @@
  * @package Roles&RulesB2B/includes
  */
 
+use ClypperTechnology\RolePricing\Services\RuleService;
+
 defined( 'ABSPATH' ) || exit;
 
 
@@ -13,35 +15,35 @@ defined( 'ABSPATH' ) || exit;
  */
 class Rrb2b_Rules {
 
-    private static array $role_rules = array();
+    private array $role_rules = array();
+    private RuleService $rule_service;
+    
+    public function __construct()
+    {
+        $this->role_rules = array();
+        $this->rule_service = new RuleService();
 
-	/**
-	 * Set frontend rules
-	 */
-	public static function rrb2b_frontend_rules() {
-		
-		//Price
-		add_filter( 'woocommerce_product_get_price', array( __CLASS__, 'rrb2b_get_rule_price' ), 20, 2 );
-		add_filter( 'woocommerce_product_variation_get_price', array( __CLASS__, 'rrb2b_get_rule_price' ), 20, 2 );
-		add_filter( 'woocommerce_get_variation_regular_price', array( __CLASS__, 'rrb2b_get_rule_price' ), 10, 4 );
+        add_filter( 'woocommerce_product_get_price', array( $this, 'rrb2b_get_rule_price' ), 20, 2 );
+        add_filter( 'woocommerce_product_variation_get_price', array( $this, 'rrb2b_get_rule_price' ), 20, 2 );
+        add_filter( 'woocommerce_get_variation_regular_price', array( $this, 'rrb2b_get_rule_price' ), 10, 4 );
 
-		//Variation
-		add_filter( 'woocommerce_variation_prices_price', array( __CLASS__, 'rrb2b_get_rule_price_variation' ), 20, 3 );
+        //Variation
+        add_filter( 'woocommerce_variation_prices_price', array( $this, 'rrb2b_get_rule_price_variation' ), 20, 3 );
 
-		//On Sale
-		add_filter( 'woocommerce_product_is_on_sale', array( __CLASS__, 'rrb2b_product_is_on_sale' ), 10, 2 );
+        //On Sale
+        add_filter( 'woocommerce_product_is_on_sale', array( $this, 'rrb2b_product_is_on_sale' ), 10, 2 );
 
-		//Login
-		add_filter( 'authenticate', array( __CLASS__, 'rrb2b_user_authenticate' ), 90, 3 );
+        //Login
+        add_filter( 'authenticate', array( $this, 'rrb2b_user_authenticate' ), 90, 3 );
 
-		//Admin and API pricing
-		add_filter( 'rrb2b_rule_get_price_api_and_admin', array( __CLASS__, 'rrb2b_rule_get_price_admin' ), 10, 5 );
-	}
-
+        //Admin and API pricing
+        add_filter( 'rrb2b_rule_get_price_api_and_admin', array( $this, 'rrb2b_rule_get_price_admin' ), 10, 5 );
+    }
+    
 	/**
 	 * Clear old sessions
 	 */
-	public static function rrb2b_user_authenticate( $user, $username, $password ) {
+	public  function rrb2b_user_authenticate( $user, $username, $password ) {
 		if ( class_exists( 'WooCommerce' ) && ! empty( WC()->session ) ) {
 			WC()->session->set( 'rrb2b_today', null );
 			WC()->session->set( 'rrb2b_rule', null );
@@ -58,13 +60,13 @@ class Rrb2b_Rules {
      * @param bool $is_on_sale bool value.
      * @param var $product product.
      */
-    public static function rrb2b_product_is_on_sale( $is_on_sale, $product ): bool {
-        if( is_admin() || ! self::rrb2b_user_in_rule() ) {
+    public  function rrb2b_product_is_on_sale( $is_on_sale, $product ): bool {
+        if( is_admin() || ! $this->rrb2b_user_in_rule() ) {
             return $is_on_sale;
         }
 
         $regular_price = $product->get_regular_price();
-        $role_price = self::rrb2b_get_rule_price($regular_price, $product);
+        $role_price = $this->rrb2b_get_rule_price($regular_price, $product);
 
         return $role_price !== $regular_price;
     }
@@ -76,12 +78,12 @@ class Rrb2b_Rules {
 	 * @param int $price price.
 	 * @param var $product product.
 	 */
-	public static function rrb2b_get_rule_price( string $price, $product ) : string {
+	public  function rrb2b_get_rule_price( string $price, $product ) : string {
 		$user         = wp_get_current_user();
 		$is_variation = $product->is_type( 'variable' );
 		$is_regular   = false;
 
-        return self::get_rule_price( $price, $product, $user, $is_variation, $is_regular );
+        return $this->get_rule_price( $price, $product, $user, $is_variation, $is_regular );
 	}
 
 	/**
@@ -90,12 +92,11 @@ class Rrb2b_Rules {
 	 * @param var $price price.
 	 * @param var $product product.
 	 */
-	public static function rrb2b_get_var_rule_price( $price, $product ) {
-
+	public  function rrb2b_get_var_rule_price( $price, $product ) {
 		$user         = wp_get_current_user();
 		$is_variation = true;
 		$is_regular   = false;
-		$price        = self::get_rule_price( $price, $product, $user, $is_variation, $is_regular );
+		$price        = $this->get_rule_price( $price, $product, $user, $is_variation, $is_regular );
 
 		return $price;
 	}
@@ -107,12 +108,11 @@ class Rrb2b_Rules {
 	 * @param var $variation variation.
 	 * @param var $product product.
 	 */
-	public static function rrb2b_get_rule_price_variation( $price, $variation, $product ) {
-
+	public  function rrb2b_get_rule_price_variation( $price, $variation, $product ) {
 		$user         = wp_get_current_user();
 		$is_variation = true;
 		$is_regular   = false;
-		$price        = self::get_rule_price( $price, $variation, $user, $is_variation, $is_regular );
+		$price        = $this->get_rule_price( $price, $variation, $user, $is_variation, $is_regular );
 
 		return $price;
 	}
@@ -121,21 +121,21 @@ class Rrb2b_Rules {
 	 * Check if user has a role or is guest
 	 *
 	 */
-	public static function rrb2b_user_in_rule() {
-        return self::rrb2b_user_in_rule_frontend();
+	public  function rrb2b_user_in_rule() {
+        return $this->rrb2b_user_in_rule_frontend();
 	}
 
 	/**
 	 * Check if user has a role or is guest frontend
 	 *
 	 */
-	public static function rrb2b_user_in_rule_frontend() {
+	public  function rrb2b_user_in_rule_frontend() {
 
 		if ( empty( WC()->session ) ) {
 			return false;
 		}
 
-		$role = self::get_user_role();
+		$role = $this->get_user_role();
 
 		$futureTime      = time() + 1 * MINUTE_IN_SECONDS;
 		$sessionInterval = WC()->session->get( 'rrb2b_today' );
@@ -149,7 +149,7 @@ class Rrb2b_Rules {
 			WC()->session->set( 'rrb2b_role', null );
 			WC()->session->set( 'rrb2b_role', $role );
 			WC()->session->set( 'rrb2b_today', $futureTime );
-			WC()->session->set( 'rrb2b_rule', self::get_role_rule( $role ) );
+			WC()->session->set( 'rrb2b_rule', $this->get_role_rule( $role ) );
 		}
 
 		$rules  = WC()->session->get( 'rrb2b_rule' );
@@ -174,7 +174,7 @@ class Rrb2b_Rules {
      * @param WP_User|null $user Optional. User object. Defaults to current user.
      * @return string User role or 'guest'
      */
-    private static function get_user_role( $user = null ): string {
+    private function get_user_role( $user = null ): string {
         if ( ! $user ) {
             $user = wp_get_current_user();
         }
@@ -186,57 +186,7 @@ class Rrb2b_Rules {
         return $user->roles[0];
     }
 
-
-	/**
-	 * Check if category is set on sale
-	 * 
-	 * @param var $product product.
-	 */
-	private static function rrb2b_product_category_on_sale($product ): bool
-    {
-
-		$rules             = WC()->session->get( 'rrb2b_rule' );
-		$rule              = $rules[0];
-		$content           = json_decode( $rule->post_content, true );
-		$categories        = $content['categories'];
-		$single_categories = $content['single_categories'];
-		$is_variation      = ( count( $product->get_children() ) > 0 ) ? true : false;
-		
-		//Check for single categories on sale
-		if ( ! empty( $single_categories ) ) {
-		
-			$product_cat = ( $is_variation ) ? get_the_terms( $product->get_parent_id(), 'product_cat' ) : get_the_terms( $product->get_id(), 'product_cat' );
-			
-			foreach ( $single_categories as $category ) {
-			
-				if ( $product_cat ) {
-					foreach ( $product_cat as $cat ) {
-						if ( strval( $cat->term_id ) === strval( $category['id'] ) && 'true' === $category['on_sale'] ) {
-							return true;
-						}
-					}
-				}
-			}
-		}
-
-		//Check for sales on general categories rule 
-		if ( ! empty( $categories ) ) {
-		
-			$product_cat = ( $is_variation ) ? get_the_terms( $product->get_parent_id(), 'product_cat' ) : get_the_terms( $product->get_id(), 'product_cat' );
-
-			foreach ( $categories as $category ) {
-			
-				$cat_id = array_values( $category );
-				
-				if ( $product_cat && in_array( strval( $product_cat[0]->term_id ), $cat_id, true ) ) {
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
-
+    
 	/**
 	 * Get price
 	 * 
@@ -245,17 +195,18 @@ class Rrb2b_Rules {
 	 * @param var $user current user.
 	 * @param var $is_variation is of type variation.
 	 */
-	private static function get_rule_price($price, $product, $user, $is_variation, $is_regular ) {
-
-        $user_in_rule = self::rrb2b_user_in_rule();
+	private function get_rule_price($price, $product, $user, $is_variation, $is_regular ) {
+        $user_in_rule = $this->rrb2b_user_in_rule();
 
 		if ( ! $user_in_rule || '' === $price || 0 === $price || empty( $price ) ) {
 			return $price;
 		}
+        
+        $user_role = 
 
 
 		$price_new = ( empty( $price ) || 0 === $price ) ? ( ( $is_regular ) ? $product->get_regular_price() : $product->get_price() ) : $price;
-		$cart_qty  = self::get_cart_item_qty( $product->get_id() );
+		$cart_qty  = $this->get_cart_item_qty( $product->get_id() );
 
 		if ( $product->get_sale_price() > 0) {
 			$price_new = $product->get_regular_price();
@@ -271,7 +222,7 @@ class Rrb2b_Rules {
 			$single_categories = ( ! empty( $content['single_categories'] ) ) ? $content['single_categories']: array();
 			$_products         = ( ! empty( $content['products'] ) ) ? $content['products'] : array();
 
-            if(!self::product_has_rules($product, $content)) {
+            if(!$this->product_has_rules($product, $content)) {
                 return $price;
             }
 
@@ -493,7 +444,7 @@ class Rrb2b_Rules {
 	 * Get price in admin (Edit Order)
 	 * 
 	 */
-	public static function rrb2b_rule_get_price_admin( $price, $product, $qty, $order_role, $is_api_request ) {
+	public  function rrb2b_rule_get_price_admin( $price, $product, $qty, $order_role, $is_api_request ) {
 
 		// If it's not an API request, and it's not in the admin, return the original price
 		if ( ! $is_api_request ) {
@@ -506,7 +457,7 @@ class Rrb2b_Rules {
 		$price_new    = ( empty( $price ) || 0 === $price ) ? $product->get_regular_price() : $price;
 		$cart_qty     = $qty; 
 		$role         = $order_role;
-		$rules        = self::get_role_rule( $role );
+		$rules        = $this->get_role_rule( $role );
 
 
 		if ( isset( $rules[0] ) && ! empty( $rules[0] ) ) {
@@ -517,7 +468,7 @@ class Rrb2b_Rules {
 			$single_categories = ( ! empty( $content['single_categories'] ) ) ? $content['single_categories']: array();
 			$_products         = ( ! empty( $content['products'] ) ) ? $content['products'] : array();
 
-            if(! self::product_has_rules( $product, $content ) ) {
+            if(! $this->product_has_rules( $product, $content ) ) {
                 return $price;
             }
 
@@ -538,7 +489,7 @@ class Rrb2b_Rules {
 
 						if ( $cart_qty >= $min_qty && ! empty( $p_rule['adjust_value_qty'] ) ) {
 
-							$price_new = self::rrb2b_adjust_price_value( $price_new, $p_rule['adjust_value_qty'], $p_rule['adjust_type_qty'] );
+							$price_new = $this->rrb2b_adjust_price_value( $price_new, $p_rule['adjust_value_qty'], $p_rule['adjust_type_qty'] );
 							return $price_new;
 
 						}
@@ -546,7 +497,7 @@ class Rrb2b_Rules {
 						// Normal product rule
 						if ( ! empty( $p_rule['adjust_value'] ) ) {
 
-							$price_new = self::rrb2b_adjust_price_value( $price_new, $p_rule['adjust_value'], $p_rule['adjust_type'] );
+							$price_new = $this->rrb2b_adjust_price_value( $price_new, $p_rule['adjust_value'], $p_rule['adjust_type'] );
 							return $price_new;
 
 						}
@@ -661,7 +612,7 @@ class Rrb2b_Rules {
 						
 				//Do normal reduction / increases
 				if ( ! empty( $content['reduce_regular_value'] ) && ! $changed_in_category ) {
-					$price_new = self::rrb2b_adjust_price_value( $price_new, $content['reduce_regular_value'], $content['reduce_regular_type'] );
+					$price_new = $this->rrb2b_adjust_price_value( $price_new, $content['reduce_regular_value'], $content['reduce_regular_type'] );
 				}
 			}
 
@@ -677,7 +628,7 @@ class Rrb2b_Rules {
 	/**
 	 * Function to adjust price value
 	 */
-	private static function rrb2b_adjust_price_value( $price_new, $value, $type ) {
+	private  function rrb2b_adjust_price_value( $price_new, $value, $type ) {
 		
 		$adjust_value = floatval( $value );
 
@@ -706,7 +657,7 @@ class Rrb2b_Rules {
 	/**
 	 * Get cart quantity for a given product.
 	 */
-	private static function get_cart_item_qty(int $product_id ): int
+	private  function get_cart_item_qty(int $product_id ): int
     {
         $cart = WC()->cart;
 
@@ -725,10 +676,10 @@ class Rrb2b_Rules {
 	 *
 	 * @param string $user_role user role.
 	 */
-	private static function get_role_rule(string $user_role ): array
+	private  function get_role_rule(string $user_role ): array
     {
-        if ( isset( self::$role_rules[$user_role] ) ) {
-            return self::$role_rules[$user_role];
+        if ( isset( $this->$role_rules[$user_role] ) ) {
+            return $this->$role_rules[$user_role];
         }
 
         $args = array(
@@ -739,7 +690,7 @@ class Rrb2b_Rules {
         $rules_query = new WP_Query( $args );
         $rules =  $rules_query->get_posts();
 
-        self::$role_rules[$user_role] = $rules;
+        $this->role_rules[$user_role] = $rules;
 
         return $rules;
 	}
@@ -748,7 +699,7 @@ class Rrb2b_Rules {
     /**
      * Check if a specific product has B2B rules applied
      */
-    private static function product_has_rules($product, $rule_content ): bool
+    private  function product_has_rules($product, $rule_content ): bool
     {
 
         $product_id = $product->get_id();
@@ -796,5 +747,3 @@ class Rrb2b_Rules {
         return false;
     }
 }
-add_action( 'plugins_loaded', array( 'Rrb2b_Rules', 'rrb2b_frontend_rules' ) );
-

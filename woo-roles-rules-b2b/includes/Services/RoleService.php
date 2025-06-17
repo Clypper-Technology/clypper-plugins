@@ -26,7 +26,7 @@ class RoleService
     /**
      * Add role (like VIP Customer)
      */
-    public function add_role( $data ) {
+    public function add_role( $data ): void {
         $logger   = wc_get_logger();
         $context  = array( 'source' => 'rrb2b-role-log' );
         $wp_roles = wp_roles();
@@ -58,6 +58,17 @@ class RoleService
             $logger->error( 'Failed to add role "' . $slug . '".', $context );
         } else {
             $logger->info( 'Role "' . $slug . '" successfully added.', $context );
+        }
+    }
+
+    public function get_roles() {
+        // From rrb2b_get_roles() method
+        $wp_roles = wp_roles();
+        $roles = $wp_roles->roles;
+        $cap_roles = array( 'administrator', 'editor', 'author', 'contributor', 'subscriber', 'customer', 'shop_manager' );
+
+        if ( ! $wp_roles->is_role( 'rrb2b_pending' ) ) {
+            $wp_roles->add_role( 'rrb2b_pending', __( 'Pending (no rights)', 'woo-roles-rules-b2b' ), array() );
         }
     }
 }

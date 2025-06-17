@@ -2,6 +2,11 @@
 
 namespace ClypperTechnology\RolePricing\Services;
 
+use ClypperTechnology\RolePricing\Rules\CategoryRule;
+use ClypperTechnology\RolePricing\Rules\ProductRule;
+use ClypperTechnology\RolePricing\Rules\RoleRules;
+use InvalidArgumentException;
+use RuntimeException;
 use WP_Post;
 
 defined( 'ABSPATH' ) || exit;
@@ -17,43 +22,18 @@ class RuleService {
     /**
      * Add rules for single categories
      */
-    public function add_rule_to_categories($cat_list, $rule ): void {
-        $rule_obj          = get_post( intval( $rule ) );
-        $content           = json_decode( $rule_obj->post_content, true );
-        $categories        = ( isset ( $content['categories'] ) ) ? $content['categories'] : array();
-        $products          = ( isset ( $content['products'] ) ) ? $content['products'] : array();
-        $single_categories = ( isset ( $content['single_categories'] ) ) ? $content['single_categories'] : array();
+    public function add_categories_to_rule($cat_list, $rule ): bool {
+        $role_rules = $this->get_role_rules( $rule );
 
         foreach ( $cat_list as $slug_name ) {
-
             $cat = get_term_by( 'slug', $slug_name, 'product_cat' );
-
-            $category = array(
-                'id'               => $cat->term_id,
-                'slug'             => $slug_name,
-                'name'             => esc_attr( $cat->name ),
-                'active'           => false,
-                'adjust_type'      => '',
-                'adjust_value'     => '',
-                'adjust_type_qty'  => '',
-                'adjust_value_qty' => '',
-                'min_qty'          => 0,
-                'hidden'           => 'false',
-                'on_sale'          => 'false',
-            );
-
-            $single_categories[] = $category;
+            $category_rule = new CategoryRule($cat->term_id, $slug_name, esc_attr__( $cat->name ));
+            $role_rules->add_single_category($category_rule);
         }
 
-        $jsonObj = $this->get_json_content_obj( $content, $rule, $categories, $products, $single_categories );
+        $this->save_role_rules($role_rules);
 
-        $args = array(
-            'ID'           => $rule,
-            'post_content' => wp_json_encode( $jsonObj, JSON_UNESCAPED_UNICODE ),
-            'post_author'  => get_current_user_id(),
-        );
-
-        wp_update_post( $args, false );
+        return true;
     }
 
     /**
@@ -72,92 +52,72 @@ class RuleService {
     /**
      * Update single category rules
      */
-    public function update_category_rule( $data ): void
-    {
-        $rule_id            = sanitize_text_field( $data['rule_id'] );
-        $rule_obj           = get_post( intval( $rule_id ) );
-        $content            = json_decode( $rule_obj->post_content, true );
-        $categories         = $content['categories'] ?? array();
-        $single_categories  = array();
-        $_single_categories = $data['rows'] ?? array();
-        $products           = $content['products'] ?? array();
+    public function update_category_rule($data): bool {
+        $rule_id = intval($data['rule_id']);
+        $role_rules = $this->get_role_rules($rule_id);
 
-        foreach ( $_single_categories as $item ) {
+        if (!$role_rules) {
+            return false;
+        }
 
-            $remove = sanitize_text_field( $item['remove'] );
+        $role_rules->single_categories = [];
+        $_single_categories = $data['rows'] ?? [];
 
-            if ( 'false' === $remove ) {
+        foreach ($_single_categories as $item) {
+            $remove = sanitize_text_field($item['remove']);
 
-                $category = array(
-                    'id'               => sanitize_text_field( $item['id'] ),
-                    'slug'             => sanitize_text_field( $item['slug'] ),
-                    'name'             => sanitize_text_field( $item['name'] ),
-                    'active'           => true,
-                    'adjust_type'      => sanitize_text_field( $item['reduce_type'] ),
-                    'adjust_value'     => sanitize_text_field( $item['reduce_value'] ),
-                    'adjust_type_qty'  => sanitize_text_field( $item['reduce_type_qty'] ),
-                    'adjust_value_qty' => sanitize_text_field( $item['reduce_value_qty'] ),
-                    'min_qty'          => sanitize_text_field( $item['min_qty'] ),
-                    'hidden'           => sanitize_text_field( $item['hidden'] ),
-                    'on_sale'          => sanitize_text_field( $item['sale'] ),
-                );
+            if ('false' === $remove) {
+                $category_rule = CategoryRule::fromArray([
+                    'id' => $item['id'],
+                    'slug' => $item['slug'],
+                    'name' => $item['name'],
+                    'active' => true,
+                    'reduce_type' => $item['reduce_type'],
+                    'reduce_value' => $item['reduce_value'],
+                    'reduce_type_qty' => $item['reduce_type_qty'],
+                    'reduce_value_qty' => $item['reduce_value_qty'],
+                    'min_qty' => $item['min_qty'],
+                ]);
 
-                $single_categories[] = $category;
+                $role_rules->single_categories[] = $category_rule;
             }
         }
 
-        $jsonObj = $this->get_json_content_obj( $content, $rule_id, $categories, $products, $single_categories );
-
-        $args = array(
-            'ID'           => $content['id'],
-            'post_content' => wp_json_encode( $jsonObj, JSON_UNESCAPED_UNICODE ),
-            'post_author'  => get_current_user_id(),
-        );
-
-        wp_update_post( $args, false );
+        return $this->save_role_rules($role_rules);
     }
 
-    public function update_product_rule( $data ) {
 
-        $rule_id           = sanitize_text_field( $data['rule_id'] );
-        $rule_obj          = get_post( intval( $rule_id ) );
-        $content           = json_decode( $rule_obj->post_content, true );
-        $categories        = $content['categories'] ?? array();
-        $single_categories = $content['single_categories'] ?? array();
-        $products          = array();
-        $_products         = $data['rows'] ?? array();
+    public function update_product_rule($data): bool {
+        $rule_id = intval($data['rule_id']);
+        $role_rules = $this->get_role_rules($rule_id);
 
-        foreach ( $_products as $item ) {
+        if (!$role_rules) {
+            return false;
+        }
 
-            $remove = sanitize_text_field( $item['remove'] );
+        $role_rules->products = [];
+        $_products = $data['rows'] ?? [];
 
-            if ( 'false' === $remove ) {
+        foreach ($_products as $item) {
+            $remove = sanitize_text_field($item['remove']);
 
-                $product = array(
-                    'id'               => sanitize_text_field( $item['product_id'] ),
-                    'name'             => sanitize_text_field( esc_attr( $item['product_name'] ) ),
-                    'active'           => ! empty( $item['reduce_value'] ),
-                    'adjust_type'      => sanitize_text_field( $item['reduce_type'] ),
-                    'adjust_value'     => sanitize_text_field( $item['reduce_value'] ),
-                    'adjust_type_qty'  => sanitize_text_field( $item['reduce_type_qty'] ),
-                    'adjust_value_qty' => sanitize_text_field( $item['reduce_value_qty'] ),
-                    'min_qty'          => sanitize_text_field( $item['min_qty'] ),
-                    'hidden'           => sanitize_text_field( $item['product_hidden'] ),
+            if ('false' === $remove) {
+                $product_rule = new ProductRule(
+                    (int)sanitize_text_field($item['product_id']),
+                    sanitize_text_field($item['product_name']),
+                    !empty($item['reduce_value']),
+                    sanitize_text_field($item['reduce_type']),
+                    sanitize_text_field($item['reduce_value']),
+                    sanitize_text_field($item['reduce_type_qty']),
+                    sanitize_text_field($item['reduce_value_qty']),
+                    (int)sanitize_text_field($item['min_qty']),
                 );
 
-                $products[] = $product;
+                $role_rules->products[] = $product_rule;
             }
         }
 
-        $jsonObj = $this->get_json_content_obj( $content, $rule_id, $categories, $products, $single_categories );
-
-        $args = array(
-            'ID'           => $content['id'],
-            'post_content' => wp_json_encode( $jsonObj, JSON_UNESCAPED_UNICODE ),
-            'post_author'  => get_current_user_id(),
-        );
-
-        wp_update_post( $args, false );
+        return $this->save_role_rules($role_rules);
     }
 
     /**
@@ -168,193 +128,158 @@ class RuleService {
     }
 
     /**
-     * Copy rules from - to multiple
+     * Copy rules from one role to multiple roles
      */
-    public function copy_rules( $data ): void {
-
+    public function copy_rules($data): bool {
         $type = $data['type'];
-        $from = $data['from'];
-        $to   = ( ! empty( $data['to'] ) ) ? explode( ',', $data['to'] ) : array();
+        $from_id = intval($data['from']);
+        $to_ids = !empty($data['to']) ? array_map('intval', explode(',', $data['to'])) : [];
 
-        if ( empty( $from ) ) {
-            wp_send_json( 'No from rule found' );
-            wp_die();
+        if (empty($from_id)) {
+            return false;
         }
 
-        $from_rule  = get_post( intval( $from ) );
-        $content    = json_decode( $from_rule->post_content, true );
-        $cat_rules  = $content['single_categories'] ??  array();
-        $prod_rules = $content['products'] ?? array();
-
-        if ( 'category' === $type ) {
-
-            foreach ( $to as $id ) {
-                $item         = get_post( intval( $id ) );
-                $item_content = json_decode( $item->post_content, true );
-                $jsonObj      = $this->get_json_content_obj( $item_content, $id, $item_content['categories'], $item_content['products'], $cat_rules );
-
-                $args = array(
-                    'ID'           => $id,
-                    'post_content' => wp_json_encode( $jsonObj, JSON_UNESCAPED_UNICODE ),
-                    'post_author'  => get_current_user_id(),
-                );
-
-                wp_update_post( $args, false );
-            }
-
-
-        } else { //Products
-
-            foreach ( $to as $id ) {
-                $item         = get_post( intval( $id ) );
-                $item_content = json_decode( $item->post_content, true );
-                $jsonObj      = $this->get_json_content_obj( $item_content, $id, $item_content['categories'], $prod_rules, $item_content['single_categories'] );
-
-                $args = array(
-                    'ID'           => $id,
-                    'post_content' => wp_json_encode( $jsonObj, JSON_UNESCAPED_UNICODE ),
-                    'post_author'  => get_current_user_id(),
-                );
-
-                wp_update_post( $args, false );
-            }
-
+        // Get source rule
+        $from_role_rules = $this->get_role_rules($from_id);
+        if (!$from_role_rules) {
+            return false;
         }
+
+        $success_count = 0;
+
+        foreach ($to_ids as $to_id) {
+            $to_role_rules = $this->get_role_rules($to_id);
+            if (!$to_role_rules) {
+                continue;
+            }
+
+            if ('category' === $type) {
+                $to_role_rules->single_categories = $from_role_rules->single_categories;
+            } else {
+                $to_role_rules->products = $from_role_rules->products;
+            }
+
+            if ($this->save_role_rules($to_role_rules)) {
+                $success_count++;
+            }
+        }
+
+        return $success_count > 0;
     }
 
     /**
      * Add rule
      *
-     * @param var $data post data.
+     * @param string $name rule name.
+     * @return int Rule ID on success
+     * @throws InvalidArgumentException If rule already exists
+     * @throws RuntimeException If creation fails
      */
-    public function add_rule( $data ) {
-
-        $name = sanitize_text_field( $data['role'] );
-
-        if ( ! empty( $name ) ) {
-
-            $rule = array(
-                'post_title'   => $name,
-                'post_content' => '',
-                'post_status'  => 'publish',
-                'post_type'    => 'rrb2b',
-                'post_author'  => get_current_user_id(),
-            );
-
-            if ( ! post_exists( $name, '', '', 'rrb2b' ) ) {
-                return wp_insert_post( apply_filters( 'rrb2b_create_rule', $rule ) );
-            }
+    public function add_rule(string $name): int {
+        if (post_exists($name, '', '', 'rrb2b')) {
+            throw new InvalidArgumentException("Rule '{$name}' already exists");
         }
 
-        return 0;
-    }
-    /**
-     * Update rule
-     *
-     * @param var $data post object.
-     */
-    public function update_rule( $data ) {
+        $role_rules = RoleRules::createForRole($name);
 
-        $rule_obj          = get_post( intval( $data['id'] ) );
-        $content           = json_decode( $rule_obj->post_content, true );
-        $products          = ( isset( $content['products'] ) ) ? $content['products'] : array();
-        $single_categories = ( isset ( $content['single_categories'] ) ) ? $content['single_categories'] : array();
-        $categories        = array();
-
-
-        $categories_arr = explode( ',', $data['selected_categories'] );
-
-        foreach ( $categories_arr as $catId ) {
-            $categories[] = array($catId => $catId);
-        }
-
-        $jsonObj = array(
-            'id'                      => $data['id'],
-            'rule_active'             => ( isset( $data['rule_active'] ) ) ? $data['rule_active'] : '',
-            'reduce_regular_type'     => $data['reduce_regular_type'],
-            'reduce_regular_value'    => $data['reduce_regular_value'],
-            'reduce_categories_value' => $data['reduce_categories_value'],
-            'reduce_sale_type'        => $data['reduce_sale_type'],
-            'reduce_sale_value'       => $data['reduce_sale_value'],
-            'coupon'                  => $data['coupon'],
-            'date_from'               => $data['date_from'],
-            'date_to'                 => $data['date_to'],
-            'time_from'               => $data['time_from'],
-            'time_to'                 => $data['time_to'],
-            'categories'              => $categories,
-            'categories_on_sale'      => ( isset ( $data['categories_on_sale'] ) && 'on' === $data['categories_on_sale'] ) ? 'on' : 'off',
-            'products'                => $products,
-            'single_categories'       => $single_categories,
-        );
-
-        $args = array(
-            'ID'           => $data['id'],
-            'post_content' => wp_json_encode( $jsonObj, JSON_UNESCAPED_UNICODE ),
+        $rule = [
+            'post_title'   => $name,
+            'post_content' => wp_json_encode($role_rules->toArray(), JSON_UNESCAPED_UNICODE),
+            'post_status'  => 'publish',
+            'post_type'    => 'rrb2b',
             'post_author'  => get_current_user_id(),
-        );
+        ];
 
-        wp_update_post( $args, false );
+        $rule_id = wp_insert_post(apply_filters('rrb2b_create_rule', $rule));
+
+        if (!$rule_id || is_wp_error($rule_id)) {
+            throw new RuntimeException('Failed to create rule in database');
+        }
+
+        return $rule_id;
+    }
+
+
+    /**
+     * Update rule settings (global pricing and general categories)
+     *
+     * @param array $data Form data
+     * @return bool Success status
+     */
+    public function update_rule(array $data): bool {
+        $rule_id = intval($data['id']);
+        $role_rules = $this->get_role_rules($rule_id);
+
+        if (!$role_rules) {
+            return false;
+        }
+
+        $role_rules->rule_active = !empty($data['rule_active']);
+        $role_rules->reduce_regular_type = $data['reduce_regular_type'] ?? '';
+        $role_rules->reduce_regular_value = $data['reduce_regular_value'] ?? '';
+        $role_rules->reduce_categories_value = $data['reduce_categories_value'] ?? '';
+        $role_rules->reduce_sale_type = $data['reduce_sale_type'] ?? '';
+        $role_rules->reduce_sale_value = $data['reduce_sale_value'] ?? '';
+
+        $categories_arr = explode(',', $data['selected_categories']);
+        $role_rules->replace_categories(array_map(fn($catId) => [$catId => $catId], $categories_arr));
+
+        return $this->save_role_rules($role_rules);
     }
 
 
     /**
      * Add product to rule
      */
-    public function add_rule_to_product($id, $name, $rule ) {
+    public function add_product_to_rule($id, $name, $rule ): bool {
+        $rule_id = intval( $rule );
+        $role_rule = $this->get_role_rules($rule_id);
 
-        $rule_obj          = get_post( intval( $rule ) );
-        $content           = json_decode( $rule_obj->post_content, true );
-        $categories        = ( isset ( $content['categories'] ) ) ? $content['categories'] : array();
-        $products          = ( isset ( $content['products'] ) ) ? $content['products'] : array();
-        $single_categories = ( isset ( $content['single_categories'] ) ) ? $content['single_categories'] : array();
+        if( ! $role_rule ) {
+            return false;
+        }
 
-        $product = array(
-            'id'               => $id,
-            'name'             => esc_attr( $name ),
-            'active'           => false,
-            'adjust_type'      => '',
-            'adjust_value'     => '',
-            'adjust_type_qty'  => '',
-            'adjust_value_qty' => '',
-            'min_qty'          => 0,
-            'hidden'           => 'false',
-        );
+        $product = new ProductRule($id, $name);
 
-        $products[] = $product;
+        $role_rule->add_product($product);
 
-        $jsonObj = $this->get_json_content_obj( $content, $rule, $categories, $products, $single_categories );
-
-        $args = array(
-            'ID'           => $rule,
-            'post_content' => wp_json_encode( $jsonObj, JSON_UNESCAPED_UNICODE ),
-            'post_author'  => get_current_user_id(),
-        );
-
-        wp_update_post( $args, false );
+        return $this->save_role_rules($role_rule);
     }
 
     /**
-     * Get content object
+     * Get RoleRules by ID
      */
-    private function get_json_content_obj( $content, $rule, $categories, $products, $single_categories ): array {
+    public function get_role_rules(int $rule_id): ?RoleRules {
+        $post = get_post($rule_id);
 
-        return array(
-            'id'                      => ( isset( $content ) ) ? $content['id'] : $rule,
-            'rule_active'             => ( isset( $content ) ) ? $content['rule_active'] : '',
-            'reduce_regular_type'     => ( isset( $content ) ) ? $content['reduce_regular_type'] : '',
-            'reduce_regular_value'    => ( isset( $content ) ) ? $content['reduce_regular_value'] : '',
-            'reduce_categories_value' => ( isset( $content ) ) ? $content['reduce_categories_value'] : '',
-            'reduce_sale_type'        => ( isset( $content ) ) ? $content['reduce_sale_type'] : '',
-            'reduce_sale_value'       => ( isset( $content ) ) ? $content['reduce_sale_value'] : '',
-            'coupon'                  => ( isset( $content ) ) ? $content['coupon'] : '',
-            'date_from'               => ( isset( $content ) ) ? $content['date_from'] : '',
-            'date_to'                 => ( isset( $content ) ) ? $content['date_to'] : '',
-            'time_from'               => ( isset( $content ) ) ? $content['time_from'] : '',
-            'time_to'                 => ( isset( $content ) ) ? $content['time_to'] : '',
-            'categories'              => $categories,
-            'categories_on_sale'      => ( isset( $content ) ) ? $content['categories_on_sale'] : '',
-            'products'                => $products,
-            'single_categories'       => $single_categories,
-        );
+        if (!$post || $post->post_type !== 'rrb2b') {
+            return null;
+        }
+
+        return RoleRules::fromPost($post);
+    }
+
+    /**
+     * Save RoleRules back to database
+     */
+    public function save_role_rules(RoleRules $role_rules): bool {
+        $result = wp_update_post([
+            'ID' => $role_rules->id,
+            'post_title' => $role_rules->role_name,
+            'post_content' => wp_json_encode($role_rules->toArray(), JSON_UNESCAPED_UNICODE),
+            'post_author' => get_current_user_id(),
+        ], true);
+
+        return !is_wp_error($result);
+    }
+
+    /**
+     * Get all RoleRules
+     *
+     * @return RoleRules[]
+     */
+    public function getAllRoleRules(): array {
+        $posts = $this->get_all_rules();
+        return array_map(fn($post) => RoleRules::fromPost($post), $posts);
     }
 }

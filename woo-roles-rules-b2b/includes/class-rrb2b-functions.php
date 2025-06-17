@@ -454,7 +454,7 @@ class Rrb2b_Functions {
 			exit;
 		} else {
 			//Add empty product rule
-			$this->rule_service->add_rule_to_product( $id, $name, $rule );
+			$this->rule_service->add_product_to_rule( $id, $name, $rule );
 		}
 		
 		wp_safe_redirect( $url );
@@ -462,26 +462,29 @@ class Rrb2b_Functions {
 	
 	}
 
-	/**
-	 * Add single categories
-	 */
-	public function rrb2b_add_table_categories( $categories, $rule ) {
-		
-		//Add empty single categories rule
-		$single_categories = explode( ',', $categories );
-		$this->rule_service->add_rule_to_categories( $single_categories, $rule );
-		
-		$filter_rule = filter_input( 1, 'filter', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		$url         = admin_url( 'admin.php?page=rrb2b&tab=categories&eid=' . $rule );
-		
-		if ( isset( $filter_rule ) && ! empty( $filter_rule ) ) {
-			$url = admin_url( 'admin.php?page=rrb2b&tab=categories&filter=' . $filter_rule );
-		}
-		
-		wp_safe_redirect( $url );
-		exit;
-	
-	}
+    /**
+     * Add single categories
+     */
+    public function rrb2b_add_table_categories( $categories, $rule ) {
+        error_log("Adding categories: '{$categories}' to rule: '{$rule}'");
+
+        //Add empty single categories rule
+        $single_categories = explode( ',', $categories );
+
+        $this->rule_service->add_categories_to_rule( $single_categories, $rule );
+
+        $filter_rule = filter_input( 1, 'filter', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $url         = admin_url( 'admin.php?page=rrb2b&tab=categories&eid=' . $rule );
+
+        if (! empty( $filter_rule )) {
+            $url = admin_url( 'admin.php?page=rrb2b&tab=categories&filter=' . $filter_rule );
+        } else {
+        }
+
+        error_log("About to redirect to: {$url}");
+        wp_safe_redirect( $url );
+        exit;
+    }
 
 	/**
 	 * Get rules for categories

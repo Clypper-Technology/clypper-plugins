@@ -28,14 +28,15 @@ class Admin {
         $this->verify_admin_request();
 
         $data = wp_unslash( $_POST );
+        $rule_name = sanitize_text_field($data['role'] ?? '');
 
-        // Fix: Check for the actual field your form sends
-        if ( empty( $data['role'] ) ) {
-            $this->redirect_with_error( 'Role is required.' );
+        if ( empty($rule_name) ) {
+            $this->redirect_with_error('Rule name is required.');
+            return;
         }
 
         try {
-            $rule_id = $this->rule_service->add_rule( $data );
+            $rule_id = $this->rule_service->add_rule( $rule_name );
 
             wp_redirect( add_query_arg(
                 array(
@@ -66,7 +67,7 @@ class Admin {
         $data = wp_unslash( $_POST );
 
         // Validate required fields
-        if ( empty( $data['rule_id'] ) ) {
+        if ( empty( $data['id'] ) ) {
             $this->redirect_with_error( __( 'Rule ID is required.', 'woo-roles-rules-b2b' ) );
         }
 

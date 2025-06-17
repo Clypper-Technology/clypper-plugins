@@ -65,6 +65,7 @@ class Rrb2b_Woo {
 
         new AjaxHandler();
         new RegistrationForm();
+        new Rrb2b_Rules();
 
 		//Filters
 		add_filter( 'admin_footer_text', array( __CLASS__, 'rrb2b_set_footer_text' ) );

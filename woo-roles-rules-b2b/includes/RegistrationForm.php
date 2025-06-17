@@ -9,7 +9,6 @@ class RegistrationForm
         add_action( 'woocommerce_register_post', array( $this, 'validate_register_form' ), 10, 3 );
         add_action( 'woocommerce_created_customer', array( $this, 'save_register_form_data' ) );
         add_action( 'woocommerce_register_form_start', array( $this, 'register_form' ) );
-
     }
 
     /**
