@@ -26,7 +26,7 @@ class RoleRules {
     /**
      * Create RoleRules from WordPress post
      */
-    public static function fromPost(\WP_Post $post): self {
+    public static function from_post(\WP_Post $post): self {
         $content = json_decode($post->post_content, true) ?: [];
 
         return new self(
@@ -48,7 +48,7 @@ class RoleRules {
     /**
      * Create empty RoleRules for new role
      */
-    public static function createForRole(string $role_name): self {
+    public static function create_for_rule(string $role_name): self {
         return new self(
             id: 0,
             role_name: $role_name

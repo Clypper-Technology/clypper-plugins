@@ -657,8 +657,7 @@ class Rrb2b_Rules {
 	/**
 	 * Get cart quantity for a given product.
 	 */
-	private  function get_cart_item_qty(int $product_id ): int
-    {
+	private  function get_cart_item_qty(int $product_id ): int {
         $cart = WC()->cart;
 
 		if ( ! $cart ) {
@@ -676,8 +675,7 @@ class Rrb2b_Rules {
 	 *
 	 * @param string $user_role user role.
 	 */
-	private  function get_role_rule(string $user_role ): array
-    {
+	private  function get_role_rule(string $user_role ): array {
         if ( isset( $this->$role_rules[$user_role] ) ) {
             return $this->$role_rules[$user_role];
         }

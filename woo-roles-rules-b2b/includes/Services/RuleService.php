@@ -67,17 +67,7 @@ class RuleService {
             $remove = sanitize_text_field($item['remove']);
 
             if ('false' === $remove) {
-                $category_rule = CategoryRule::fromArray([
-                    'id' => $item['id'],
-                    'slug' => $item['slug'],
-                    'name' => $item['name'],
-                    'active' => true,
-                    'reduce_type' => $item['reduce_type'],
-                    'reduce_value' => $item['reduce_value'],
-                    'reduce_type_qty' => $item['reduce_type_qty'],
-                    'reduce_value_qty' => $item['reduce_value_qty'],
-                    'min_qty' => $item['min_qty'],
-                ]);
+                $category_rule = CategoryRule::fromArray( $data );
 
                 $role_rules->single_categories[] = $category_rule;
             }
@@ -180,11 +170,9 @@ class RuleService {
             throw new InvalidArgumentException("Rule '{$name}' already exists");
         }
 
-        $role_rules = RoleRules::createForRole($name);
-
         $rule = [
             'post_title'   => $name,
-            'post_content' => wp_json_encode($role_rules->toArray(), JSON_UNESCAPED_UNICODE),
+            'post_content' => '',
             'post_status'  => 'publish',
             'post_type'    => 'rrb2b',
             'post_author'  => get_current_user_id(),
@@ -256,7 +244,7 @@ class RuleService {
             return null;
         }
 
-        return RoleRules::fromPost($post);
+        return RoleRules::from_post($post);
     }
 
     /**
@@ -278,8 +266,8 @@ class RuleService {
      *
      * @return RoleRules[]
      */
-    public function getAllRoleRules(): array {
+    public function get_all_role_rules(): array {
         $posts = $this->get_all_rules();
-        return array_map(fn($post) => RoleRules::fromPost($post), $posts);
+        return array_map(fn($post) => RoleRules::from_post($post), $posts);
     }
 }
