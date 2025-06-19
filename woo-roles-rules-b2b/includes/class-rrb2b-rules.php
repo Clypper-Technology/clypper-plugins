@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Rrb2b_Rules {
 
-    private array $role_rules = array();
+    private array $role_rules;
     private RuleService $rule_service;
     
     public function __construct()
@@ -201,9 +201,6 @@ class Rrb2b_Rules {
 		if ( ! $user_in_rule || '' === $price || 0 === $price || empty( $price ) ) {
 			return $price;
 		}
-        
-        $user_role = 
-
 
 		$price_new = ( empty( $price ) || 0 === $price ) ? ( ( $is_regular ) ? $product->get_regular_price() : $product->get_price() ) : $price;
 		$cart_qty  = $this->get_cart_item_qty( $product->get_id() );
@@ -676,8 +673,8 @@ class Rrb2b_Rules {
 	 * @param string $user_role user role.
 	 */
 	private  function get_role_rule(string $user_role ): array {
-        if ( isset( $this->$role_rules[$user_role] ) ) {
-            return $this->$role_rules[$user_role];
+        if ( isset( $this->role_rules[$user_role] ) ) {
+            return $this->role_rules[$user_role];
         }
 
         $args = array(
