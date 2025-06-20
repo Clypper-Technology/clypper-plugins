@@ -31,7 +31,7 @@ class Rrb2b_Rules {
         add_filter( 'woocommerce_variation_prices_price', array( $this, 'rrb2b_get_rule_price_variation' ), 20, 3 );
 
         //On Sale
-        add_filter( 'woocommerce_product_is_on_sale', array( $this, 'rrb2b_product_is_on_sale' ), 10, 2 );
+        add_filter( 'woocommerce_product_is_on_sale', array( $this, 'rrb2b_product_is_on_sale' ), 25, 2 );
 
         //Login
         add_filter( 'authenticate', array( $this, 'rrb2b_user_authenticate' ), 90, 3 );
@@ -60,13 +60,17 @@ class Rrb2b_Rules {
      * @param bool $is_on_sale bool value.
      * @param var $product product.
      */
-    public  function rrb2b_product_is_on_sale( $is_on_sale, $product ): bool {
+    public function rrb2b_product_is_on_sale( $is_on_sale, $product ): bool {
         if( is_admin() || ! $this->rrb2b_user_in_rule() ) {
+            error_log("Exiting early: admin=" . (is_admin() ? 'yes' : 'no') . ", user_in_rule=" . ($this->rrb2b_user_in_rule() ? 'yes' : 'no'));
             return $is_on_sale;
         }
 
         $regular_price = $product->get_regular_price();
         $role_price = $this->rrb2b_get_rule_price($regular_price, $product);
+
+        error_log("Product {$product->get_id()}: Regular='$regular_price' (" . gettype($regular_price) . "), Role='$role_price' (" . gettype($role_price) . ")");
+        error_log("Comparison result: " . ($role_price !== $regular_price ? 'DIFFERENT' : 'SAME'));
 
         return $role_price !== $regular_price;
     }

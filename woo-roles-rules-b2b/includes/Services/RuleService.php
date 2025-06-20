@@ -67,13 +67,16 @@ class RuleService {
             $remove = sanitize_text_field($item['remove']);
 
             if ('false' === $remove) {
-                $category_rule = CategoryRule::fromArray( $data );
+                // Pass the individual $item instead of the entire $data array
+                $category_rule = CategoryRule::fromArray($item);
 
-                $role_rules->single_categories[] = $category_rule;
+                $role_rules->add_single_category($category_rule);
             }
         }
 
-        return $this->save_role_rules($role_rules);
+        $this->save_role_rules($role_rules);
+
+        return true;
     }
 
 
