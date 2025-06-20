@@ -24,16 +24,16 @@ class RuleService {
      */
     public function add_categories_to_rule($cat_list, $rule ): bool {
         $role_rules = $this->get_role_rules( $rule );
+        $new_categories = [];
 
         foreach ( $cat_list as $slug_name ) {
             $cat = get_term_by( 'slug', $slug_name, 'product_cat' );
-            $category_rule = new CategoryRule($cat->term_id, $slug_name, esc_attr__( $cat->name ));
-            $role_rules->add_single_category($category_rule);
+            $new_categories[] = new CategoryRule($cat->term_id, $slug_name, esc_attr__( $cat->name ));
         }
 
-        $this->save_role_rules($role_rules);
+        $role_rules->add_single_categories($new_categories);
 
-        return true;
+        return $this->save_role_rules($role_rules);
     }
 
     /**
@@ -55,47 +55,41 @@ class RuleService {
     public function update_category_rule($data): bool {
         $rule_id = intval($data['rule_id']);
         $role_rules = $this->get_role_rules($rule_id);
+        $new_categories = $data['rows'] ?? [];
+        $categories_to_add = [];
 
         if (!$role_rules) {
             return false;
         }
 
-        $role_rules->single_categories = [];
-        $_single_categories = $data['rows'] ?? [];
-
-        foreach ($_single_categories as $item) {
+        foreach ($new_categories as $item) {
             $remove = sanitize_text_field($item['remove']);
 
             if ('false' === $remove) {
-                // Pass the individual $item instead of the entire $data array
-                $category_rule = CategoryRule::fromArray($item);
-
-                $role_rules->add_single_category($category_rule);
+                $categories_to_add[] = CategoryRule::fromArray($item);
             }
         }
 
-        $this->save_role_rules($role_rules);
-
-        return true;
+        $role_rules->replace_single_categories($categories_to_add);
+        return $this->save_role_rules($role_rules);
     }
 
 
     public function update_product_rule($data): bool {
         $rule_id = intval($data['rule_id']);
         $role_rules = $this->get_role_rules($rule_id);
+        $new_products = $data['rows'] ?? [];
+        $products_to_add = [];
 
         if (!$role_rules) {
             return false;
         }
 
-        $role_rules->products = [];
-        $_products = $data['rows'] ?? [];
-
-        foreach ($_products as $item) {
+        foreach ($new_products as $item) {
             $remove = sanitize_text_field($item['remove']);
 
             if ('false' === $remove) {
-                $product_rule = new ProductRule(
+                $products_to_add[] = new ProductRule(
                     (int)sanitize_text_field($item['product_id']),
                     sanitize_text_field($item['product_name']),
                     !empty($item['reduce_value']),
@@ -105,10 +99,10 @@ class RuleService {
                     sanitize_text_field($item['reduce_value_qty']),
                     (int)sanitize_text_field($item['min_qty']),
                 );
-
-                $role_rules->products[] = $product_rule;
             }
         }
+
+        $role_rules->replace_products($products_to_add);
 
         return $this->save_role_rules($role_rules);
     }
@@ -212,8 +206,8 @@ class RuleService {
         $role_rules->reduce_sale_type = $data['reduce_sale_type'] ?? '';
         $role_rules->reduce_sale_value = $data['reduce_sale_value'] ?? '';
 
-        $categories_arr = explode(',', $data['selected_categories']);
-        $role_rules->replace_categories(array_map(fn($catId) => [$catId => $catId], $categories_arr));
+        $new_categories = explode(',', $data['selected_categories']);
+        $role_rules->replace_categories(array_map(fn($catId) => [$catId => $catId], $new_categories));
 
         return $this->save_role_rules($role_rules);
     }

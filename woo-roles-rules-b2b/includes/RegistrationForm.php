@@ -2,6 +2,8 @@
 
 namespace ClypperTechnology\RolePricing;
 
+defined( 'ABSPATH' ) || exit;
+
 class RegistrationForm
 {
     public function __construct()

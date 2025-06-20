@@ -1,5 +1,8 @@
 <?php
 
+namespace ClypperTechnology\RolePricing;
+
+use Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController;
 use ClypperTechnology\RolePricing\Services\RoleService;
 use ClypperTechnology\RolePricing\Services\RuleService;
 
@@ -19,6 +22,66 @@ class Admin {
         add_action( 'admin_post_rrb2b_update_rule', array( $this, 'update_rule' ) );
         add_action( 'admin_menu', array( $this, 'create_admin_menu' ) );
         add_action( 'admin_post_rrb2b_create_role', array( $this, 'create_role' ) );
+        add_action( 'admin_head', array( $this, 'add_button_to_user_page' ) );
+        add_action( 'woocommerce_process_shop_order_meta', array( $this, 'save_selected_role_on_order') );
+        add_action( 'add_meta_boxes', array( $this, 'register_role_meta_box' ) );
+        add_filter( 'wp_new_user_notification_email_admin', array( $this, 'add_company_info_to_admin_email' ), 10, 3 );
+    }
+
+    public function add_company_info_to_admin_email( $wp_new_user_notification_email, $user, $blogname ) {
+        $company_cvr = get_user_meta( $user->ID, 'company_cvr', true );
+        $company_type = get_user_meta( $user->ID, 'company_type', true );
+
+        if ( $company_cvr || $company_type ) {
+            $company_info = "\n\n" . __( 'Company Information:', 'woo-roles-rules-b2b' ) . "\n";
+
+            if ( $company_cvr ) {
+                $company_info .= __( 'CVR Number:', 'woo-roles-rules-b2b' ) . ' ' . $company_cvr . "\n";
+            }
+
+            if ( $company_type ) {
+                $company_info .= __( 'Industry:', 'woo-roles-rules-b2b' ) . ' ' . $company_type . "\n";
+            }
+
+            // Add company info to the email message
+            $wp_new_user_notification_email['message'] .= $company_info;
+        }
+
+        return $wp_new_user_notification_email;
+    }
+
+    /**
+     * Add meta box for Roles & Rules B2B in Order page
+     */
+    public function register_role_meta_box(): void {
+
+        $screen = wc_get_container()->get( CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
+            ? wc_get_page_screen_id( 'shop-order' )
+            : 'shop_order';
+
+        /*
+		add_meta_box(
+			'rrb2b-role-prices-meta-box',
+			__( 'Roles & Rules B2B', 'woo-roles-rules-b2b' ),
+			'Rrb2b_Woo::rrb2b_display_role_meta_box_callback',
+			$screen,
+			'side',
+			'default'
+		);
+	    */
+    }
+
+    /**
+     * Save selected role on order
+     */
+    public function save_selected_role_on_order($order_id ): void {
+        $this->verify_admin_request('rrb2b_nonce_id');
+
+        if ( ! empty( $order_id ) && ! empty( $_POST['rrb2b_user_role'] ) ) {
+            $order = wc_get_order( $order_id );
+            $order->update_meta_data( '_rrb2b_user_role', wc_clean( $_POST['rrb2b_user_role'] ) );
+            $order->save();
+        }
     }
 
     /**
@@ -145,8 +208,28 @@ class Admin {
             'rrb2b_plugin_roles_page',
             30
         );
-
     }
+
+    /**
+     * Add button to list users
+     */
+    public function add_button_to_user_page() {
+
+        global $current_screen;
+
+        if ( 'users' !== $current_screen->id ) {
+            return;
+        }
+
+        ?>
+        <script>
+            jQuery(function(){
+                jQuery('h1').append(' <a href="<?php echo esc_url( admin_url( 'admin.php?page=rrb2b' ) ); ?>" class="page-title-action"><?php esc_attr_e( 'Roles & Rules B2B', 'woo-roles-rules-b2b' ); ?></a>');
+            });
+        </script>
+        <?php
+    }
+
 
     /**
      * Combined verification for admin requests

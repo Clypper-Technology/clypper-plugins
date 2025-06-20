@@ -78,6 +78,10 @@ class RoleRules {
         $this->products[] = $product;
     }
 
+    public function replace_products(array $products): void {
+        $this->products = $products;
+    }
+
     public function add_categories(array $categories): void
     {
         $this->categories= array_merge($this->categories, $categories);
@@ -91,9 +95,13 @@ class RoleRules {
         $this->categories[] = $category;
     }
 
+    public function replace_single_categories(array $categories): void {
+        $this->single_categories = $categories;
+    }
+
     public function add_single_categories(array $categories): void
     {
-        $this->single_categories= array_merge($this->categories, $categories);
+        $this->single_categories= array_merge($this->single_categories, $categories);
     }
 
     public function add_single_category(CategoryRule $category): void {

@@ -24,6 +24,8 @@
 
  */
 
+use ClypperTechnology\RolePricing\Admin;
+
 require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 
 
@@ -44,8 +46,6 @@ require_once dirname( __FILE__ ) . '/includes/class-rrb2b-woo.php';
 require_once dirname( __FILE__ ) . '/includes/class-rrb2b-rules.php';
 
 if(is_admin()) {
-    require_once __DIR__ . '/includes/class-admin.php';
-
     new Admin();
 }
 

@@ -10,6 +10,8 @@ defined( 'ABSPATH' ) || exit;
 use Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController;
 use ClypperTechnology\RolePricing\AjaxHandler;
 use ClypperTechnology\RolePricing\RegistrationForm;
+use ClypperTechnology\RolePricing\Admin;
+use ClypperTechnology\RolePricing\Users;
 
 require_once __DIR__ . '/class-rrb2b-functions.php';
 
@@ -39,8 +41,6 @@ class Rrb2b_Woo {
 		//Actions
 		if ( is_admin() ) {
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'rrb2b_header_scripts' ) );
-			add_action( 'admin_head', array( __CLASS__, 'rrb2b_add_button_users' ) );
-			add_action( 'admin_notices', array( __CLASS__, 'rrb2b_admin_activation_notice_success' ) );
 			add_filter( 'woocommerce_get_settings_pages', array( __CLASS__, 'cas_rrb2b_settings' ) );
 
 		}
@@ -56,125 +56,15 @@ class Rrb2b_Woo {
 		 */
 		add_action( 'woocommerce_before_calculate_totals', array( __CLASS__, 'rrb2b_apply_role_based_pricing_to_api_orders' ) );
 
-		//Add metabox 
-		add_action( 'add_meta_boxes', array( __CLASS__, 'rrb2b_register_role_meta_box' ) );
-		
 		//Add roles to orders
 		add_action( 'admin_footer', array( __CLASS__, 'rrb2b_admin_order_scripts' ) );
-		add_action( 'woocommerce_process_shop_order_meta', array( __CLASS__, 'rrb2b_save_selected_role_on_order' ) );
 
         new AjaxHandler();
         new RegistrationForm();
         new Rrb2b_Rules();
-
-		//Filters
-		add_filter( 'admin_footer_text', array( __CLASS__, 'rrb2b_set_footer_text' ) );
-
-
-        // Add CVR column to admin users list
-        add_filter( 'manage_users_columns', array( __CLASS__, 'add_cvr_column' ) );
-        add_action( 'manage_users_custom_column', array( __CLASS__, 'show_cvr_column_content' ), 10, 3 );
-
-        // Add company info to customer account dashboard
-        add_action( 'woocommerce_account_dashboard', array( __CLASS__, 'display_company_info_dashboard' ) );
-
-
-        // Add company info to new user admin notification email
-        add_filter( 'wp_new_user_notification_email_admin', array( __CLASS__, 'add_company_info_to_admin_email' ), 10, 3 );
-
-        // Add custom fields to admin user edit page
-        add_action( 'show_user_profile', array( __CLASS__, 'show_custom_customer_fields' ) );
-        add_action( 'edit_user_profile', array( __CLASS__, 'show_custom_customer_fields' ) );
+        new Users();
 	}
 
-    public static function show_custom_customer_fields( $user ) {
-        $company_name = get_user_meta( $user->ID, 'company_name', true );
-        $company_cvr = get_user_meta( $user->ID, 'company_cvr', true );
-        $company_type = get_user_meta( $user->ID, 'company_type', true );
-
-        // Only show if user has company information
-        if ( $company_name || $company_cvr || $company_type ) {
-            ?>
-            <h3><?php _e( 'B2B Company Information', 'woo-roles-rules-b2b' ); ?></h3>
-            <table class="form-table">
-                <?php if ( $company_name ) : ?>
-                    <tr>
-                        <th><label><?php _e( 'Company Name', 'woo-roles-rules-b2b' ); ?></label></th>
-                        <td><?php echo esc_html( $company_name ); ?></td>
-                    </tr>
-                <?php endif; ?>
-
-                <?php if ( $company_cvr ) : ?>
-                    <tr>
-                        <th><label><?php _e( 'CVR Number', 'woo-roles-rules-b2b' ); ?></label></th>
-                        <td><?php echo esc_html( $company_cvr ); ?></td>
-                    </tr>
-                <?php endif; ?>
-
-                <?php if ( $company_type ) : ?>
-                    <tr>
-                        <th><label><?php _e( 'Industry', 'woo-roles-rules-b2b' ); ?></label></th>
-                        <td><?php echo esc_html( $company_type ); ?></td>
-                    </tr>
-                <?php endif; ?>
-            </table>
-            <?php
-        }
-    }
-
-    public static function add_cvr_column( $columns ) {
-        $columns['company_cvr'] = __( 'CVR', 'woo-roles-rules-b2b' );
-        return $columns;
-    }
-
-    public static function show_cvr_column_content( $value, $column_name, $user_id ) {
-        if ( $column_name === 'company_cvr' ) {
-            return get_user_meta( $user_id, 'company_cvr', true );
-        }
-        return $value;
-    }
-
-    public static function display_company_info_dashboard() {
-        $customer_id = get_current_user_id();
-        $company_cvr = get_user_meta( $customer_id, 'company_cvr', true );
-        $company_type = get_user_meta( $customer_id, 'company_type', true );
-
-        if ( $company_cvr || $company_type ) {
-            ?>
-            <div class="woocommerce-MyAccount-content">
-                <h3><?php _e( 'Company Information', 'woo-roles-rules-b2b' ); ?></h3>
-                <?php if ( $company_cvr ) : ?>
-                    <p><strong><?php _e( 'CVR:', 'woo-roles-rules-b2b' ); ?></strong> <?php echo esc_html( $company_cvr ); ?></p>
-                <?php endif; ?>
-                <?php if ( $company_type ) : ?>
-                    <p><strong><?php _e( 'Industry:', 'woo-roles-rules-b2b' ); ?></strong> <?php echo esc_html( $company_type ); ?></p>
-                <?php endif; ?>
-            </div>
-            <?php
-        }
-    }
-
-    public static function add_company_info_to_admin_email( $wp_new_user_notification_email, $user, $blogname ) {
-        $company_cvr = get_user_meta( $user->ID, 'company_cvr', true );
-        $company_type = get_user_meta( $user->ID, 'company_type', true );
-
-        if ( $company_cvr || $company_type ) {
-            $company_info = "\n\n" . __( 'Company Information:', 'woo-roles-rules-b2b' ) . "\n";
-
-            if ( $company_cvr ) {
-                $company_info .= __( 'CVR Number:', 'woo-roles-rules-b2b' ) . ' ' . $company_cvr . "\n";
-            }
-
-            if ( $company_type ) {
-                $company_info .= __( 'Industry:', 'woo-roles-rules-b2b' ) . ' ' . $company_type . "\n";
-            }
-
-            // Add company info to the email message
-            $wp_new_user_notification_email['message'] .= $company_info;
-        }
-
-        return $wp_new_user_notification_email;
-    }
 
 	/**
 	 * Add settings
@@ -197,17 +87,18 @@ class Rrb2b_Woo {
 		}
 		
 	}
-	
+
 
 	/**
 	 * Add meta box for Roles & Rules B2B in Order page
 	 */
 	public static function rrb2b_register_role_meta_box() {
-		
+
 		$screen = wc_get_container()->get( CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
 		? wc_get_page_screen_id( 'shop-order' )
 		: 'shop_order';
 
+        /*
 		add_meta_box(
 			'rrb2b-role-prices-meta-box',
 			__( 'Roles & Rules B2B', 'woo-roles-rules-b2b' ),
@@ -216,27 +107,9 @@ class Rrb2b_Woo {
 			'side',
 			'default'
 		);
-	
+	    */
 	}
 
-	/**
-	 * Save selected role on order
-	 */
-	public static function rrb2b_save_selected_role_on_order( $order_id ) {
-	
-		if ( check_admin_referer( 'rrb2b_nonce_id', 'rrb2b_nonce' ) ) {
-			
-			if ( ! empty( $order_id ) && ! empty( $_POST['rrb2b_user_role'] ) ) {
-
-				$order = wc_get_order( $order_id );
-				$order->update_meta_data( '_rrb2b_user_role', wc_clean( $_POST['rrb2b_user_role'] ) );
-				$order->save();
-
-			}
-
-		}
-
-	}
 
 	/**
 	 * Show the meta box for role and recalculate
@@ -415,85 +288,6 @@ class Rrb2b_Woo {
 
 	}
 
-
-	/**
-	 * On activation notice
-	 */
-	public static function rrb2b_admin_activation_notice_success() {
-
-		$allowed_tags = array(
-			'a' => array(
-				'class'  => array(),
-				'href'   => array(),
-				'target' => array(),
-				'title'  => array(),
-			),
-		);
-
-		/* translators: %s: url for documentation */
-		$read_doc = __( 'Read the <a href="%1$s" target="_blank"> extension documentation </a> for more information.', 'woo-roles-rules-b2b' );
-		$out_str  = sprintf( $read_doc, esc_url( 'https://docs.woocommerce.com/document/roles-rules-b2b/' ) );
-
-		if ( get_transient( 'rrb2b-admin-notice-activated' ) ) {
-			?>
-			<div class="updated woocommerce-message">
-				<a class="woocommerce-message-close notice-dismiss" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wc-hide-notice', 'rrb2b_admin_activation_notice_success' ), 'woocommerce_hide_notices_nonce', '_wc_notice_nonce' ) ); ?>"><?php esc_html_e( 'Dismiss', 'woo-roles-rules-b2b' ); ?></a>
-				<p>
-					<?php esc_html_e( 'Thank you for installing Roles & Rules B2B for WooCommerce. You can now start creating roles and rules. ', 'woo-roles-rules-b2b' ); ?>
-					<?php echo wp_kses( $out_str, $allowed_tags ); ?>
-				</p>
-				<p class="submit">
-					<a href="<?php echo esc_url( admin_url( 'admin.php?page=rrb2b&tab=rules' ) ); ?>" class="button-primary"><?php esc_html_e( 'Start Roles & Rules', 'woo-roles-rules-b2b' ); ?></a>
-					<a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=rrb2b' ) ); ?>" class="button-secondary"><?php esc_html_e( 'Settings', 'woo-roles-rules-b2b' ); ?></a>
-				</p>
-			</div>
-
-			<?php
-			delete_transient( 'rrb2b-admin-notice-activated' );
-		}
-	}
-
-	/**
-	 * Set footer text.
-	 */
-	public static function rrb2b_set_footer_text( $text ) {
-
-		$page = filter_input( 1, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-
-		if ( 'rrb2b' === $page ) {
-			$img_file = plugins_url( '../consortia-100.png', __FILE__ );
-
-			/* translators: %s: url to vendor and logo */
-			printf( esc_html__( '- developed by %1$s%2$s%3$s', 'woo-roles-rules-b2b' ), '<a href="https://www.consortia.no/en/" target="_blank">', '<img src="' . esc_attr( $img_file ) . '" class="cas-logo">', '</a>' );
-
-		} else {
-
-			return $text;
-
-		}
-
-	}
-
-	/**
-	 * Add button to list users 
-	 */
-	public static function rrb2b_add_button_users() {
-		
-		global $current_screen;
-
-		if ( 'users' !== $current_screen->id ) {
-			return;
-		}
-
-		?>
-		<script>
-		jQuery(function(){
-			jQuery('h1').append(' <a href="<?php echo esc_url( admin_url( 'admin.php?page=rrb2b' ) ); ?>" class="page-title-action"><?php esc_attr_e( 'Roles & Rules B2B', 'woo-roles-rules-b2b' ); ?></a>');
-		});
-		</script>
-		<?php
-		
-	}
 
 	/**
 	 * Add scripts and style
