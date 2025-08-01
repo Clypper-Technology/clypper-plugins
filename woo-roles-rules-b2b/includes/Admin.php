@@ -54,21 +54,21 @@ class Admin {
      * Add meta box for Roles & Rules B2B in Order page
      */
     public function register_role_meta_box(): void {
-
-        $screen = wc_get_container()->get( CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
-            ? wc_get_page_screen_id( 'shop-order' )
-            : 'shop_order';
-
         /*
-		add_meta_box(
-			'rrb2b-role-prices-meta-box',
-			__( 'Roles & Rules B2B', 'woo-roles-rules-b2b' ),
-			'Rrb2b_Woo::rrb2b_display_role_meta_box_callback',
-			$screen,
-			'side',
-			'default'
-		);
-	    */
+                $screen = wc_get_container()->get( CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
+                    ? wc_get_page_screen_id( 'shop-order' )
+                    : 'shop_order';
+
+
+                add_meta_box(
+                    'rrb2b-role-prices-meta-box',
+                    __( 'Roles & Rules B2B', 'woo-roles-rules-b2b' ),
+                    'Rrb2b_Woo::rrb2b_display_role_meta_box_callback',
+                    $screen,
+                    'side',
+                    'default'
+                );
+                */
     }
 
     /**

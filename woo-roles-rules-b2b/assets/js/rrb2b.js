@@ -544,11 +544,16 @@
 				var frm_elements  = frm.form.elements;
 				var remove_status = frm_elements['product_remove'].checked;
 
-				var frm_data = { rule_id: id,
-					remove: remove_status, product_id: frm_elements['product_id'].value, product_hidden: frm_elements['product_hidden'].checked,
-					product_name: frm_elements['product_name'].value, reduce_type: frm_elements['reduce_regular_type'].value, 
-					reduce_value: frm_elements['adjust_value'].value, reduce_type_qty: frm_elements['reduce_regular_type_qty'].value,
-					reduce_value_qty: frm_elements['adjust_value_qty'].value, min_qty: frm_elements['min_qty'].value,
+				var frm_data = {
+					rule_id: id,
+					remove: remove_status,
+					product_id: frm_elements['product_id'].value,
+					product_name: frm_elements['product_name'].value,
+					reduce_type: frm_elements['reduce_regular_type'].value,
+					reduce_value: frm_elements['adjust_value'].value,
+					reduce_type_qty: frm_elements['reduce_regular_type_qty'].value,
+					reduce_value_qty: frm_elements['adjust_value_qty'].value,
+					min_qty: frm_elements['min_qty'].value,
 					is_variable: frm_elements['variable'].value,
 				};
 				json_data.rows.push( frm_data );

@@ -29,7 +29,7 @@ use ClypperTechnology\RolePricing\Admin;
 require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 
 
-const CAS_ROLES_RULES_VS   = '2.5.5';
+const CAS_ROLES_RULES_VS   = '2.5.6';
 const CAS_ROLES_RULES_PROD = 'true';
 
 add_action( 'before_woocommerce_init', function() {
@@ -59,16 +59,6 @@ function rrb2b_install() {
 	if ( version_compare( $wp_version, '4.1', '<' ) ) {
 		wp_die( 'This plugin require WordPress 4.1 or higher.' );
 	}
-
-	$rrb2b_options_arr = array(
-		'rrb2b_net_price_b2b'            => '',
-		'rrb2b_net_price_b2b_list'       => array(),
-		'rrb2b_auth_new_customer'        => '',
-		'rrb2b_tax_exempt_list'          => '',
-		'rrb2b_force_b2b_variable_price' => '',
-	);
-
-	update_option( 'rrb2b_options', $rrb2b_options_arr );
 
 	set_transient( 'rrb2b-admin-notice-activated', true );
 

@@ -5,6 +5,7 @@ namespace ClypperTechnology\RolePricing\Services;
 use ClypperTechnology\RolePricing\Rules\CategoryRule;
 use ClypperTechnology\RolePricing\Rules\ProductRule;
 use ClypperTechnology\RolePricing\Rules\RoleRules;
+use ClypperTechnology\RolePricing\Rules\Rule;
 use InvalidArgumentException;
 use RuntimeException;
 use WP_Post;
@@ -12,7 +13,6 @@ use WP_Post;
 defined( 'ABSPATH' ) || exit;
 
 class RuleService {
-
     public function __construct()
     {
 
@@ -27,8 +27,8 @@ class RuleService {
         $new_categories = [];
 
         foreach ( $cat_list as $slug_name ) {
-            $cat = get_term_by( 'slug', $slug_name, 'product_cat' );
-            $new_categories[] = new CategoryRule($cat->term_id, $slug_name, esc_attr__( $cat->name ));
+            $new_category = get_term_by( 'slug', $slug_name, 'product_cat' );
+            $new_categories[] = new CategoryRule($new_category->term_id, $slug_name, esc_attr__( $new_category->name ));
         }
 
         $role_rules->add_single_categories($new_categories);
@@ -66,7 +66,7 @@ class RuleService {
             $remove = sanitize_text_field($item['remove']);
 
             if ('false' === $remove) {
-                $categories_to_add[] = CategoryRule::fromArray($item);
+                $categories_to_add[] = CategoryRule::from_array_old($item);
             }
         }
 
@@ -92,11 +92,7 @@ class RuleService {
                 $products_to_add[] = new ProductRule(
                     (int)sanitize_text_field($item['product_id']),
                     sanitize_text_field($item['product_name']),
-                    !empty($item['reduce_value']),
-                    sanitize_text_field($item['reduce_type']),
-                    sanitize_text_field($item['reduce_value']),
-                    sanitize_text_field($item['reduce_type_qty']),
-                    sanitize_text_field($item['reduce_value_qty']),
+                    Rule::from_array_old( $item ),
                     (int)sanitize_text_field($item['min_qty']),
                 );
             }
@@ -200,11 +196,23 @@ class RuleService {
         }
 
         $role_rules->rule_active = !empty($data['rule_active']);
-        $role_rules->reduce_regular_type = $data['reduce_regular_type'] ?? '';
-        $role_rules->reduce_regular_value = $data['reduce_regular_value'] ?? '';
-        $role_rules->reduce_categories_value = $data['reduce_categories_value'] ?? '';
-        $role_rules->reduce_sale_type = $data['reduce_sale_type'] ?? '';
-        $role_rules->reduce_sale_value = $data['reduce_sale_value'] ?? '';
+
+        // Global rule - only create if there's actually a value
+        $role_rules->global_rule = new Rule(
+            $data['reduce_regular_type'] ?? '',
+            $data['reduce_regular_value'] ?? '',
+            '',  // Future: could support bulk global discounts
+            ''
+        )
+        ;
+
+        // Category rule - only create if there's actually a value
+        $role_rules->category_rule = new Rule(
+            $data['reduce_categories_type'] ?? 'percent',  // Default assumption
+            $data['reduce_categories_value'] ?? '',
+            '',  // Future: could support bulk category discounts
+            ''
+        );
 
         $new_categories = explode(',', $data['selected_categories']);
         $role_rules->replace_categories(array_map(fn($catId) => [$catId => $catId], $new_categories));
@@ -251,7 +259,7 @@ class RuleService {
         $result = wp_update_post([
             'ID' => $role_rules->id,
             'post_title' => $role_rules->role_name,
-            'post_content' => wp_json_encode($role_rules->toArray(), JSON_UNESCAPED_UNICODE),
+            'post_content' => wp_json_encode($role_rules->to_array(), JSON_UNESCAPED_UNICODE),
             'post_author' => get_current_user_id(),
         ], true);
 
@@ -265,6 +273,13 @@ class RuleService {
      */
     public function get_all_role_rules(): array {
         $posts = $this->get_all_rules();
+
         return array_map(fn($post) => RoleRules::from_post($post), $posts);
+    }
+
+    public function get_rule_by_user_role( string $user_role): ?RoleRules {
+        $all_rules = $this->get_all_role_rules();
+
+        return array_find($all_rules, fn( RoleRules $rule ) => $rule->role_name === $user_role );
     }
 }

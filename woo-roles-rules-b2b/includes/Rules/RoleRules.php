@@ -8,20 +8,25 @@ defined('ABSPATH') || exit;
  * RoleRules - Complete pricing rules for a user role
  */
 class RoleRules {
+    public const GUEST_ROLE = 'guest';
+
+    /**
+     * @param int[] $categories;
+     * @param ProductRule[] $products
+     * @param CategoryRule[] $single_categories
+     */
     public function __construct(
         public int $id,
         public string $role_name,
         public bool $rule_active = false,
-        public string $reduce_regular_type = '',
-        public string $reduce_regular_value = '',
-        public string $reduce_categories_value = '',
-        public string $reduce_sale_type = '',
-        public string $reduce_sale_value = '',
-        public string $coupon = '',
+        public ?Rule $global_rule = null,
+        public ?Rule $category_rule = null,
         public array $categories = [],           // General category mappings [['123' => '123']]
         public array $products = [],             // ProductRule[]
         public array $single_categories = []     // CategoryRule[]
     ) {}
+
+
 
     /**
      * Create RoleRules from WordPress post
@@ -33,45 +38,39 @@ class RoleRules {
             id: $post->ID,
             role_name: $post->post_title,
             rule_active: ($content['rule_active'] ?? '') === 'on',
-            reduce_regular_type: $content['reduce_regular_type'] ?? '',
-            reduce_regular_value: $content['reduce_regular_value'] ?? '',
-            reduce_categories_value: $content['reduce_categories_value'] ?? '',
-            reduce_sale_type: $content['reduce_sale_type'] ?? '',
-            reduce_sale_value: $content['reduce_sale_value'] ?? '',
-            coupon: $content['coupon'] ?? '',
-            categories: $content['categories'] ?? [],
-            products: array_map(fn($p) => ProductRule::fromArray($p), $content['products'] ?? []),
-            single_categories: array_map(fn($c) => CategoryRule::fromArray($c), $content['single_categories'] ?? [])
+            global_rule: isset($content['global_rule']) ? Rule::from_array($content['global_rule']) : null,
+            category_rule: isset($content['category_rule']) ? Rule::from_array($content['category_rule']) : null,
+            categories: array_Map(fn($id) => intval($id), $content['categories'] ?? []),
+            products: array_map(fn($p) => ProductRule::from_array($p), $content['products'] ?? []),
+            single_categories: array_map(fn($c) => CategoryRule::from_array($c), $content['single_categories'] ?? [])
         );
     }
 
-    /**
-     * Create empty RoleRules for new role
-     */
-    public static function create_for_rule(string $role_name): self {
-        return new self(
-            id: 0,
-            role_name: $role_name
-        );
-    }
 
     /**
      * Convert to array for storage (matches your exact structure)
      */
-    public function toArray(): array {
+    public function to_array(): array {
         return [
             'id' => $this->id,
             'rule_active' => $this->rule_active ? 'on' : '',
-            'reduce_regular_type' => $this->reduce_regular_type,
-            'reduce_regular_value' => $this->reduce_regular_value,
-            'reduce_categories_value' => $this->reduce_categories_value,
-            'reduce_sale_type' => $this->reduce_sale_type,
-            'reduce_sale_value' => $this->reduce_sale_value,
-            'coupon' => $this->coupon,
+            'global_rule' => $this->global_rule?->to_array(),
+            'category_rule' => $this->category_rule?->to_array(),
             'categories' => $this->categories,
-            'products' => array_map(fn($p) => $p->toArray(), $this->products),
-            'single_categories' => array_map(fn($c) => $c->toArray(), $this->single_categories),
+            'products' => array_map(fn($p) => $p->to_array(), $this->products),
+            'single_categories' => array_map(fn($c) => $c->to_array(), $this->single_categories),
         ];
+    }
+
+    /**
+     * Get product rules by product ID
+     * @return ProductRule[]
+     * @param int $product_id
+     */
+    public function products_rules_by_id( int $product_id ): array {
+        return array_filter( $this->products, function( ProductRule $product_rule ) use ( $product_id ) {
+            return $product_rule->id === $product_id;
+        });
     }
 
     public function add_product(ProductRule $product): void {
@@ -108,23 +107,49 @@ class RoleRules {
         $this->single_categories[] = $category;
     }
 
-    public function activate(): void {
-        $this->rule_active = true;
+    public function is_guest(): bool {
+        return $this->role_name === self::GUEST_ROLE;
     }
 
-    public function deactivate(): void {
-        $this->rule_active = false;
+    public function has_products(): bool {
+        return ! empty( $this->products );
     }
 
-    public function hasGlobalDiscount(): bool {
-        return !empty($this->reduce_regular_value);
+    public function has_categories(): bool {
+        return ! empty( $this->categories );
     }
 
-    public function hasCategoryDiscount(): bool {
-        return !empty($this->reduce_categories_value);
+    public function has_single_categories(): bool {
+        return ! empty( $this->single_categories );
     }
 
-    public function hasSaleDiscount(): bool {
-        return !empty($this->reduce_sale_value);
+    public function has_category_rule(): bool {
+        return $this->category_rule && $this->category_rule->has_value();
+    }
+
+    public function has_global_rule(): bool {
+        return $this->global_rule && $this->global_rule->has_value();
+    }
+
+    /**
+     * @param int[] $category_ids
+     * @return ?CategoryRule
+     */
+    public function first_single_category_in_rule(array $category_ids ): ?CategoryRule {
+        foreach ( $this->single_categories as $category ) {
+            if ( in_array($category->id, $category_ids, true) ) {
+                return $category;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param int[] $category_ids
+     * @return bool
+     */
+    public function matches_any_category( array $category_ids ): bool {
+        return ! empty(array_intersect($category_ids, $this->categories));
     }
 }

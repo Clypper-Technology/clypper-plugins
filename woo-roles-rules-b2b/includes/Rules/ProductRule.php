@@ -6,61 +6,47 @@ defined('ABSPATH') || exit;
 
 class ProductRule
 {
-    public function __construct(
-        public int $id,
-        public string $name,
-        public bool $active = false,
-        public string $adjust_type = '',
-        public string $adjust_value = '',
-        public string $adjust_type_qty = '',
-        public string $adjust_value_qty = '',
-        public int $min_qty = 0,
-    ) {}
+    public int $id;
+    public string $name;
+    public Rule $rule;
+    public string $min_quantity;
 
-    public function toArray(): array {
+    public function __construct(
+        int $id,
+        string $name,
+        Rule $rule = new Rule('', '', '', ''),
+        int $min_qty = 0,
+    ) {
+        $this->id = $id;
+        $this->name = $name;
+        $this->rule = $rule;
+        $this->min_quantity = $min_qty;
+    }
+
+    public function to_array(): array {
         return [
             'id' => $this->id,
             'name' => esc_attr($this->name),
-            'active' => $this->active,
-            'adjust_type' => $this->adjust_type,
-            'adjust_value' => $this->adjust_value,
-            'adjust_type_qty' => $this->adjust_type_qty,
-            'adjust_value_qty' => $this->adjust_value_qty,
-            'min_qty' => $this->min_qty,
+            'rule' => $this->rule->to_array(),
+            'min_qty' => $this->min_quantity,
         ];
     }
 
-    public static function fromArray(array $data): self {
+    public static function from_array(array $data): self {
         return new self(
             id: (int)$data['id'],
             name: $data['name'],
-            active: (bool)($data['active'] ?? false),
-            adjust_type: $data['adjust_type'] ?? '',
-            adjust_value: $data['adjust_value'] ?? '',
-            adjust_type_qty: $data['adjust_type_qty'] ?? '',
-            adjust_value_qty: $data['adjust_value_qty'] ?? '',
+            rule: Rule::from_array( $data['rule'] ),
             min_qty: (int)($data['min_qty'] ?? 0),
         );
     }
 
-    /**
-     * Check if this product rule is active
-     */
-    public function isActive(): bool {
-        return $this->active;
-    }
-
-    /**
-     * Check if this product rule has quantity-based pricing
-     */
-    public function hasQuantityPricing(): bool {
-        return ! empty( $this->adjust_value_qty ) && $this->min_qty > 0;
-    }
-
-    /**
-     * Check if this product rule has regular pricing
-     */
-    public function hasRegularPricing(): bool {
-        return ! empty( $this->adjust_value );
+    public static function from_array_old( $data ) : self {
+        return new self(
+            id: (int)$data['id'],
+            name: $data['name'],
+            rule: Rule::from_array_old( $data ),
+            min_qty: (int)($data['min_qty'] ?? 0),
+        );
     }
 }

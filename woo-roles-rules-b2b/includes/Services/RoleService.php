@@ -60,15 +60,4 @@ class RoleService
             $logger->info( 'Role "' . $slug . '" successfully added.', $context );
         }
     }
-
-    public function get_roles() {
-        // From rrb2b_get_roles() method
-        $wp_roles = wp_roles();
-        $roles = $wp_roles->roles;
-        $cap_roles = array( 'administrator', 'editor', 'author', 'contributor', 'subscriber', 'customer', 'shop_manager' );
-
-        if ( ! $wp_roles->is_role( 'rrb2b_pending' ) ) {
-            $wp_roles->add_role( 'rrb2b_pending', __( 'Pending (no rights)', 'woo-roles-rules-b2b' ), array() );
-        }
-    }
 }

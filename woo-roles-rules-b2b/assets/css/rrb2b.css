@@ -96,8 +96,7 @@
 }
 
 .submit_rule{
-	position: absolute; 
-    bottom: 0px; 
+	margin-bottom: 0!important;
 }
 .rrb2b-select{
 	margin-bottom: 3px;

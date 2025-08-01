@@ -74,39 +74,20 @@ class Rrb2b_Templates {
 	/**
 	 * Get General Rules table
 	 */
-	public function rrb2b_get_rules_table() {
-		
-		$order = ( ! empty( filter_input( 1, 'order', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ) ) ? filter_input( 1, 'order', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) : '';
-
-		if ( empty( $order ) || 'ASC' === $order ) {
-			$order = 'DESC';
-		} else {
-			$order = 'ASC';
-		}
-
-		$url = admin_url( 'admin.php?page=rrb2b&order=' . $order );
+	public function rrb2b_get_rules_table(): void {
 		?>
 		<div class="wrap"> <!-- Table -->
 			<table class="widefat fixed striped posts rrb2b-table" id="rrb2b_table" style="width:100%;">
 				<thead>
 					<tr>
 						<th style="width: 50px;"><?php esc_attr_e( 'Active', 'woo-roles-rules-b2b' ); ?></th>
-						<th style="width: 190px;"><i class="fas fa-user-tag"></i> <a href="<?php echo esc_url( $url . '&tab=rules' ); ?>"> <?php esc_attr_e( 'Role', 'woo-roles-rules-b2b' ); ?> <i class="fas fa-sort"></i> </a></th>
+						<th style="width: 190px;"><i class="fas fa-user-tag"></i> <?php esc_attr_e( 'Role', 'woo-roles-rules-b2b' ); ?></i></th>
 						<th><i class="fas fa-sliders-h"></i> <?php esc_attr_e( 'Rule: General', 'woo-roles-rules-b2b' ); ?></th>
-						<th></th>
 					</tr>
 				</thead>
 				<tbody id="rrb2b-list">   
 					<?php $this->functions->rrb2b_get_rules(); ?>
 				</tbody>
-				<tfoot>
-					<tr>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
-				</tfoot>
 			</table>
 			
 		</div>

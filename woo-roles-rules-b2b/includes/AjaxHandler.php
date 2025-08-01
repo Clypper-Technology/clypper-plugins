@@ -47,7 +47,7 @@ class AjaxHandler {
         $this->check_nonce('rrb2b_id');
 
         $data = wp_unslash( $_POST );
-        $this->rule_service->update_category_rule($data);
+        $this->rule_service->update_category_rule( $data );
 
         wp_send_json_success( array( 'message' => 'Updated successfully' ) );
     }
@@ -95,6 +95,7 @@ class AjaxHandler {
         }
 
         $order = wc_get_order( $order_id );
+
         if ( ! $order ) {
             wp_send_json_error( array( 'message' => 'Order not found.' ) );
         }
@@ -131,10 +132,6 @@ class AjaxHandler {
      */
     public function rrb2b_ajax_get_products() {
         $this->check_nonce('rrb2b_id');
-
-        error_log('AJAX Search - Session exists: ' . (WC()->session ? 'YES' : 'NO'));
-        error_log('AJAX Search - User logged in: ' . (is_user_logged_in() ? 'YES' : 'NO'));
-
 
         $data = wp_unslash( $_REQUEST );
         $txt  = sanitize_text_field( $data['search'] );

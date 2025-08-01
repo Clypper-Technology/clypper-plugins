@@ -7,10 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController;
 use ClypperTechnology\RolePricing\AjaxHandler;
 use ClypperTechnology\RolePricing\RegistrationForm;
-use ClypperTechnology\RolePricing\Admin;
 use ClypperTechnology\RolePricing\Users;
 
 require_once __DIR__ . '/class-rrb2b-functions.php';
@@ -19,8 +17,6 @@ require_once __DIR__ . '/class-rrb2b-functions.php';
  * Admin class
  */
 class Rrb2b_Woo {
-
-    private AjaxHandler $ajax_handler;
 
     public function __construct()
     {
@@ -36,18 +32,9 @@ class Rrb2b_Woo {
 			return;
 		}
 
-		$options = get_option( 'rrb2b_options' );
-
 		//Actions
 		if ( is_admin() ) {
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'rrb2b_header_scripts' ) );
-			add_filter( 'woocommerce_get_settings_pages', array( __CLASS__, 'cas_rrb2b_settings' ) );
-
-		}
-
-		//Prevent automatic login on registration
-		if ( 'yes' === $options['rrb2b_auth_new_customer'] ) {
-			add_filter( 'woocommerce_registration_auth_new_customer', '__return_false' );
 		}
 
 		/**
@@ -67,16 +54,6 @@ class Rrb2b_Woo {
 
 
 	/**
-	 * Add settings
-	 */
-	public static function cas_rrb2b_settings( $settings ) {
-
-		$settings[] = include_once dirname( __FILE__ ) . '/class-rrb2b-settings.php';
-		return $settings;
-
-	}
-
-	/**
 	 * Init
 	 */
 	public static function rrb2b_init() {
@@ -94,11 +71,11 @@ class Rrb2b_Woo {
 	 */
 	public static function rrb2b_register_role_meta_box() {
 
+        /*
 		$screen = wc_get_container()->get( CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
 		? wc_get_page_screen_id( 'shop-order' )
 		: 'shop_order';
 
-        /*
 		add_meta_box(
 			'rrb2b-role-prices-meta-box',
 			__( 'Roles & Rules B2B', 'woo-roles-rules-b2b' ),
@@ -303,17 +280,12 @@ class Rrb2b_Woo {
 		wp_register_script( 'rrb2b_jquery-ui', 'https://code.jquery.com/ui/1.13.2/jquery-ui.js', array( 'jquery' ), '1.13.2', true );
 		wp_enqueue_script( 'rrb2b_jquery-ui' );
 
-		if ( 'true' === CAS_ROLES_RULES_PROD ) {
-			wp_register_script( 'rrb2b_scripts', plugins_url( '../assets/js/rrb2b.min.js', __FILE__ ), array( 'jquery' ), CAS_ROLES_RULES_VS, true );
-		} else {
-			wp_register_script( 'rrb2b_scripts', plugins_url( '../assets/js/rrb2b.js', __FILE__ ), array( 'jquery' ), CAS_ROLES_RULES_VS, true );
-		}
+        wp_register_script( 'rrb2b_scripts', plugins_url( '../assets/js/rrb2b.js', __FILE__ ), array( 'jquery' ), CAS_ROLES_RULES_VS, true );
 
 		wp_enqueue_script( 'select2' ); // WooCommerce includes this by default in the admin
 		wp_enqueue_style( 'select2' );  // WooCommerce includes the styles
 
-		
-		
+
 		wp_register_style( 'woocommerce_admin', plugins_url( '../plugins/woocommerce/assets/css/admin.css' ), array(), '1.12.1' );
 		wp_enqueue_style( 'woocommerce_admin' );
 
@@ -329,8 +301,6 @@ class Rrb2b_Woo {
 		wp_register_style( 'rrb2b_dark_css', plugins_url( '../assets/css/rrb2b-dark.css', __FILE__ ), array(), CAS_ROLES_RULES_VS );
 		wp_enqueue_style( 'rrb2b_dark_css' );
 
-		$options = get_option( 'rrb2b_options' );
-
 		// Localize the script with new data
 		$translation = array(
 			'delete_role_txt'     => __( 'You are about to delete the role: ', 'woo-roles-rules-b2b' ),
@@ -343,7 +313,6 @@ class Rrb2b_Woo {
 			'select_coupon'       => __( 'Select Coupon', 'woo-roles-rules-b2b' ),
 			'add_categories'      => __( 'Categories to Add', 'woo-roles-rules-b2b' ),
 			'select_categories'   => __( 'Select Categories', 'woo-roles-rules-b2b' ),
-			'use_dark_mode'       => ! empty( $options[ 'rrb2b_use_dark_mode' ] ) ? $options[ 'rrb2b_use_dark_mode' ] : 'no',
 		);
 		wp_localize_script( 'rrb2b_scripts', 'cyp_object', $translation );
 		wp_enqueue_script( 'rrb2b_scripts' );
