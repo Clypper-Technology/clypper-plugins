@@ -362,12 +362,6 @@ class Rrb2b_Templates {
 					<th scope="col" id="name">
 						<span><?php esc_attr_e( 'Capabilities', 'woo-roles-rules-b2b' ); ?></span>
 					</th>
-					<th style="text-align: center;width: 95px;">
-						<span><?php esc_attr_e( 'Ex. VAT', 'woo-roles-rules-b2b' ); ?></span>
-					</th>
-					<th style="text-align: center;width: 95px;">
-						<span><?php esc_attr_e( 'Tax exempt', 'woo-roles-rules-b2b' ); ?></span>
-					</th>
 					<th style="width: 100px;text-align:center;">
 						<span><?php esc_attr_e( 'Delete role', 'woo-roles-rules-b2b' ); ?></span>
 					</th>
@@ -377,8 +371,6 @@ class Rrb2b_Templates {
 					<?php $this->functions->rrb2b_get_roles(); ?>	
 				<tfoot>
 				<tr>
-					<td></td>
-					<td></td>
 					<td></td>
 					<td></td>
 					<td></td>
