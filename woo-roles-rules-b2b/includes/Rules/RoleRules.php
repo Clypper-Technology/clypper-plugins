@@ -8,7 +8,7 @@ defined('ABSPATH') || exit;
  * RoleRules - Complete pricing rules for a user role
  */
 class RoleRules {
-    public const GUEST_ROLE = 'guest';
+    public const string GUEST_ROLE = 'guest';
 
     /**
      * @param int[] $categories;
@@ -64,11 +64,11 @@ class RoleRules {
 
     /**
      * Get product rules by product ID
-     * @return ProductRule[]
+     * @return ?ProductRule
      * @param int $product_id
      */
-    public function products_rules_by_id( int $product_id ): array {
-        return array_filter( $this->products, function( ProductRule $product_rule ) use ( $product_id ) {
+    public function get_rule_by_product_id( int $product_id ): ?ProductRule {
+        return array_find( $this->products, function( ProductRule $product_rule ) use ( $product_id ) {
             return $product_rule->id === $product_id;
         });
     }
@@ -135,14 +135,9 @@ class RoleRules {
      * @param int[] $category_ids
      * @return ?CategoryRule
      */
-    public function first_single_category_in_rule(array $category_ids ): ?CategoryRule {
-        foreach ( $this->single_categories as $category ) {
-            if ( in_array($category->id, $category_ids, true) ) {
-                return $category;
-            }
-        }
+    public function get_single_category_rule( array $category_ids ): ?CategoryRule {
+        return array_find($this->single_categories, fn($category) => in_array($category->id, $category_ids, true));
 
-        return null;
     }
 
     /**

@@ -827,9 +827,9 @@ class Rrb2b_Functions {
                                 </td>
 								<td class="cas-qty-row">
 									<select name="reduce_regular_type_qty" class="rrb2b-product-select">
-                                        <option value="" selected="selected"><?php esc_html_e( 'Reduce by', 'woo-roles-rules-b2b' ); ?></option>
-                                        <option value="percent" <?php echo ( Rule::TYPE_PERCENT === $product->rule->quantity_value_type ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Percent (%)', 'woo-roles-rules-b2b' ); ?></option>
-                                        <option value="fixed" <?php echo ( Rule::TYPE_FIXED === $product->rule->quantity_value_type ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Fixed amount', 'woo-roles-rules-b2b' ); ?></option>
+                                        <option value="" selected="selected"><?php esc_html_e( 'Select', 'woo-roles-rules-b2b' ); ?></option>
+                                        <option value="percent" <?php echo ( Rule::TYPE_PERCENT === $product->rule->quantity_value_type ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Reduce by percent (%)', 'woo-roles-rules-b2b' ); ?></option>
+                                        <option value="fixed" <?php echo ( Rule::TYPE_FIXED === $product->rule->quantity_value_type ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Reduce by fixed amount', 'woo-roles-rules-b2b' ); ?></option>
 										<option value="fixed_set" <?php echo ( Rule::TYPE_FIXED_SET === $product->rule->quantity_value_type ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Set fixed price', 'woo-roles-rules-b2b' ); ?></option>
 									</select>
 								</td>

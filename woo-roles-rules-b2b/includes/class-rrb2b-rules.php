@@ -34,7 +34,7 @@ class Rrb2b_Rules {
         add_filter( 'woocommerce_variation_prices_price', array( $this, 'rrb2b_get_rule_price_variation' ), 20, 3 );
 
         //On Sale
-        add_filter( 'woocommerce_product_is_on_sale', array( $this, 'rrb2b_product_is_on_sale' ), 25, 2 );
+        add_filter( 'woocommerce_product_is_on_sale', array( $this, 'rrb2b_product_is_on_sale' ), 999, 2 );
 
         //Admin and API pricing
         add_filter( 'rrb2b_rule_get_price_api_and_admin', array( $this, 'rrb2b_rule_get_price_admin' ), 10, 5 );
@@ -47,16 +47,16 @@ class Rrb2b_Rules {
      * @param bool $is_on_sale bool value.
      * @param var $product product.
      */
-    public function rrb2b_product_is_on_sale(bool $is_on_sale, $product ): bool {
-        if( is_admin() || ! $this->user_has_rule() ) {
-            error_log("Exiting early: admin=" . (is_admin() ? 'yes' : 'no') . ", user_in_rule=" . ($this->user_has_rule() ? 'yes' : 'no'));
+    public function rrb2b_product_is_on_sale(bool $is_on_sale, $product): bool {
+        if (is_admin() || !$this->user_has_rule()) {
             return $is_on_sale;
         }
 
-        $regular_price = $product->get_regular_price();
-        $role_price = $this->rrb2b_get_rule_price($regular_price, $product);
+        $regular_price = floatval($product->get_regular_price());
+        $current_effective_price = floatval($product->get_price());
+        $role_price = floatval($this->rrb2b_get_rule_price(strval($current_effective_price), $product));
 
-        return $role_price !== $regular_price;
+        return $role_price < $regular_price;
     }
 
 
@@ -70,15 +70,6 @@ class Rrb2b_Rules {
         return $this->get_rule_price( $price, $product );
 	}
 
-	/**
-	 * Get rule price variation
-	 *
-	 * @param var $price price.
-	 * @param var $product product.
-	 */
-	public  function rrb2b_get_var_rule_price( $price, $product ) {
-        return $this->get_rule_price( $price, $product );
-	}
 
 	/**
 	 * Get rule price - variation
@@ -131,7 +122,7 @@ class Rrb2b_Rules {
 	 * @param var $price current price.
 	 * @param var $product current product.
 	 */
-	private function get_rule_price($price, $product ) {
+	private function get_rule_price( $price, $product ) {
         if( self::$processing ) {
             return $price;
         }
@@ -143,23 +134,23 @@ class Rrb2b_Rules {
         self::$processing = true;
 
         try {
-            $price_new = ($product->get_sale_price() > 0) ?
-                $product->get_regular_price() :
-                $product->get_price();
+            $regular_price = floatval($product->get_regular_price());
 
             $cart_qty = $this->get_cart_item_qty($product->get_id());
             $role = $this->get_user_role();
             $rule = $this->get_role_rule($role);
 
-            return $this->role_price($rule, $product, $price_new, $cart_qty);
+            $calculated_price = $this->role_price($rule, $product, $regular_price, $cart_qty) ?? floatval($price);
+
+            return strval($calculated_price);
         } finally {
             self::$processing = false;
         }
 	}
 
-    public function role_price(RoleRules $rule, $product, float $price_new, int $cart_qty) : float {
+    public function role_price(RoleRules $rule, $product, float $price_new, int $cart_qty) : ?float {
         if ( ! $rule->rule_active ) {
-            return $price_new;
+            return null;
         }
 
         $category_ids = $this->get_category_ids( $product );
@@ -168,65 +159,71 @@ class Rrb2b_Rules {
             $category_ids = [];
         }
 
+        $product_rule = $rule->get_rule_by_product_id( $product->get_id() );
+
         //Check for product rules
-        if ( $rule->has_products() ) {
-            $product_rules = $rule->products_rules_by_id( $product->get_id() );
+        if ( $product_rule ) {
+            $product_price = $product_rule->rule->calculatePrice($price_new, $product_rule->min_quantity, $cart_qty);
 
-            foreach ( $product_rules as $product_rule ) {
-                // Determine which rule to use based on quantity and availability
-                $use_quantity_rule = $cart_qty >= $product_rule->min_quantity && $product_rule->rule->has_quantity_value();
-
-                // Apply quantity rule if conditions are met, otherwise try regular rule
-                if ($use_quantity_rule || $product_rule->rule->hasRegularRule()) {
-                    return $product_rule->rule->calculatePrice($price_new, $use_quantity_rule);
-                }
+            if( $product_price ) {
+                return $product_price;
             }
         }
 
+        $category_rule = $rule->get_single_category_rule( $category_ids );
+
         //Check for single categories rules
-        if ( $rule->has_single_categories() ) {
-            $category_rule = $rule->first_single_category_in_rule( $category_ids );
+        if ( $category_rule ) {
+            $category_price = $category_rule->rule->calculatePrice($price_new, $category_rule->min_quantity, $cart_qty);
 
-            if($category_rule != null) {
-                $use_quantity_rule = $cart_qty >= $category_rule->min_qty && $category_rule->rule->has_quantity_value();
-
-                return $category_rule->rule->calculatePrice($price_new, $use_quantity_rule);
+            if( $category_price ) {
+                return $category_price;
             }
         }
 
         //Check for general category reductions / increases
         if ($rule->has_categories() && $rule->has_category_rule()) {
             // Check if product is in any selected general categories
-            if ( $rule->matches_any_category( $category_ids ) ) {  // Assuming categories becomes [123, 456, 789]
-                return $rule->category_rule->calculatePrice($price_new);
+            if ( $rule->matches_any_category( $category_ids ) ) {
+                $global_price = $rule->category_rule->calculatePrice($price_new);
+
+                if($global_price) {
+                    return $global_price;
+                }
             }
         }
 
         if ( $rule->has_global_rule() ) {
-            return $rule->global_rule->calculatePrice($price_new);
+            $global_price = $rule->global_rule->calculatePrice($price_new);
+
+            if($global_price) {
+                return $global_price;
+            }
         }
 
         //Do normal reduction / increases
-        return $price_new;
+        return null;
     }
 
 	/**
 	 * Get price in admin (Edit Order)
 	 * 
 	 */
-	public  function rrb2b_rule_get_price_admin( $price, $product, $qty, $order_role, $is_api_request ) {
-		// If it's not an API request, and it's not in the admin, return the original price
-		if ( ! $is_api_request && ! is_admin() ) {
+    public function rrb2b_rule_get_price_admin($price, $product, $qty, $order_role, $is_api_request) {
+        // If it's not an API request, and it's not in the admin, return the original price
+        if (!$is_api_request && !is_admin()) {
             return $price;
-		}
-		
-		$price_new    = ( empty( $price ) ) ? $product->get_regular_price() : $price;
-		$cart_qty     = $qty; 
-		$role         = $order_role;
-		$rules        = $this->get_role_rule( $role );
+        }
 
-        return $this->role_price($rules, $product, $price_new, $cart_qty);
-	}
+        $regular_price = floatval($product->get_regular_price());
+        $rules = $this->get_role_rule($order_role);
+
+        if ( ! $rules ) {
+            return $price;
+        }
+
+        return strval($this->role_price($rules, $product, $regular_price, $qty)) ?? $price;
+    }
 
 
 	/**

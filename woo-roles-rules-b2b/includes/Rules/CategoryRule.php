@@ -8,11 +8,11 @@ defined('ABSPATH') || exit;
 
 class CategoryRule {
     public function __construct(
-        public int $id,
+        public int    $id,
         public string $slug,
         public string $name,
-        public Rule $rule = new Rule('', '', '', ''),
-        public int $min_qty = 0,
+        public Rule   $rule = new Rule('', '', '', ''),
+        public int    $min_quantity = 0,
     ) {}
 
     /**
@@ -24,7 +24,7 @@ class CategoryRule {
             slug: sanitize_text_field($data['slug']),
             name: sanitize_text_field($data['name']),
             rule: Rule::from_array( $data['rule'] ),
-            min_qty: (int)sanitize_text_field($data['min_qty'] ?? 0),
+            min_quantity: (int)sanitize_text_field($data['min_qty'] ?? 0),
         );
     }
 
@@ -34,7 +34,7 @@ class CategoryRule {
             slug: sanitize_text_field($data['slug']),
             name: sanitize_text_field($data['name']),
             rule: Rule::from_array_old( $data ),
-            min_qty: (int)sanitize_text_field($data['min_qty'] ?? 0),
+            min_quantity: (int)sanitize_text_field($data['min_qty'] ?? 0),
         );
     }
 
@@ -64,7 +64,7 @@ class CategoryRule {
             'slug' => $this->slug,
             'name' => esc_attr($this->name),
             'rule' => $this->rule->to_array(),
-            'min_qty' => $this->min_qty,
+            'min_qty' => $this->min_quantity,
         ];
     }
 }

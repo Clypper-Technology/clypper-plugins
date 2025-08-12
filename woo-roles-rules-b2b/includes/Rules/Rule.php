@@ -15,6 +15,10 @@ class Rule
     public const string TYPE_FIXED_ADD = 'fixed_add';
     public const string TYPE_FIXED_SET = 'fixed_set';
 
+    private const string USE_QUANTITY_RULE = 'use_quantity_rule';
+    private const string USE_REGULAR_RULE = 'use_regular_rule';
+    private const string USE_NO_RULE = 'use_no_rule';
+
     public function __construct(
         string $type,
         string $value,
@@ -29,57 +33,61 @@ class Rule
     }
 
     public function has_value(): bool {
-        if( ! isset( $this->value ) || $this->value <= 0) {
-            return false;
-        }
-
-        return true;
+        return ! empty( $this->value );
     }
 
     public function has_quantity_value(): bool {
-        if( ! isset( $this->quantity_value ) || $this->quantity_value <= 0) {
-            return false;
-        }
-
-        return true;
+        return ! empty( $this->quantity_value );
     }
 
     /**
      * Calculate adjusted price based on rule type and value
      *
      * @param float $original_price The original price to adjust
-     * @param bool $use_quantity_rule Whether to use quantity-based rule instead of regular rule
-     * @return float The adjusted price
+     * @param int $minimum_quantity Minimum quantity required for quantity rule
+     * @param int $quantity Current cart quantity
+     * @return ?float The adjusted price
      */
-    public function calculatePrice(float $original_price, bool $use_quantity_rule = false): float {
-        $rule_type = $use_quantity_rule ? $this->quantity_value_type : $this->type;
-        $rule_value = $use_quantity_rule ? $this->quantity_value : $this->value;
+    public function calculatePrice(float $original_price, int $minimum_quantity = 0, int $quantity = -1): ?float {
+        $use_rule = $this->getApplicableRule($minimum_quantity, $quantity);
 
-        // Return original price if no rule value is set
-        if (empty($rule_value)) {
-            return $original_price;
-        }
+        return match( $use_rule ) {
+            self::USE_QUANTITY_RULE => $this->applyRule($this->quantity_value_type, $this->quantity_value, $original_price),
+            self::USE_REGULAR_RULE => $this->applyRule($this->type, $this->value, $original_price),
+            self::USE_NO_RULE => null
+        };
+    }
 
+    private function applyRule(string $rule_type, string $rule_value, float $original_price): ?float {
         $adjust_value = floatval($rule_value);
 
-        return match ($rule_type) {
+        $calculated_price = match ($rule_type) {
             self::TYPE_PERCENT => $original_price * (1.0 - ($adjust_value / 100)),
             self::TYPE_PERCENT_ADD => $original_price * (1.0 + ($adjust_value / 100)),
             self::TYPE_FIXED => $original_price - $adjust_value,
             self::TYPE_FIXED_ADD => $original_price + $adjust_value,
             self::TYPE_FIXED_SET => $adjust_value,
-            default => $original_price
+            default => null
         };
+
+        // If calculated price is 0 and it wasn't intentionally set to 0, return original price
+        if ($calculated_price <= 0) {
+            return null;
+        }
+
+        return round($calculated_price, wc_get_price_decimals());
     }
 
-    /**
-     * Check if this rule has a regular adjustment
-     *
-     * @return bool
-     */
-    public function hasRegularRule(): bool
-    {
-        return !empty($this->value);
+    private function getApplicableRule(int $minimum_quantity, int $quantity): string {
+        if($this->has_quantity_value() && $quantity >= $minimum_quantity) {
+            return self::USE_QUANTITY_RULE;
+        }
+
+        if($this->has_value()) {
+            return self::USE_REGULAR_RULE;
+        }
+
+        return self::USE_NO_RULE;
     }
 
     public static function from_array_old(array $data ): Rule {
