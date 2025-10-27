@@ -8,7 +8,7 @@ defined('ABSPATH') || exit;
  * RoleRules - Complete pricing rules for a user role
  */
 class RoleRules {
-    public const string GUEST_ROLE = 'guest';
+    public const GUEST_ROLE = 'guest';
 
     /**
      * @param int[] $categories;
@@ -108,7 +108,7 @@ class RoleRules {
     }
 
     public function is_guest(): bool {
-        return $this->role_name === self::GUEST_ROLE;
+        return $this->role_name == self::GUEST_ROLE;
     }
 
     public function has_products(): bool {

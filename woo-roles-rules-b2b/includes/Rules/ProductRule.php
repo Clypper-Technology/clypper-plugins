@@ -14,15 +14,14 @@ class ProductRule
     public function __construct(
         int $id,
         string $name,
-        Rule $rule = new Rule('', '', '', ''),
+        ?Rule $rule = null,
         int $min_qty = 0,
     ) {
         $this->id = $id;
         $this->name = $name;
-        $this->rule = $rule;
+        $this->rule = $rule ?? new Rule('', '', '', '');
         $this->min_quantity = $min_qty;
     }
-
     public function to_array(): array {
         return [
             'id' => $this->id,

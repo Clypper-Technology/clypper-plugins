@@ -82,7 +82,6 @@ class RegistrationForm
      * Create registration form
      */
     private function create_registration_form( $data ): void {
-
         wp_nonce_field( 'rrb2b_reg_form', 'rrb2b_reg_form_nonce' );
         ?>
 

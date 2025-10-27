@@ -19,8 +19,6 @@
  *
  * Copyright: © 2018-2025 Consortia AS.
  * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
- * Woo: 7085464:91f1d1f92de5f2c3adbe62dfaaa3d5ac
 
  */
 

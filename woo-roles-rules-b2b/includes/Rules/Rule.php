@@ -9,15 +9,15 @@ class Rule
     public string $quantity_value;
     public string $quantity_value_type;
 
-    public const string TYPE_PERCENT = 'percent';
-    public const string TYPE_PERCENT_ADD = 'percent_add';
-    public const string TYPE_FIXED = 'fixed';
-    public const string TYPE_FIXED_ADD = 'fixed_add';
-    public const string TYPE_FIXED_SET = 'fixed_set';
+    public const  TYPE_PERCENT = 'percent';
+    public const  TYPE_PERCENT_ADD = 'percent_add';
+    public const  TYPE_FIXED = 'fixed';
+    public const  TYPE_FIXED_ADD = 'fixed_add';
+    public const  TYPE_FIXED_SET = 'fixed_set';
 
-    private const string USE_QUANTITY_RULE = 'use_quantity_rule';
-    private const string USE_REGULAR_RULE = 'use_regular_rule';
-    private const string USE_NO_RULE = 'use_no_rule';
+    private const  USE_QUANTITY_RULE = 'use_quantity_rule';
+    private const  USE_REGULAR_RULE = 'use_regular_rule';
+    private const  USE_NO_RULE = 'use_no_rule';
 
     public function __construct(
         string $type,

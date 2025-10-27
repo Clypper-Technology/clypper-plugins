@@ -14,36 +14,25 @@ class AjaxHandler {
     {
         $this->rule_service = new RuleService();
 
-        add_action( 'wp_ajax_rrb2b_get_user_role', array( $this, 'rrb2b_get_user_role' ) );
-        add_action( 'wp_ajax_nopriv_rrb2b_get_user_role', array( $this, 'rrb2b_get_user_role' ) );
-        add_action( 'wp_ajax_rrb2b_recalculate_prices', array( $this, 'rrb2b_recalculate_prices_callback' ) );
+        // Only register for logged-in users (admin area)
         add_action( 'wp_ajax_rrb2b_delete_rule_callback', array($this, 'rrb2b_delete_rule_callback' ) );
-        add_action( 'wp_ajax_nopriv_rrb2b_delete_rule_callback', array( $this, 'rrb2b_delete_rule_callback' ) );
-
         add_action( 'wp_ajax_rrb2b_ajax_get_products', array( $this, 'rrb2b_ajax_get_products' ) );
-        add_action( 'wp_ajax_nopriv_rrb2b_ajax_get_products', array( $this, 'rrb2b_ajax_get_products' ) );
-
         add_action( 'wp_ajax_rrb2b_ajax_update_product_rule', array( $this, 'rrb2b_ajax_update_product_rule' ) );
-        add_action( 'wp_ajax_nopriv_rrb2b_ajax_update_product_rule', array( $this, 'rrb2b_ajax_update_product_rule' ) );
-
         add_action( 'wp_ajax_rrb2b_ajax_get_products_category', array( $this, 'rrb2b_ajax_get_products_category' ) );
-        add_action( 'wp_ajax_nopriv_rrb2b_ajax_get_products_category', array( $this, 'rrb2b_ajax_get_products_category' ) );
-
         add_action( 'wp_ajax_rrb2b_delete_role', array( $this, 'rrb2b_ajax_delete_role' ) );
-        add_action( 'wp_ajax_nopriv_rrb2b_delete_role', array( $this, 'rrb2b_ajax_delete_role' ) );
-
         add_action( 'wp_ajax_rrb2b_ajax_update_single_category_rule', array( $this, 'rrb2b_ajax_update_single_category_rule' ) );
-        add_action( 'wp_ajax_nopriv_rrb2b_ajax_update_single_category_rule', array( $this, 'rrb2b_ajax_update_single_category_rule' ) );
-
         add_action( 'wp_ajax_rrb2b_copy_rules_to', array( $this, 'rrb2b_copy_rules_to_callback' ) );
-        add_action( 'wp_ajax_nopriv_rrb2b_copy_rules_to', array( $this, 'rrb2b_copy_rules_to_callback' ) );
     }
-
 
     /**
      * Update single category rules
      */
     public function rrb2b_ajax_update_single_category_rule(): void {
+        // Add capability check since we're in admin context
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( array( 'message' => 'Insufficient permissions.' ) );
+        }
+
         $this->check_nonce('rrb2b_id');
 
         $data = wp_unslash( $_POST );
@@ -53,74 +42,13 @@ class AjaxHandler {
     }
 
     /**
-     * Get user role on Order page
-     */
-    public function rrb2b_get_user_role(): void {
-        $this->check_nonce('rrb2b_nonce_id');
-
-        $data    = wp_unslash( $_POST );
-        $user_id = isset( $data['user_id'] ) ? absint( $data['user_id'] ) : 0;
-
-        if ( ! $user_id ) {
-            wp_send_json_error();
-        }
-
-        $user_info = get_userdata( $user_id );
-
-        if ( ! $user_info ) {
-            wp_send_json_error();
-        }
-
-        // Get user roles
-        $user_roles = $user_info->roles;
-
-        if ( ! empty( $user_roles ) ) {
-            // Send the first role
-            wp_send_json_success( array( 'role' => $user_roles[0] ) );
-        }
-    }
-
-    /**
-     * Recalculate order items based on role prices
-     */
-    public function rrb2b_recalculate_prices_callback(): void {
-        $this->check_nonce('rrb2b_nonce_id');
-
-        $data     = wp_unslash( $_POST );
-        $order_id = isset( $data['order_id'] ) ? absint( $data['order_id'] ) : 0;
-        $role     = isset( $data['role'] ) ? sanitize_text_field( $data['role'] ) : '';
-
-        if ( ! $order_id || ! $role ) {
-            wp_send_json_error( array( 'message' => 'Invalid order ID or role.' ) );
-        }
-
-        $order = wc_get_order( $order_id );
-
-        if ( ! $order ) {
-            wp_send_json_error( array( 'message' => 'Order not found.' ) );
-        }
-
-        // Update prices for each order item based on the role
-        foreach ( $order->get_items() as $item_id => $item ) {
-            if ( $item->is_type( 'line_item' ) ) {
-                $product = $item->get_product();
-                if ( $product ) {
-                    $new_price = apply_filters( 'rrb2b_rule_get_price_api_and_admin', $product->get_price(), $product, $item->get_quantity(), $role, false );
-                    $item->set_subtotal( $new_price * $item->get_quantity() );
-                    $item->set_total( $new_price * $item->get_quantity() );
-                    $item->save();
-                }
-            }
-        }
-
-        $order->calculate_totals(); // Recalculate totals for the order
-        wp_send_json_success();
-    }
-
-    /**
      * Delete rule
      */
     public function rrb2b_delete_rule_callback() {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( array( 'message' => 'Insufficient permissions.' ) );
+        }
+
         $this->check_nonce('rrb2b_id');
 
         $data = wp_unslash( $_POST );
@@ -131,6 +59,10 @@ class AjaxHandler {
      * Get products
      */
     public function rrb2b_ajax_get_products() {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( array( 'message' => 'Insufficient permissions.' ) );
+        }
+
         $this->check_nonce('rrb2b_id');
 
         $data = wp_unslash( $_REQUEST );
@@ -213,6 +145,10 @@ class AjaxHandler {
      * Update products to current rule
      */
     public function rrb2b_ajax_update_product_rule(): void {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( array( 'message' => 'Insufficient permissions.' ) );
+        }
+
         $this->check_nonce('rrb2b_id');
         $data = wp_unslash( $_POST );
 
@@ -224,6 +160,10 @@ class AjaxHandler {
      * Get products by category
      */
     public function rrb2b_ajax_get_products_category() {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( array( 'message' => 'Insufficient permissions.' ) );
+        }
+
         $this->check_nonce('rrb2b_id');
 
         $data = wp_unslash( $_POST );
@@ -268,6 +208,10 @@ class AjaxHandler {
      * Delete role and role in rrb2b db
      */
     public function rrb2b_ajax_delete_role() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( array( 'message' => 'Insufficient permissions.' ) );
+        }
+
         $this->check_nonce('rrb2b_id');
 
         $logger  = wc_get_logger();
@@ -311,6 +255,10 @@ class AjaxHandler {
      * Copy rule from to (several)
      */
     public function rrb2b_copy_rules_to_callback(): void {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( array( 'message' => 'Insufficient permissions.' ) );
+        }
+
         $this->check_nonce('rrb2b_id');
 
         $data = wp_unslash( $_POST );
