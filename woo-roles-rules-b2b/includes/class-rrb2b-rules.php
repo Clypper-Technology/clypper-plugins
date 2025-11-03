@@ -20,24 +20,26 @@ class Rrb2b_Rules {
     private RuleService $rule_service;
 
     private static bool $processing = false;
-    
+
     public function __construct()
     {
         $this->role_rules = array();
         $this->rule_service = new RuleService();
 
-        add_filter( 'woocommerce_product_get_price', array( $this, 'rrb2b_get_rule_price' ), 20, 2 );
-        add_filter( 'woocommerce_product_variation_get_price', array( $this, 'rrb2b_get_rule_price' ), 20, 2 );
-        add_filter( 'woocommerce_get_variation_regular_price', array( $this, 'rrb2b_get_rule_price' ), 10, 4 );
+        // Price filters - both use same method
+        add_filter( 'woocommerce_product_get_price', array( $this, 'get_rule_sale_price' ), 20, 2 );
+        add_filter( 'woocommerce_product_variation_get_price', array( $this, 'get_rule_sale_price' ), 20, 2 );
 
-        //Variation
-        add_filter( 'woocommerce_variation_prices_price', array( $this, 'rrb2b_get_rule_price_variation' ), 20, 3 );
+        // Sale price filters
+        add_filter( 'woocommerce_product_get_sale_price', array( $this, 'get_rule_sale_price' ), 20, 2 );
+        add_filter( 'woocommerce_product_variation_get_sale_price', array( $this, 'get_rule_sale_price' ), 20, 2 );
 
-        //On Sale
+        // Variation price filters
+        add_filter( 'woocommerce_variation_prices_price', array( $this, 'get_rule_sale_price' ), 20, 3 );
+        add_filter( 'woocommerce_variation_prices_sale_price', array( $this, 'get_rule_sale_price' ), 20, 3 );
+
+        // On Sale
         add_filter( 'woocommerce_product_is_on_sale', array( $this, 'rrb2b_product_is_on_sale' ), 999, 2 );
-
-        //Admin and API pricing
-        add_filter( 'rrb2b_rule_get_price_api_and_admin', array( $this, 'rrb2b_rule_get_price_admin' ), 10, 5 );
     }
 
 
@@ -48,39 +50,25 @@ class Rrb2b_Rules {
      * @param var $product product.
      */
     public function rrb2b_product_is_on_sale(bool $is_on_sale, $product): bool {
-        if (is_admin() || !$this->user_has_rule()) {
+        if (is_admin() || self::$processing || !$this->user_has_rule()) {
             return $is_on_sale;
         }
 
-        $regular_price = floatval($product->get_regular_price());
-        $current_effective_price = floatval($product->get_price());
-        $role_price = floatval($this->rrb2b_get_rule_price(strval($current_effective_price), $product));
+        self::$processing = true;
 
-        return $role_price < $regular_price;
+        try {
+            $regular_price = floatval($product->get_regular_price());
+            $sale_price = $this->get_rule_sale_price('', $product);
+
+            if (empty($sale_price)) {
+                return $is_on_sale;
+            }
+
+            return floatval($sale_price) < $regular_price;
+        } finally {
+            self::$processing = false;
+        }
     }
-
-
-	/**
-	 * Get rule price
-	 *
-	 * @param int $price price.
-	 * @param var $product product.
-	 */
-	public function rrb2b_get_rule_price( string $price, $product ) : string {
-        return $this->get_rule_price( $price, $product );
-	}
-
-
-	/**
-	 * Get rule price - variation
-	 *
-	 * @param var $price price.
-	 * @param var $variation variation.
-	 * @param var $product product.
-	 */
-	public  function rrb2b_get_rule_price_variation( $price, $variation, $product ) {
-        return $this->get_rule_price( $price, $variation );
-	}
 
 
     /**
@@ -115,38 +103,42 @@ class Rrb2b_Rules {
         return $user->roles[0];
     }
 
-    
-	/**
-	 * Get price
-	 * 
-	 * @param var $price current price.
-	 * @param var $product current product.
-	 */
-	private function get_rule_price( $price, $product ) {
-        if( self::$processing ) {
+
+    /**
+     * Get sale price with role discount
+     *
+     * @param var $price current price.
+     * @param var $product current product.
+     */
+    public function get_rule_sale_price( $price, $product ) {
+        if ( self::$processing || ! $this->user_has_rule() ) {
             return $price;
         }
-
-		if ( ! $this->user_has_rule() || '' === $price || 0 === $price || empty( $price ) ) {
-			return $price;
-		}
 
         self::$processing = true;
 
         try {
-            $regular_price = floatval($product->get_regular_price());
+            // Get base price: use WC sale if exists, otherwise regular
+            $wc_sale_price = $product->get_sale_price();
+            $base_price = !empty($wc_sale_price) ? floatval($wc_sale_price) : floatval($product->get_regular_price());
 
             $cart_qty = $this->get_cart_item_qty($product->get_id());
             $role = $this->get_user_role();
             $rule = $this->get_role_rule($role);
 
-            $calculated_price = $this->role_price($rule, $product, $regular_price, $cart_qty) ?? floatval($price);
+            if (!$rule) {
+                return $price;
+            }
 
-            return strval($calculated_price);
+            // Apply role discount to the base price
+            $calculated_price = $this->role_price($rule, $product, $base_price, $cart_qty);
+
+            // Return calculated price if valid, otherwise return WC sale price if exists, else original
+            return $calculated_price !== null ? strval($calculated_price) : (!empty($wc_sale_price) ? $wc_sale_price : $price);
         } finally {
             self::$processing = false;
         }
-	}
+    }
 
     public function role_price(RoleRules $rule, $product, float $price_new, int $cart_qty) : ?float {
         if ( ! $rule->rule_active ) {
@@ -205,48 +197,28 @@ class Rrb2b_Rules {
         return null;
     }
 
-	/**
-	 * Get price in admin (Edit Order)
-	 * 
-	 */
-    public function rrb2b_rule_get_price_admin($price, $product, $qty, $order_role, $is_api_request) {
-        // If it's not an API request, and it's not in the admin, return the original price
-        if (!$is_api_request && !is_admin()) {
-            return $price;
-        }
 
-        $regular_price = floatval($product->get_regular_price());
-        $rules = $this->get_role_rule($order_role);
-
-        if ( ! $rules ) {
-            return $price;
-        }
-
-        return strval($this->role_price($rules, $product, $regular_price, $qty)) ?? $price;
-    }
-
-
-	/**
-	 * Get cart quantity for a given product.
-	 */
-	private  function get_cart_item_qty(int $product_id ): int {
+    /**
+     * Get cart quantity for a given product.
+     */
+    private  function get_cart_item_qty(int $product_id ): int {
         $cart = WC()->cart;
 
-		if ( ! $cart ) {
-			return 0;
-		}
+        if ( ! $cart ) {
+            return 0;
+        }
 
-		$quantities = $cart->get_cart_item_quantities();
+        $quantities = $cart->get_cart_item_quantities();
 
         return intval( $quantities[ $product_id ] ?? 0);
     }
 
 
-	/**
-	 * Get rule for role
-	 *
-	 * @param string $user_role user role.
-	 */
+    /**
+     * Get rule for role
+     *
+     * @param string $user_role user role.
+     */
     private function get_role_rule(string $user_role): RoleRules | null {
         if (isset($this->role_rules[$user_role])) {
             return $this->role_rules[$user_role];
