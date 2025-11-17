@@ -13,9 +13,34 @@ use WP_Post;
 defined( 'ABSPATH' ) || exit;
 
 class RuleService {
+    private array $role_rules;
+    private RoleService $role_service;
+
     public function __construct()
     {
+        $this->role_rules = array();
+        $this->role_service = new RoleService();
+    }
 
+    /**
+     * Get rule for role
+     *
+     */
+    public function get_rule_by_current_role(): RoleRules | null {
+        $user_role = $this->role_service->get_user_role();
+
+        if (isset($this->role_rules[$user_role])) {
+            return $this->role_rules[$user_role];
+        }
+
+        $rule = $this->get_rule_by_user_role( $user_role );
+
+        if( $rule ) {
+            $this->role_rules[$user_role] = $rule;
+            return $rule;
+        }
+
+        return null;
     }
 
 

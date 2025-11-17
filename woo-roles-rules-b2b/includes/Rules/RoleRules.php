@@ -73,6 +73,46 @@ class RoleRules {
         });
     }
 
+    public function get_applicable_rule( $product_id, array $category_ids ): ?ApplicableRule {
+        $product_rule = $this->get_rule_by_product_id( $product_id );
+
+        //Check for product rules
+        if ( $product_rule ) {
+            return new ApplicableRule(
+                $product_rule->rule,
+                $product_rule->min_quantity
+            );
+        }
+
+        $category_rule = $this->get_single_category_rule( $category_ids );
+
+
+        if ( $category_rule ) {
+            return new ApplicableRule(
+                $category_rule->rule,
+                $category_rule->min_quantity
+            );
+        }
+
+        //Check for general category reductions / increases
+        if ($this->has_categories() && $this->has_category_rule()) {
+            // Check if product is in any selected general categories
+            if ( $this->matches_any_category( $category_ids ) ) {
+                return new ApplicableRule(
+                    $this->category_rule
+                );
+            }
+        }
+
+        if ( $this->has_global_rule() ) {
+            return new ApplicableRule(
+                $this->global_rule
+            );
+        }
+
+        return null;
+    }
+
     public function add_product(ProductRule $product): void {
         $this->products[] = $product;
     }
@@ -81,17 +121,8 @@ class RoleRules {
         $this->products = $products;
     }
 
-    public function add_categories(array $categories): void
-    {
-        $this->categories= array_merge($this->categories, $categories);
-    }
-
     public function replace_categories(array $categories): void {
         $this->categories = $categories;
-    }
-
-    public function add_category(CategoryRule $category): void {
-        $this->categories[] = $category;
     }
 
     public function replace_single_categories(array $categories): void {
@@ -103,31 +134,19 @@ class RoleRules {
         $this->single_categories= array_merge($this->single_categories, $categories);
     }
 
-    public function add_single_category(CategoryRule $category): void {
-        $this->single_categories[] = $category;
-    }
-
     public function is_guest(): bool {
         return $this->role_name == self::GUEST_ROLE;
     }
 
-    public function has_products(): bool {
-        return ! empty( $this->products );
-    }
-
-    public function has_categories(): bool {
+    private function has_categories(): bool {
         return ! empty( $this->categories );
     }
 
-    public function has_single_categories(): bool {
-        return ! empty( $this->single_categories );
-    }
-
-    public function has_category_rule(): bool {
+    private function has_category_rule(): bool {
         return $this->category_rule && $this->category_rule->has_value();
     }
 
-    public function has_global_rule(): bool {
+    private function has_global_rule(): bool {
         return $this->global_rule && $this->global_rule->has_value();
     }
 
@@ -135,16 +154,15 @@ class RoleRules {
      * @param int[] $category_ids
      * @return ?CategoryRule
      */
-    public function get_single_category_rule( array $category_ids ): ?CategoryRule {
+    private function get_single_category_rule( array $category_ids ): ?CategoryRule {
         return array_find($this->single_categories, fn($category) => in_array($category->id, $category_ids, true));
-
     }
 
     /**
      * @param int[] $category_ids
      * @return bool
      */
-    public function matches_any_category( array $category_ids ): bool {
+    private function matches_any_category( array $category_ids ): bool {
         return ! empty(array_intersect($category_ids, $this->categories));
     }
 }

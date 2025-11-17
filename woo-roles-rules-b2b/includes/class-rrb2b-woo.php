@@ -62,7 +62,7 @@ class Rrb2b_Woo {
 		if ( ! post_type_exists( 'rrb2b' ) ) {
 			self::rrb2b_create_posttype();
 		}
-		
+
 	}
 
 
@@ -92,7 +92,7 @@ class Rrb2b_Woo {
 	 * Show the meta box for role and recalculate
 	 */
 	public static function rrb2b_display_role_meta_box_callback( $post ) {
-		
+
 		$order        = ( $post instanceof WP_Post ) ? wc_get_order( $post->ID ) : $post;
 		$current_role = $order->get_meta( '_rrb2b_user_role', true );
 
@@ -139,12 +139,12 @@ class Rrb2b_Woo {
 		?>
 		<script type="text/javascript">
 			jQuery(document).ready(function($) {
-				
+
 				// Listen for changes in the user selection
 				$("select[name='customer_user']").change(function() {
 					var userId    = $(this).val();
 					var nonce_val = $('#rrb2b_nonce').val();
-	
+
 					if (userId) {
 						$.ajax({
 							url: ajaxurl,
@@ -166,7 +166,7 @@ class Rrb2b_Woo {
 						});
 					}
 				});
-	
+
 				// Update prices when the role changes
 				$('#rrb2b_user_role').change(function() {
 					var selectedRole = $(this).val();
