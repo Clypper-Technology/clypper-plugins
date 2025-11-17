@@ -5,6 +5,7 @@
  * @package Roles&RulesB2B/includes
  */
 
+use ClypperTechnology\RolePricing\Rules\CategoryRule;
 use ClypperTechnology\RolePricing\Rules\ProductRule;
 use ClypperTechnology\RolePricing\Rules\Rule;
 use ClypperTechnology\RolePricing\Services\RoleService;
@@ -352,7 +353,7 @@ class Rrb2b_Functions {
         //Add empty single categories rule
         $single_categories = explode( ',', $categories );
 
-        $this->rule_service->add_categories_to_rule( $single_categories, $rule );
+        $this->rule_service->add_categories_to_rule( $single_categories, intval($rule) );
 
         $filter_rule = filter_input( 1, 'filter', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
         $url         = admin_url( 'admin.php?page=rrb2b&tab=categories&eid=' . $rule );
@@ -371,67 +372,34 @@ class Rrb2b_Functions {
 	 * Get rules for categories
 	 */
 	public function rrb2b_get_rules_categories() {
-
-		$wp_roles    = wp_roles();
-		$rules       = $this->rule_service->get_all_rules();
 		$add_slugs   = filter_input( 1, 'add', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		$add_rule    = filter_input( 1, 'rule', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		$filter_rule = filter_input( 1, 'filter', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		$options     = get_option( 'rrb2b_options' );
 		$edited_id   = filter_input( 1, 'eid', FILTER_VALIDATE_INT );
 		
 		if ( isset( $add_slugs ) ) {
 			$this->rrb2b_add_table_categories( $add_slugs, $add_rule );
 		}
 
-		if ( isset( $filter_rule ) && ! empty( $filter_rule ) ) {
-			$rules = array();
-			array_push( $rules, get_post( $filter_rule ) );
-		}
+        if (! empty( $filter_rule )) {
+            $rules = $this->rule_service->get_rule_by_user_role( $filter_rule );
+        } else {
+            $rules = $this->rule_service->get_all_role_rules();
+        }
 
 		foreach ( $rules as $rule ) {
-			
-			$content           = json_decode( $rule->post_content, true );
-			$single_categories = ( isset( $content['single_categories'] ) ) ? $content['single_categories'] : array();
-			$is_guest          = ( 'guest' === $rule->post_name );
-			$role_obj          = get_role( $rule->post_name );
+			$single_categories = $rule->single_categories;
 
-			if ( ! $is_guest && ! $role_obj ) {
-				// Role is missing — fallback handling
-				error_log( 'RRB2B: Missing role "' . $rule->post_name . '" for rule ID ' . $rule->ID );
+            $role_name = ( $rule->is_guest() )
+                ? __( 'Guest', 'woo-roles-rules-b2b' )
+                : translate_user_role( $rule->role_name );
 
-				$role       = null;
-				$role_name  = ucfirst( $rule->post_name ) . ' (missing)';
-				$user_count = __( 'N/A', 'woo-roles-rules-b2b' );
-
-			} else {
-				$role      = ( $is_guest ) ? '0' : $role_obj;
-				$role_name = ( $is_guest )
-					? __( 'Guest', 'woo-roles-rules-b2b' )
-					: translate_user_role( $wp_roles->roles[ $rule->post_name ]['name'] );
-
-				$user_count = ( $is_guest )
-					? __( 'Regular guests (B2C)', 'woo-roles-rules-b2b' )
-					: $this->role_service->users_in_role( (array) $role );
-				
-			}
-
-			$url         = admin_url( 'admin.php' ) . '?page=rrb2b&tab=categories&rule=' . $rule->ID . '&add=';
-			$net_prices  = false;
-			$tax_exempt  = false;
-			$role_active = isset( $content['rule_active'] ) && 'on' === $content['rule_active'];
+			$url         = admin_url( 'admin.php' ) . '?page=rrb2b&tab=categories&rule=' . $rule->id . '&add=';
+			$role_active = $rule->rule_active;
 
 			if ( isset( $filter_rule ) && ! empty( $filter_rule ) ) {
-				$url = admin_url( 'admin.php' ) . '?page=rrb2b&tab=categories&filter=' . $filter_rule . '&rule=' . $rule->ID . '&add=';
-			}	
-
-			if ( isset( $role->name ) && is_array( $options['rrb2b_net_price_b2b_list'] ) && in_array( $role->name, $options['rrb2b_net_price_b2b_list'], true ) ) {
-				$net_prices = true;
+				$url = admin_url( 'admin.php' ) . '?page=rrb2b&tab=categories&filter=' . $filter_rule . '&rule=' . $rule->id . '&add=';
 			}
-			if ( isset( $role->name ) && is_array( $options['rrb2b_tax_exempt_list'] ) && in_array( $role->name, $options['rrb2b_tax_exempt_list'], true ) ) {
-				$tax_exempt = true;
-			}
-
 
 			?>
 			<tr>
@@ -439,86 +407,58 @@ class Rrb2b_Functions {
 					<h2 style="font-size:1.2rem;margin-top:5px;"><?php esc_attr_e( $role_name ); ?></h2>
 					<?php if ( $role_active ) : ?>
 						<h3 class="rrb2b-circle-green-h3">
-						<i class="fas fa-circle-check <?php echo ( $role_active ) ? 'rrb2b-circle-green' : 'rrb2b-circle-gray'; ?>"></i>
+						<i class="fas fa-circle-check <?php echo ( $rule->rule_active ) ? 'rrb2b-circle-green' : 'rrb2b-circle-gray'; ?>"></i>
 							<?php esc_attr_e( 'ACTIVE', 'woo-roles-rules-b2b' ); ?>
 						</h3>
 					<?php else : ?>
-						<h3 class="rrb2b-circle-gray-h3" title="<?php echo esc_attr( ! $role_active ? __( 'Make active in General Rules (tab)', 'woo-roles-rules-b2b' ) : '' ); ?>" >
-							<i class="fas fa-circle <?php echo ( $role_active ) ? 'rrb2b-circle-green' : 'rrb2b-circle-gray'; ?>"></i>
+						<h3 class="rrb2b-circle-gray-h3" title="<?php echo esc_attr( ! $rule->rule_active ? __( 'Make active in General Rules (tab)', 'woo-roles-rules-b2b' ) : '' ); ?>" >
+							<i class="fas fa-circle <?php echo ( ! $rule->rule_active ) ? 'rrb2b-circle-green' : 'rrb2b-circle-gray'; ?>"></i>
 							<?php esc_attr_e( 'NOT ACTIVATED', 'woo-roles-rules-b2b' ); ?>
 						</h3>
-					<?php endif; ?>
-					<?php if ( '0' !== $user_count && ! $is_guest ) : ?>
-					<a href="<?php echo esc_attr( admin_url( 'users.php?role=' . $rule->post_name ) ); ?>" target="_new">
-					<?php endif; ?>
-					<span style="font-size:.8rem;"><i class="fas fa-users"></i> <?php esc_html_e( 'Users:', 'woo-roles-rules-b2b' ); ?> <?php esc_attr_e( $user_count ); ?></span>
-					<?php if ( '0' !== $user_count && ! $is_guest ) : ?>
-					</a>
-					<?php endif; ?>
-					<?php
-					if ( $net_prices ) {
-						?>
-						<br/><span style="font-size:.8rem;"><i class="fas fa-info-circle"></i> <?php esc_attr_e( 'Ex. VAT for role', 'woo-roles-rules-b2b' ); ?></span>
-						<?php
-					}
-					if ( $tax_exempt ) {
-						?>
-						<br/><span style="font-size:.8rem;"><i class="fas fa-info-circle"></i> <?php esc_attr_e( 'Tax exempt for role', 'woo-roles-rules-b2b' ); ?></span>
-						<?php
-					}
-					?>
-					<br/>
-					<div style="margin-top: 10px;<?php echo esc_attr( intval( $filter_rule ) === $rule->ID || intval( $edited_id ) === $rule->ID ? '' : 'display:none;' ); ?>" id="cat_<?php echo esc_js( $rule->ID ); ?>">
-						<form name="frm_single_categories" id="frm_single_categories_<?php echo esc_js( $rule->ID ); ?>" >
-						<input type="hidden" name="rule_id" value="<?php echo esc_js( $rule->ID ); ?>">
+                    <?php endif; ?>
+                    <br/>
+					<div style="margin-top: 10px;<?php echo esc_attr( intval( $filter_rule ) === $rule->id || intval( $edited_id ) === $rule->id ? '' : 'display:none;' ); ?>" id="cat_<?php echo esc_js( $rule->id ); ?>">
+						<form name="frm_single_categories" id="frm_single_categories_<?php echo esc_js( $rule->id ); ?>" >
+						<input type="hidden" name="rule_id" value="<?php echo esc_js( $rule->id ); ?>">
 						<input type="hidden" name="rule_url" value="<?php esc_attr_e( $url ); ?>">
-						<?php self::rrb2b_get_categories_select_dropdown( $rule->ID ); ?>
+						<?php self::rrb2b_get_categories_select_dropdown( $rule->id ); ?>
 						</form>
 						<div style="text-align: left;margin-top:10px;">
-							<a class="button" href="#" onclick="checkCategories('<?php echo esc_js( $rule->ID ); ?>', this );"><i class="fas fa-check-circle"></i> <?php esc_attr_e( 'Check all', 'woo-roles-rules-b2b' ); ?></a>
-							<a id="categories_add_<?php echo esc_js( $rule->ID ); ?>" class="button" href="<?php esc_attr_e( $url ); ?>&eid=<?php echo esc_js( $rule->ID ); ?>"><i class="fas fa-plus-circle"></i> <?php esc_attr_e( 'Add categories', 'woo-roles-rules-b2b' ); ?></a>
+							<a class="button" href="#" onclick="checkCategories('<?php echo esc_js( $rule->id ); ?>', this );"><i class="fas fa-check-circle"></i> <?php esc_attr_e( 'Check all', 'woo-roles-rules-b2b' ); ?></a>
+							<a id="categories_add_<?php echo esc_js( $rule->id ); ?>" class="button" href="<?php esc_attr_e( $url ); ?>&eid=<?php echo esc_js( $rule->id ); ?>"><i class="fas fa-plus-circle"></i> <?php esc_attr_e( 'Add categories', 'woo-roles-rules-b2b' ); ?></a>
 						</div>
 					</div>
 					
 				</td>
 				<td>
 					<div>
-					<button class="button" onclick="rrb2b_toggle_div_cat('<?php echo esc_js( $rule->ID ); ?>');"><i class="fas fa-edit"></i> <?php esc_attr_e( 'Edit', 'woo-roles-rules-b2b' ); ?></button>
+					<button class="button" onclick="rrb2b_toggle_div_cat('<?php echo esc_js( $rule->id ); ?>');"><i class="fas fa-edit"></i> <?php esc_attr_e( 'Edit', 'woo-roles-rules-b2b' ); ?></button>
 					</div>
-					<div id="div_<?php echo esc_js( $rule->ID ); ?>" style="<?php echo esc_attr( intval( $filter_rule ) === $rule->ID || intval( $edited_id ) === $rule->ID ? '' : 'display:none;' ); ?>">
+					<div id="div_<?php echo esc_js( $rule->id ); ?>" style="<?php echo esc_attr( intval( $filter_rule ) === $rule->id || intval( $edited_id ) === $rule->id ? '' : 'display:none;' ); ?>">
 						
-						<table id="rrb2b_table_cat_<?php echo esc_js( $rule->ID ); ?>" style="width:100%;" class="widefat fixed striped posts rrb2b-table_">
+						<table id="rrb2b_table_cat_<?php echo esc_js( $rule->id ); ?>" style="width:100%;" class="widefat fixed striped posts rrb2b-table_">
 						<caption style="margin-bottom:10px;width:100%;text-align:right;">
 							<div style="display: inline-block;text-align:right;">
-								<input type="search" onmouseover="this.focus();" id="category_filter_<?php echo esc_js( $rule->ID ); ?>" oninput="rrb2b_filter_categories('<?php echo esc_js( $rule->ID ); ?>');" placeholder="<?php esc_html_e( 'Search...', 'woo-roles-rules-b2b' ); ?>" >
+								<input type="search" onmouseover="this.focus();" id="category_filter_<?php echo esc_js( $rule->id ); ?>" oninput="rrb2b_filter_categories('<?php echo esc_js( $rule->id ); ?>');" placeholder="<?php esc_html_e( 'Search...', 'woo-roles-rules-b2b' ); ?>" >
 							</div>
 						</caption>
 						<thead>
 							<tr>
-								<th style="width: 80px;"><?php esc_html_e( 'Remove', 'woo-roles-rules-b2b' ); ?></th>
+								<th style="width: 50px;"><?php esc_html_e( 'Remove', 'woo-roles-rules-b2b' ); ?></th>
 								<th style="width: 250px;text-align:left;"><?php esc_html_e( 'Category', 'woo-roles-rules-b2b' ); ?></th>
-								<th style="width: 30px;"><?php esc_html_e( 'Hide', 'woo-roles-rules-b2b' ); ?></th>
-								<th style="width: 30px;"><?php esc_html_e( 'Sale', 'woo-roles-rules-b2b' ); ?></th>
-								<th style="width:100px;"><?php esc_html_e( 'Rule', 'woo-roles-rules-b2b' ); ?></th>
-								<th style="width:70px;"><?php esc_html_e( 'Value', 'woo-roles-rules-b2b' ); ?></th>
-								<th style="width:142px;background-color:silver;border-bottom: 1px solid ghostwhite;"><?php esc_html_e( 'Rule: Qty or more', 'woo-roles-rules-b2b' ); ?></th>
-								<th style="width:70px;background-color:silver;border-bottom: 1px solid ghostwhite;"><?php esc_html_e( 'Value', 'woo-roles-rules-b2b' ); ?></th>
+								<th style="width:200px;"><?php esc_html_e( 'Rule', 'woo-roles-rules-b2b' ); ?></th>
+								<th style="width:120px;"><?php esc_html_e( 'Value', 'woo-roles-rules-b2b' ); ?></th>
+								<th style="width:230px;background-color:silver;border-bottom: 1px solid ghostwhite;"><?php esc_html_e( 'Rule: Qty or more', 'woo-roles-rules-b2b' ); ?></th>
+								<th style="width:120px;background-color:silver;border-bottom: 1px solid ghostwhite;"><?php esc_html_e( 'Value', 'woo-roles-rules-b2b' ); ?></th>
 							</tr>
 							<tr>
 								<th style="padding-left:1px;">
-									<input type="checkbox" id="category_remove_<?php echo esc_js( $rule->ID ); ?>" onclick="catBulkCheck('<?php echo esc_js( $rule->ID ); ?>', 'category_remove', 'rrb2b_table_cat');">
+									<input type="checkbox" id="category_remove_<?php echo esc_js( $rule->id ); ?>" onclick="catBulkCheck('<?php echo esc_js( $rule->id ); ?>', 'category_remove', 'rrb2b_table_cat');">
 								</th>
 								<th style="text-align: right;">
-									<?php esc_html_e( 'Bulk set values here', 'woo-roles-rules-b2b' ); ?> <i class="fas fa-arrow-circle-right"></i>
-								</th>
-								<th style="padding-left:1px;">
-									<input type="checkbox" id="category_hidden_<?php echo esc_js( $rule->ID ); ?>" onclick="catBulkCheck('<?php echo esc_js( $rule->ID ); ?>', 'category_hidden', 'rrb2b_table_cat');">
-								</th>
-								<th style="padding-left:1px;">
-									<input type="checkbox" id="category_sale_<?php echo esc_js( $rule->ID ); ?>" onclick="catBulkCheck('<?php echo esc_js( $rule->ID ); ?>', 'category_sale', 'rrb2b_table_cat');">
 								</th>
 								<th>
-									<select id="reduce_regular_type_<?php echo esc_js( $rule->ID ); ?>" class="rrb2b-product-select" onchange="catBulkSelect('<?php echo esc_js( $rule->ID ); ?>', 'reduce_regular_type', 'rrb2b_table_cat');">
+									<select id="reduce_regular_type_<?php echo esc_js( $rule->id ); ?>" class="rrb2b-product-select" onchange="catBulkSelect('<?php echo esc_js( $rule->id ); ?>', 'reduce_regular_type', 'rrb2b_table_cat');">
 										<option value=""><?php esc_html_e( 'Select (Reset)', 'woo-roles-rules-b2b' ); ?></option>
 										<option value="percent"><?php esc_html_e( 'Reduce by percent (%)', 'woo-roles-rules-b2b' ); ?></option>
 										<option value="fixed"><?php esc_html_e( 'Reduce by fixed amount', 'woo-roles-rules-b2b' ); ?></option>
@@ -527,18 +467,18 @@ class Rrb2b_Functions {
 									</select>
 								</th>
 								<th style="padding-left:1px;">
-									<input id="adjust_value_<?php echo esc_js( $rule->ID ); ?>" type="number" class="rrb2b-prod-val" style="width: 94%;padding-left: 5px;" oninput="catBulkInput('<?php echo esc_js( $rule->ID ); ?>', 'adjust_value', 'rrb2b_table_cat');">
+									<input id="adjust_value_<?php echo esc_js( $rule->id ); ?>" type="number" class="rrb2b-prod-val" style="width: 94%;padding-left: 5px;" oninput="catBulkInput('<?php echo esc_js( $rule->id ); ?>', 'adjust_value', 'rrb2b_table_cat');">
 								</th>
 								<th class="cas-qty-row" style="padding-left:1px;">
-									<input id="min_qty_<?php echo esc_js( $rule->ID ); ?>" type="number" class="rrb2b-prod-val" style="width: 42%;padding-left: 5px;" oninput="catBulkInput('<?php echo esc_js( $rule->ID ); ?>', 'min_qty', 'rrb2b_table_cat');">
-									<select id="reduce_regular_type_qty_<?php echo esc_js( $rule->ID ); ?>" class="rrb2b-product-select" style="width: 49%;margin-bottom:-11px;" onchange="catBulkSelect('<?php echo esc_js( $rule->ID ); ?>', 'reduce_regular_type_qty', 'rrb2b_table_cat');">
+									<input id="min_qty_<?php echo esc_js( $rule->id ); ?>" type="number" class="rrb2b-prod-val" style="width: 42%;padding-left: 5px;" oninput="catBulkInput('<?php echo esc_js( $rule->id ); ?>', 'min_qty', 'rrb2b_table_cat');">
+									<select id="reduce_regular_type_qty_<?php echo esc_js( $rule->id ); ?>" class="rrb2b-product-select" style="width: 49%;margin-bottom:-11px;" onchange="catBulkSelect('<?php echo esc_js( $rule->id ); ?>', 'reduce_regular_type_qty', 'rrb2b_table_cat');">
 										<option value=""><?php esc_html_e( 'Select (Reset)', 'woo-roles-rules-b2b' ); ?></option>
 										<option value="percent"><?php esc_html_e( 'Percent (%) reduction', 'woo-roles-rules-b2b' ); ?></option>
 										<option value="fixed"><?php esc_html_e( 'Fixed amount reduction', 'woo-roles-rules-b2b' ); ?></option>
 									</select>
 								</th>
 								<th class="cas-qty-row" style="padding-left:1px;">
-									<input id="adjust_value_qty_<?php echo esc_js( $rule->ID ); ?>" type="number" class="rrb2b-prod-val" style="width: 94%;padding-left: 5px;" oninput="catBulkInput('<?php echo esc_js( $rule->ID ); ?>', 'adjust_value_qty', 'rrb2b_table_cat');">
+									<input id="adjust_value_qty_<?php echo esc_js( $rule->id ); ?>" type="number" class="rrb2b-prod-val" style="width: 94%;padding-left: 5px;" oninput="catBulkInput('<?php echo esc_js( $rule->id ); ?>', 'adjust_value_qty', 'rrb2b_table_cat');">
 								</th>
 							</tr>
 						</thead>
@@ -547,12 +487,12 @@ class Rrb2b_Functions {
 						//Get single categories
 						if ( isset( $single_categories ) ) {
 
-							usort( $single_categories, function( $a, $b ) {
-								return strcmp( $a['name'], $b['name'] );
+							usort( $single_categories, function( CategoryRule $a, CategoryRule $b ) {
+								return strcmp( $a->name, $b->name );
 							} );
 				
-							foreach ( $single_categories as $obj ) {
-								$parents          = get_ancestors( $obj['id'], 'product_cat' );
+							foreach ( $single_categories as $category ) {
+								$parents          = get_ancestors( $category->id, 'product_cat' );
 								$parent_hierarchy = '';
 
 								if ( ! empty( $parents ) ) {
@@ -568,40 +508,38 @@ class Rrb2b_Functions {
 								}
 								
 								?>
-								<tr id="<?php echo esc_attr( $obj['id'] ); ?>">
+								<tr id="<?php echo esc_attr( $category->id ); ?>">
 								<td colspan="2">
 									<form method="post" name="update_single_category" autocomplete="off">
 									<input type="checkbox" name="category_remove">
-									<input type="hidden" name="slug" value="<?php echo esc_attr( $obj['slug'] ); ?>">
-									<input type="hidden" name="id" value="<?php echo esc_attr( $obj['id'] ); ?>">
+									<input type="hidden" name="slug" value="<?php echo esc_attr( $category->slug ); ?>">
+									<input type="hidden" name="id" value="<?php echo esc_attr( $category->id ); ?>">
 								
 									<input type="text" value="<?php esc_attr_e( $parent_hierarchy ); ?>" title="<?php esc_attr_e( $parent_hierarchy ); ?>" style="width: 30%;" readonly="readonly">
-									<input type="text" name="category_name" readonly="readonly" style="width:60%;" value="<?php echo esc_attr( $obj['name'] ); ?>">
+									<input type="text" name="category_name" readonly="readonly" style="width:60%;" value="<?php echo esc_attr( $category->name ); ?>">
 								</td>
-								<td><input type="checkbox" name="category_hidden" <?php echo ( 'true' === $obj['hidden'] ) ? 'checked' : ''; ?>></td>
-								<td><input type="checkbox" name="category_sale" <?php echo ( 'true' === $obj['on_sale'] ) ? 'checked' : ''; ?>></td>
 								<td>
 									<select name="reduce_regular_type" class="rrb2b-product-select">
-										<option value="" <?php echo ( '' === $obj['adjust_type'] ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Select', 'woo-roles-rules-b2b' ); ?></option>
-										<option value="percent" <?php echo ( 'percent' === $obj['adjust_type'] ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Reduce by percent (%)', 'woo-roles-rules-b2b' ); ?></option>
-										<option value="fixed" <?php echo ( 'fixed' === $obj['adjust_type'] ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Reduce by fixed amount', 'woo-roles-rules-b2b' ); ?></option>
-										<option value="percent_add" <?php echo ( 'percent_add' === $obj['adjust_type'] ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Increase by percent (%)', 'woo-roles-rules-b2b' ); ?></option>
-										<option value="fixed_add" <?php echo ( 'fixed_add' === $obj['adjust_type'] ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Increase by fixed amount', 'woo-roles-rules-b2b' ); ?></option>	
+										<option value="" <?php echo ( '' === $category->rule->type ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Select', 'woo-roles-rules-b2b' ); ?></option>
+										<option value="percent" <?php echo ( 'percent' === $category->rule->type ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Reduce by percent (%)', 'woo-roles-rules-b2b' ); ?></option>
+										<option value="fixed" <?php echo ( 'fixed' === $category->rule->type ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Reduce by fixed amount', 'woo-roles-rules-b2b' ); ?></option>
+										<option value="percent_add" <?php echo ( 'percent_add' === $category->rule->type ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Increase by percent (%)', 'woo-roles-rules-b2b' ); ?></option>
+										<option value="fixed_add" <?php echo ( 'fixed_add' === $category->rule->type ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Increase by fixed amount', 'woo-roles-rules-b2b' ); ?></option>
 									</select>
 								</td>
 								<td>
-									<input name="adjust_value" type="number" class="rrb2b-prod-val" value="<?php echo esc_attr( $obj['adjust_value'] ); ?>">
+									<input name="adjust_value" type="number" class="rrb2b-prod-val" value="<?php echo esc_attr( $category->rule->value ); ?>">
 								</td>
 								<td class="cas-qty-row">
-									<input name="min_qty" type="number" class="rrb2b-prod-val" style="width: 42%;margin-top:-1px;" value="<?php echo esc_attr( $obj['min_qty'] ); ?>">
+									<input name="min_qty" type="number" class="rrb2b-prod-val" style="width: 42%;margin-top:-1px;" value="<?php echo esc_attr( $category->min_quantity ); ?>">
 									<select name="reduce_regular_type_qty" class="rrb2b-product-select" style="width: 51%;">
-										<option value="" <?php echo ( isset( $obj['adjust_type_qty'] ) && '' === $obj['adjust_type_qty'] ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Select', 'woo-roles-rules-b2b' ); ?></option>
-										<option value="percent" <?php echo ( isset( $obj['adjust_type_qty'] ) && 'percent' === $obj['adjust_type_qty'] ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Percent (%) reduction', 'woo-roles-rules-b2b' ); ?></option>
-										<option value="fixed" <?php echo ( isset( $obj['adjust_type_qty'] ) && 'fixed' === $obj['adjust_type_qty'] ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Fixed amount reduction', 'woo-roles-rules-b2b' ); ?></option>
+										<option value="" <?php echo ( '' === $category->rule->quantity_value_type ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Select', 'woo-roles-rules-b2b' ); ?></option>
+										<option value="percent" <?php echo ( Rule::TYPE_PERCENT === $category->rule->quantity_value_type ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Percent (%) reduction', 'woo-roles-rules-b2b' ); ?></option>
+										<option value="fixed" <?php echo ( Rule::TYPE_FIXED === $category->rule->quantity_value_type ) ? 'selected="selected"' : ''; ?>><?php esc_html_e( 'Fixed amount reduction', 'woo-roles-rules-b2b' ); ?></option>
 									</select>
 								</td>
 								<td class="cas-qty-row">
-									<input name="adjust_value_qty" type="number" class="rrb2b-prod-val" value="<?php echo esc_attr( isset( $obj['adjust_type_qty'] ) ? $obj['adjust_value_qty'] : '' ); ?>">
+									<input name="adjust_value_qty" type="number" class="rrb2b-prod-val" value="<?php echo esc_attr( $category->rule->quantity_value ) ?>">
 									</form>
 								</td>
 								</tr>
@@ -613,11 +551,11 @@ class Rrb2b_Functions {
 						<tfoot>
 						<tr>
 							<td>
-								<button class="button" onclick="rrb2bFindDuplicates('rrb2b_table_cat_<?php echo esc_js( $rule->ID ); ?>', 'category');"><i class="fa-regular fa-eye"></i> <?php esc_attr_e( 'Find Duplicates', 'woo-roles-rules-b2b' ); ?></button>
+								<button class="button" onclick="rrb2bFindDuplicates('rrb2b_table_cat_<?php echo esc_js( $rule->id ); ?>', 'category');"><i class="fa-regular fa-eye"></i> <?php esc_attr_e( 'Find Duplicates', 'woo-roles-rules-b2b' ); ?></button>
 							</td>
 							<td colspan="7">
 								<div style="float:right;">
-									<button type="button" id="updateSingleCatButton-<?php echo esc_js( $rule->ID ); ?>" class="button button-primary" onclick="updateSingleCategories('<?php echo esc_js( $rule->ID ); ?>');"><i class="fas fa-save"></i> <?php esc_attr_e( 'Save Changes', 'woo-roles-rules-b2b' ); ?></button>
+									<button type="button" id="updateSingleCatButton-<?php echo esc_js( $rule->id ); ?>" class="button button-primary" onclick="updateSingleCategories('<?php echo esc_js( $rule->id ); ?>');"><i class="fas fa-save"></i> <?php esc_attr_e( 'Save Changes', 'woo-roles-rules-b2b' ); ?></button>
 								</div>
 							</td>
 						</tr>

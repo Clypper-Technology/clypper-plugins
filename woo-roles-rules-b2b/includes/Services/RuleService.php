@@ -91,7 +91,7 @@ class RuleService {
             $remove = sanitize_text_field( $item[ 'remove' ] );
 
             if ( 'false' === $remove ) {
-                $categories_to_add[] = CategoryRule::from_array_old( $item );
+                $categories_to_add[] = CategoryRule::from_array( $item );
             }
         }
 
@@ -117,7 +117,7 @@ class RuleService {
                 $products_to_add[] = new ProductRule(
                     (int)sanitize_text_field($item['product_id']),
                     sanitize_text_field($item['product_name']),
-                    Rule::from_array_old( $item ),
+                    Rule::from_array( $item ),
                     (int)sanitize_text_field($item['min_qty']),
                 );
             }
@@ -239,7 +239,7 @@ class RuleService {
         );
 
         $new_categories = explode(',', $data['selected_categories']);
-        $role_rules->replace_categories(array_map(fn($catId) => [$catId => $catId], $new_categories));
+        $role_rules->replace_categories(array_map(fn($catId) => [$catId], $new_categories));
 
         return $this->save_role_rules($role_rules);
     }

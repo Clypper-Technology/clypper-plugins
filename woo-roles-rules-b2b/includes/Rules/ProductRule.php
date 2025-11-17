@@ -39,13 +39,4 @@ class ProductRule
             min_qty: (int)($data['min_qty'] ?? 0),
         );
     }
-
-    public static function from_array_old( $data ) : self {
-        return new self(
-            id: (int)$data['id'],
-            name: $data['name'],
-            rule: Rule::from_array_old( $data ),
-            min_qty: (int)($data['min_qty'] ?? 0),
-        );
-    }
 }

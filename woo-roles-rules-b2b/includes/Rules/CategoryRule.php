@@ -28,16 +28,6 @@ class CategoryRule {
         );
     }
 
-    public static function from_array_old(array $data): self {
-        return new self(
-            id: (int)sanitize_text_field($data['id']),
-            slug: sanitize_text_field($data['slug']),
-            name: sanitize_text_field($data['name']),
-            rule: Rule::from_array_old( $data ),
-            min_quantity: (int)sanitize_text_field($data['min_qty'] ?? 0),
-        );
-    }
-
     /**
      * Create CategoryRule from WordPress term
      */

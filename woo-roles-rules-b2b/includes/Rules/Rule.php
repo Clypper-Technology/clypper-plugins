@@ -90,20 +90,6 @@ class Rule
         return self::USE_NO_RULE;
     }
 
-    public static function from_array_old(array $data ): Rule {
-        $type = $data['reduce_type'];
-        $value = $data['reduce_value'];
-        $quantity = $data['reduce_value_qty'];
-        $quantity_type = $data['reduce_type_qty'];
-
-        return new Rule(
-            type: $type ?? '',
-            value: $value ?? '',
-            quantity: $quantity ?? '',
-            quantity_type: $quantity_type ?? '',
-        );
-    }
-
     public function to_array() : array {
         return [
             'type' => $this->type,
