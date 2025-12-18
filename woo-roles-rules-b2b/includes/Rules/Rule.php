@@ -101,10 +101,10 @@ class Rule
 
     public static function from_array( array $rule ) : Rule {
         return new Rule(
-            $rule['type'],
-            $rule['value'],
-            $rule['quantity'],
-            $rule['quantity_type']
+            $rule['type'] ?? "",
+            $rule['value'] ?? "",
+            $rule['quantity'] ?? "",
+            $rule['quantity_type'] ?? ""
         );
     }
 }

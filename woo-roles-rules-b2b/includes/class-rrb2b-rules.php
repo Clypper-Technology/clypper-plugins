@@ -41,6 +41,7 @@ class Rrb2b_Rules {
 
         // x for y banner
         add_action('woocommerce_before_shop_loop_item', array( $this, 'show_discount_banner'), 999);
+        add_filter('flatsome_custom_single_product_1', array($this, 'show_discount_banner'), 999, 3);
     }
 
 
@@ -73,9 +74,28 @@ class Rrb2b_Rules {
 
     public function show_discount_banner(): void {
         global $product;
+
+        // Fallback if global not set
+        if (!$product) {
+            $product = wc_get_product();
+        }
+
+        if (!$product) {
+            return;
+        }
+
         $rule = $this->rule_service->get_rule_by_current_role();
 
+        if(!$rule || !$rule->rule_active) {
+            return;
+        }
+
         $applicable_rule = $this->get_applicable_rule( $rule, $product );
+
+        if(!$applicable_rule) {
+            return;
+        }
+
         $message = $applicable_rule->quantityReductionMessage();
 
         if($applicable_rule->rule->quantity_value) {

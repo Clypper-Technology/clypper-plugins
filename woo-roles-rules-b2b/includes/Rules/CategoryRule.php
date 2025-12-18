@@ -23,7 +23,7 @@ class CategoryRule {
             id: (int)sanitize_text_field($data['id']),
             slug: sanitize_text_field($data['slug']),
             name: sanitize_text_field($data['name']),
-            rule: Rule::from_array( $data['rule'] ),
+            rule: Rule::from_array( $data['rule'] ?? $data ),
             min_quantity: (int)sanitize_text_field($data['min_qty'] ?? 0),
         );
     }

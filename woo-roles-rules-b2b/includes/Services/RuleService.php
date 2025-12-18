@@ -117,7 +117,7 @@ class RuleService {
                 $products_to_add[] = new ProductRule(
                     (int)sanitize_text_field($item['product_id']),
                     sanitize_text_field($item['product_name']),
-                    Rule::from_array( $item ),
+                    Rule::from_array( $item['rule'] ),
                     (int)sanitize_text_field($item['min_qty']),
                 );
             }

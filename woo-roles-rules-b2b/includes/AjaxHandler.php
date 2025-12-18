@@ -153,6 +153,8 @@ class AjaxHandler {
         $data = wp_unslash( $_POST );
 
         $this->rule_service->update_product_rule( $data );
+
+        wp_send_json_success( __( 'Rule updated.', 'woo-roles-rules-b2b' ) );
     }
 
 

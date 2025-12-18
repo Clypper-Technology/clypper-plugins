@@ -35,7 +35,7 @@ class ProductRule
         return new self(
             id: (int)$data['id'],
             name: $data['name'],
-            rule: Rule::from_array( $data['rule'] ),
+            rule: Rule::from_array( $data['rule'] ?? $data ),
             min_qty: (int)($data['min_qty'] ?? 0),
         );
     }

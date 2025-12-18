@@ -536,8 +536,8 @@
                     rule: {
                         type: frm_elements['reduce_regular_type'].value,
                         value: frm_elements['adjust_value'].value,
-                        quantity: frm_elements['reduce_regular_type_qty'].value,
-                        quantity_type: frm_elements['adjust_value_qty'].value,
+                        quantity: frm_elements['adjust_value_qty'].value,
+                        quantity_type: frm_elements['reduce_regular_type_qty'].value,
                     },
 					min_qty: frm_elements['min_qty'].value,
 					is_variable: frm_elements['variable'].value,
@@ -602,7 +602,8 @@
 				var frm_elements  = frm.form.elements;
 				var remove_status = frm_elements['category_remove'].checked;
 
-				var frm_data = { rule_id: id,
+				var frm_data = {
+					rule_id: id,
 					remove: remove_status,
                     id: frm_elements['id'].value,
 					slug: frm_elements['slug'].value,
