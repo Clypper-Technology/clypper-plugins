@@ -303,22 +303,6 @@
 		rrb2bFindDuplicates(tableName,removeName);
 	}
 
-	function clearSale( obj ){
-
-		var theForm = $(obj.form)[0];
-
-		theForm['reduce_sale_value'].value = '';
-		theForm['date_from'].value = '';
-		theForm['date_to'].value = '';
-		theForm['reduce_sale_type'].value = '';
-		theForm['time_from'].value = '00:00';
-		theForm['time_to'].value = '23:59';
-
-	}
-	window.clearSale = function(obj){
-		clearSale(obj);
-	}
-
 	function formChanged( obj ) {
 
 		$('#btn_'+obj).css('color', 'red');
@@ -549,10 +533,12 @@
 					remove: remove_status,
 					product_id: frm_elements['product_id'].value,
 					product_name: frm_elements['product_name'].value,
-					reduce_type: frm_elements['reduce_regular_type'].value,
-					reduce_value: frm_elements['adjust_value'].value,
-					reduce_type_qty: frm_elements['reduce_regular_type_qty'].value,
-					reduce_value_qty: frm_elements['adjust_value_qty'].value,
+                    rule: {
+                        type: frm_elements['reduce_regular_type'].value,
+                        value: frm_elements['adjust_value'].value,
+                        quantity: frm_elements['reduce_regular_type_qty'].value,
+                        quantity_type: frm_elements['adjust_value_qty'].value,
+                    },
 					min_qty: frm_elements['min_qty'].value,
 					is_variable: frm_elements['variable'].value,
 				};
@@ -617,11 +603,17 @@
 				var remove_status = frm_elements['category_remove'].checked;
 
 				var frm_data = { rule_id: id,
-					remove: remove_status, id: frm_elements['id'].value, hidden: frm_elements['category_hidden'].checked,
-					slug: frm_elements['slug'].value, name: frm_elements['category_name'].value, reduce_type: frm_elements['reduce_regular_type'].value, 
-					reduce_value: frm_elements['adjust_value'].value, sale: frm_elements['category_sale'].checked,
-					reduce_type_qty: frm_elements['reduce_regular_type_qty'].value,
-					reduce_value_qty: frm_elements['adjust_value_qty'].value, min_qty: frm_elements['min_qty'].value,
+					remove: remove_status,
+                    id: frm_elements['id'].value,
+					slug: frm_elements['slug'].value,
+                    name: frm_elements['category_name'].value,
+                    rule: {
+                        type: frm_elements['reduce_regular_type'].value,
+                        value: frm_elements['adjust_value'].value,
+                        quantity: frm_elements['adjust_value_qty'].value,
+                        quantity_type: frm_elements['reduce_regular_type_qty'].value,
+                    },
+                    min_qty: frm_elements['min_qty'].value
 				};
 				json_data.rows.push( frm_data );
 				count++;

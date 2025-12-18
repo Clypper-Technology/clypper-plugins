@@ -5,6 +5,7 @@
  * @package Roles&RulesB2B/includes
  */
 
+use ClypperTechnology\RolePricing\Rules\ApplicableRule;
 use ClypperTechnology\RolePricing\Rules\RoleRules;
 use ClypperTechnology\RolePricing\Services\RuleService;
 
@@ -37,6 +38,9 @@ class Rrb2b_Rules {
 
         // On Sale
         add_filter( 'woocommerce_product_is_on_sale', array( $this, 'rrb2b_product_is_on_sale' ), 999, 2 );
+
+        // x for y banner
+        add_action('woocommerce_before_shop_loop_item', array( $this, 'show_discount_banner'), 999);
     }
 
 
@@ -68,7 +72,19 @@ class Rrb2b_Rules {
     }
 
     public function show_discount_banner(): void {
+        global $product;
         $rule = $this->rule_service->get_rule_by_current_role();
+
+        $applicable_rule = $this->get_applicable_rule( $rule, $product );
+        $message = $applicable_rule->quantityReductionMessage();
+
+        if($applicable_rule->rule->quantity_value) {
+            ?>
+            <div class="badge-container absolute right top z-1">
+                <div class="callout badge badge-circle"><div class="badge-inner secondary on-sale"><span class="onsale"><?php echo $message ?></span></div></div>
+            </div>
+            <?php
+        }
     }
 
 
@@ -121,15 +137,19 @@ class Rrb2b_Rules {
     }
 
     public function role_price(RoleRules $rule, $product, float $price_new, int $cart_qty) : ?float {
+        $applicable_rule = $this->get_applicable_rule( $rule, $product );
+
+        return $applicable_rule?->calculatePrice($price_new, $cart_qty);
+    }
+
+    private function get_applicable_rule( RoleRules $rule, $product ): ?ApplicableRule {
         $category_ids = $this->get_category_ids( $product );
 
         if( is_wp_error($category_ids) ) {
             $category_ids = [];
         }
 
-        $applicable_rule = $rule->get_applicable_rule( $product->get_id(), $category_ids );
-
-        return $applicable_rule?->calculatePrice($price_new, $cart_qty);
+        return $rule->get_applicable_rule( $product->get_id(), $category_ids );
     }
 
 
