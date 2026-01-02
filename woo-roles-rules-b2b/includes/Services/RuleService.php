@@ -29,18 +29,7 @@ class RuleService {
     public function get_rule_by_current_role(): RoleRules | null {
         $user_role = $this->role_service->get_user_role();
 
-        if (isset($this->role_rules[$user_role])) {
-            return $this->role_rules[$user_role];
-        }
-
-        $rule = $this->get_rule_by_user_role( $user_role );
-
-        if( $rule ) {
-            $this->role_rules[$user_role] = $rule;
-            return $rule;
-        }
-
-        return null;
+        return $this->get_rule_by_user_role($user_role);
     }
 
 
@@ -302,8 +291,18 @@ class RuleService {
     }
 
     public function get_rule_by_user_role( string $user_role): ?RoleRules {
-        $all_rules = $this->get_all_role_rules();
+        if (isset($this->role_rules[$user_role])) {
+            return $this->role_rules[$user_role];
+        }
 
-        return array_find($all_rules, fn( RoleRules $rule ) => $rule->role_name === $user_role );
+        $all_rules = $this->get_all_role_rules();
+        $rule = array_find($all_rules, fn( RoleRules $rule ) => $rule->role_name === $user_role );
+
+        if( $rule ) {
+            $this->role_rules[$user_role] = $rule;
+            return $rule;
+        }
+
+        return null;
     }
 }
