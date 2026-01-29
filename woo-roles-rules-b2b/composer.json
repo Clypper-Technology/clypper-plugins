@@ -1,9 +1,16 @@
 {
     "name": "clypper-technology/role-pricing",
-    "type": "library",
+    "type": "wordpress-plugin",
+    "description": "Clypper's Role Based Pricing - Part of the Clypper plugin series for WooCommerce",
+    "license": "GPL-3.0-or-later",
     "autoload": {
         "psr-4": {
             "ClypperTechnology\\RolePricing\\": "includes/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ClypperTechnology\\RolePricing\\Tests\\": "tests/"
         }
     },
     "authors": [
@@ -12,5 +19,22 @@
             "email": "casho@itu.dk"
         }
     ],
-    "require": {}
+    "require": {
+        "php": ">=8.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0",
+        "yoast/phpunit-polyfills": "^1.0"
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test:unit": "phpunit --testsuite 'Unit Tests'",
+        "test:integration": "phpunit --testsuite 'Integration Tests'",
+        "test:coverage": "phpunit --coverage-html tests/coverage/html"
+    },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
+    }
 }

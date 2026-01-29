@@ -1,0 +1,67 @@
+{
+  "name": "clypper-role-pricing",
+  "version": "2.5.7",
+  "description": "Clypper's Role Based Pricing - Part of the Clypper plugin series for WooCommerce",
+  "author": "Clypper Technology",
+  "license": "GPL-3.0-or-later",
+  "keywords": [
+    "wordpress",
+    "woocommerce",
+    "b2b",
+    "pricing",
+    "roles",
+    "clypper"
+  ],
+  "homepage": "https://github.com/clypper-technology/clypper-role-pricing",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/clypper-technology/clypper-role-pricing.git"
+  },
+  "scripts": {
+    "start": "wp-env start",
+    "stop": "wp-env stop",
+    "restart": "wp-env stop && wp-env start",
+    "clean": "wp-env clean all",
+    "wp": "wp-env run cli wp",
+    "test:php": "wp-env run tests-cli --env-cwd='wp-content/plugins/clypper-role-pricing' -- phpunit",
+    "test:php:watch": "wp-env run tests-cli --env-cwd='wp-content/plugins/clypper-role-pricing' -- phpunit --testdox --colors=always",
+    "test:js": "jest",
+    "test:js:watch": "jest --watch",
+    "test:js:coverage": "jest --coverage",
+    "test": "npm run test:php && npm run test:js",
+    "lint:php": "composer run-script lint",
+    "format:php": "composer run-script format",
+    "setup": "npm run start && npm run setup:woocommerce",
+    "setup:woocommerce": "wp-env run cli wp plugin activate woocommerce && wp-env run cli wp plugin activate clypper-role-pricing",
+    "logs": "wp-env logs",
+    "build": "wp-scripts build",
+    "dev": "wp-scripts start"
+  },
+  "dependencies": {
+    "@wordpress/api-fetch": "^6.0.0",
+    "@wordpress/components": "^25.0.0",
+    "@wordpress/core-data": "^7.39.0",
+    "@wordpress/data": "^9.0.0",
+    "@wordpress/element": "^5.0.0",
+    "@wordpress/notices": "^4.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/user-event": "^14.5.1",
+    "@types/jest": "^29.5.11",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@types/wordpress__components": "^23.0.0",
+    "@wordpress/env": "^10.11.0",
+    "@wordpress/scripts": "^27.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}

@@ -26,25 +26,25 @@ class Users
         // Only show if user has company information
         if ( $company_name || $company_cvr || $company_type ) {
             ?>
-            <h3><?php _e( 'Virksomhedsoplysninger', 'woo-roles-rules-b2b' ); ?></h3>
+            <h3><?php _e( 'Virksomhedsoplysninger', 'clypper-role-pricing' ); ?></h3>
             <table class="form-table">
                 <?php if ( $company_name ) : ?>
                     <tr>
-                        <th><label><?php _e( 'Virksomhedsnavn', 'woo-roles-rules-b2b' ); ?></label></th>
+                        <th><label><?php _e( 'Virksomhedsnavn', 'clypper-role-pricing' ); ?></label></th>
                         <td><?php echo esc_html( $company_name ); ?></td>
                     </tr>
                 <?php endif; ?>
 
                 <?php if ( $company_cvr ) : ?>
                     <tr>
-                        <th><label><?php _e( 'CVR Nummer', 'woo-roles-rules-b2b' ); ?></label></th>
+                        <th><label><?php _e( 'CVR Nummer', 'clypper-role-pricing' ); ?></label></th>
                         <td><?php echo esc_html( $company_cvr ); ?></td>
                     </tr>
                 <?php endif; ?>
 
                 <?php if ( $company_type ) : ?>
                     <tr>
-                        <th><label><?php _e( 'Industri', 'woo-roles-rules-b2b' ); ?></label></th>
+                        <th><label><?php _e( 'Industri', 'clypper-role-pricing' ); ?></label></th>
                         <td><?php echo esc_html( $company_type ); ?></td>
                     </tr>
                 <?php endif; ?>
@@ -54,7 +54,7 @@ class Users
     }
 
     public function add_cvr_column( $columns ) {
-        $columns['company_cvr'] = __( 'CVR', 'woo-roles-rules-b2b' );
+        $columns['company_cvr'] = __( 'CVR', 'clypper-role-pricing' );
         return $columns;
     }
 
@@ -73,12 +73,12 @@ class Users
         if ( $company_cvr || $company_type ) {
             ?>
             <div class="woocommerce-MyAccount-content">
-                <h3><?php _e( 'Virksomhedsoplysninger', 'woo-roles-rules-b2b' ); ?></h3>
+                <h3><?php _e( 'Virksomhedsoplysninger', 'clypper-role-pricing' ); ?></h3>
                 <?php if ( $company_cvr ) : ?>
-                    <p><strong><?php _e( 'CVR:', 'woo-roles-rules-b2b' ); ?></strong> <?php echo esc_html( $company_cvr ); ?></p>
+                    <p><strong><?php _e( 'CVR:', 'clypper-role-pricing' ); ?></strong> <?php echo esc_html( $company_cvr ); ?></p>
                 <?php endif; ?>
                 <?php if ( $company_type ) : ?>
-                    <p><strong><?php _e( 'Industri:', 'woo-roles-rules-b2b' ); ?></strong> <?php echo esc_html( $company_type ); ?></p>
+                    <p><strong><?php _e( 'Industri:', 'clypper-role-pricing' ); ?></strong> <?php echo esc_html( $company_type ); ?></p>
                 <?php endif; ?>
             </div>
             <?php

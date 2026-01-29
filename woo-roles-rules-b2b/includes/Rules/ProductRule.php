@@ -9,7 +9,7 @@ class ProductRule
     public int $id;
     public string $name;
     public Rule $rule;
-    public string $min_quantity;
+    public int $min_quantity;
 
     public function __construct(
         int $id,

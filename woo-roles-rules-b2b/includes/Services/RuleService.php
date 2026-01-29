@@ -10,6 +10,19 @@ use InvalidArgumentException;
 use RuntimeException;
 use WP_Post;
 
+use function get_posts;
+use function get_post;
+use function get_term;
+use function get_term_by;
+use function sanitize_text_field;
+use function get_current_user_id;
+use function wp_insert_post;
+use function apply_filters;
+use function is_wp_error;
+use function wp_delete_post;
+use function wp_update_post;
+use function esc_attr__;
+
 defined( 'ABSPATH' ) || exit;
 
 class RuleService {
@@ -77,10 +90,27 @@ class RuleService {
         }
 
         foreach ($new_categories as $item) {
-            $remove = sanitize_text_field( $item[ 'remove' ] );
+            // Skip if explicitly marked for removal
+            $remove = isset($item['remove']) ? sanitize_text_field( $item['remove'] ) : 'false';
 
-            if ( 'false' === $remove ) {
-                $categories_to_add[] = CategoryRule::from_array( $item );
+            if ( 'false' === $remove || $remove === '' ) {
+                // Handle API format (category_id, type, value) vs UI format (id, slug, name, rule)
+                if (isset($item['category_id']) && !isset($item['id'])) {
+                    // API format - look up category details
+                    $term = get_term($item['category_id'], 'product_cat');
+                    if ($term && !is_wp_error($term)) {
+                        $categories_to_add[] = new CategoryRule(
+                            id: $term->term_id,
+                            slug: $term->slug,
+                            name: $term->name,
+                            rule: Rule::from_array($item),
+                            min_quantity: (int)($item['min_qty'] ?? 0)
+                        );
+                    }
+                } else {
+                    // UI format - use from_array
+                    $categories_to_add[] = CategoryRule::from_array( $item );
+                }
             }
         }
 
@@ -100,14 +130,18 @@ class RuleService {
         }
 
         foreach ($new_products as $item) {
-            $remove = sanitize_text_field($item['remove']);
+            // Skip if explicitly marked for removal
+            $remove = isset($item['remove']) ? sanitize_text_field($item['remove']) : 'false';
 
-            if ('false' === $remove) {
+            if ('false' === $remove || $remove === '') {
+                // Handle both formats: flat (from API) or nested (from UI)
+                $rule_data = isset($item['rule']) ? $item['rule'] : $item;
+
                 $products_to_add[] = new ProductRule(
                     (int)sanitize_text_field($item['product_id']),
-                    sanitize_text_field($item['product_name']),
-                    Rule::from_array( $item['rule'] ),
-                    (int)sanitize_text_field($item['min_qty']),
+                    sanitize_text_field($item['product_name'] ?? ''),
+                    Rule::from_array( $rule_data ),
+                    (int)sanitize_text_field($item['min_qty'] ?? 1),
                 );
             }
         }
@@ -120,8 +154,20 @@ class RuleService {
     /**
      * Delete rule
      */
-    public function delete_rule( string $id ): void {
-        wp_delete_post( $id, true );
+    /**
+     * Delete a rule
+     *
+     * @param int|string $id Rule ID
+     * @throws RuntimeException If deletion fails
+     */
+    public function delete_rule( $id ): bool {
+        $result = wp_delete_post( $id, true );
+
+        if ( ! $result || is_wp_error( $result ) ) {
+            throw new RuntimeException( 'Failed to delete rule with ID: ' . $id );
+        }
+
+        return true;
     }
 
     /**
@@ -173,7 +219,15 @@ class RuleService {
      * @throws RuntimeException If creation fails
      */
     public function add_rule(string $name): int {
-        if (post_exists($name, '', '', 'rrb2b')) {
+        // Check if rule already exists using get_posts
+        $existing = get_posts([
+            'post_type'   => 'rrb2b',
+            'post_status' => 'any',
+            'title'       => $name,
+            'numberposts' => 1,
+        ]);
+
+        if (!empty($existing)) {
             throw new InvalidArgumentException("Rule '{$name}' already exists");
         }
 
@@ -211,24 +265,30 @@ class RuleService {
 
         $role_rules->rule_active = !empty( $data['rule_active'] );
 
-        // Global rule - only create if there's actually a value
-        $role_rules->global_rule = new Rule(
-            $data['reduce_regular_type'] ?? '',
-            $data['reduce_regular_value'] ?? '',
-            '',  // Future: could support bulk global discounts
-            ''
-        );
+        // Global rule - only update if provided
+        if (isset($data['reduce_regular_type']) || isset($data['reduce_regular_value'])) {
+            $role_rules->global_rule = new Rule(
+                $data['reduce_regular_type'] ?? '',
+                $data['reduce_regular_value'] ?? '',
+                '',  // Future: could support bulk global discounts
+                ''
+            );
+        }
 
-        // Category rule - only create if there's actually a value
-        $role_rules->category_rule = new Rule(
-            $data['reduce_categories_type'] ?? 'percent',  // Default assumption
-            $data['reduce_categories_value'] ?? '',
-            '',  // Future: could support bulk category discounts
-            ''
-        );
+        // Category rule - only update if provided
+        if (isset($data['reduce_categories_type']) || isset($data['reduce_categories_value'])) {
+            $role_rules->category_rule = new Rule(
+                $data['reduce_categories_type'] ?? 'percent',  // Default assumption
+                $data['reduce_categories_value'] ?? '',
+                '',  // Future: could support bulk category discounts
+                ''
+            );
+        }
 
-        $new_categories = explode(',', $data['selected_categories']);
-        $role_rules->replace_categories(array_map(fn($catId) => [$catId], $new_categories));
+        if (!empty($data['selected_categories'])) {
+            $new_categories = explode(',', $data['selected_categories']);
+            $role_rules->replace_categories(array_map(fn($catId) => [$catId], $new_categories));
+        }
 
         return $this->save_role_rules($role_rules);
     }

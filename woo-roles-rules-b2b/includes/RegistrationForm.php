@@ -162,62 +162,62 @@ class RegistrationForm
 
         // Verify nonce
         if ( ! isset( $data['rrb2b_reg_form_nonce'] ) || ! wp_verify_nonce( $data['rrb2b_reg_form_nonce'], 'rrb2b_reg_form' ) ) {
-            $validation_errors->add( 'nonce_error', __( 'Nonce verification failed.', 'woo-roles-rules-b2b' ) );
+            $validation_errors->add( 'nonce_error', __( 'Nonce verification failed.', 'clypper-role-pricing' ) );
             $logger->info( 'Nonce error in registration form (validate reg form)', $context );
             return;
         }
 
         if ( empty( $data['first_name'] ) ) {
-            $validation_errors->add( 'first_name_error', __( 'Fornavn skal udfyldes!', 'woo-roles-rules-b2b' ) );
+            $validation_errors->add( 'first_name_error', __( 'Fornavn skal udfyldes!', 'clypper-role-pricing' ) );
         }
 
         if ( empty( $data['last_name'] ) ) {
-            $validation_errors->add( 'last_name_error', __( 'Efternavn skal udfyldes!', 'woo-roles-rules-b2b' ) );
+            $validation_errors->add( 'last_name_error', __( 'Efternavn skal udfyldes!', 'clypper-role-pricing' ) );
         }
 
         if ( empty( $data['phone'] ) ) {
-            $validation_errors->add( 'phone_error', __( 'Telefonnummer skal udfyldes!', 'woo-roles-rules-b2b' ) );
+            $validation_errors->add( 'phone_error', __( 'Telefonnummer skal udfyldes!', 'clypper-role-pricing' ) );
         }
 
         if ( empty( $data['company_name'] ) ) {
-            $validation_errors->add( 'company_name_error', __( 'Firmanavn skal udfyldes!', 'woo-roles-rules-b2b' ) );
+            $validation_errors->add( 'company_name_error', __( 'Firmanavn skal udfyldes!', 'clypper-role-pricing' ) );
         }
 
         if ( empty( $data['company_type'] ) ) {
-            $validation_errors->add( 'company_type_error', __( 'Branche skal udfyldes!', 'woo-roles-rules-b2b' ) );
+            $validation_errors->add( 'company_type_error', __( 'Branche skal udfyldes!', 'clypper-role-pricing' ) );
         }
 
         if ( empty( $data['company_cvr'] ) ) {
-            $validation_errors->add( 'company_cvr_error', __( 'CVR skal udfyldes!', 'woo-roles-rules-b2b' ) );
+            $validation_errors->add( 'company_cvr_error', __( 'CVR skal udfyldes!', 'clypper-role-pricing' ) );
         } else {
             $cvr = trim( $data['company_cvr'] );
 
             // Check if exactly 8 digits
             if ( !preg_match('/^\d{8}$/', $cvr) ) {
-                $validation_errors->add( 'company_cvr_error', __( 'CVR skal være præcis 8 cifre!', 'woo-roles-rules-b2b' ) );
+                $validation_errors->add( 'company_cvr_error', __( 'CVR skal være præcis 8 cifre!', 'clypper-role-pricing' ) );
             } else {
                 // Modulus 11 validation
                 if ( !$this->validate_cvr_modulus11( $cvr ) ) {
-                    $validation_errors->add( 'company_cvr_error', __( 'Ugyldigt CVR-nummer!', 'woo-roles-rules-b2b' ) );
+                    $validation_errors->add( 'company_cvr_error', __( 'Ugyldigt CVR-nummer!', 'clypper-role-pricing' ) );
                 }
             }
         }
 
         if ( empty( $data['company_address'] ) ) {
-            $validation_errors->add( 'company_address_error', __( 'Firmaadresse skal udfyldes!', 'woo-roles-rules-b2b' ) );
+            $validation_errors->add( 'company_address_error', __( 'Firmaadresse skal udfyldes!', 'clypper-role-pricing' ) );
         }
 
         if ( empty( $data['company_city'] ) ) {
-            $validation_errors->add( 'company_city_error', __( 'By skal udfyldes!', 'woo-roles-rules-b2b' ) );
+            $validation_errors->add( 'company_city_error', __( 'By skal udfyldes!', 'clypper-role-pricing' ) );
         }
 
         if ( empty( $data['company_postal'] ) ) {
-            $validation_errors->add( 'company_postal_error', __( 'Postnummer skal udfyldes!', 'woo-roles-rules-b2b' ) );
+            $validation_errors->add( 'company_postal_error', __( 'Postnummer skal udfyldes!', 'clypper-role-pricing' ) );
         } else {
             $postal_number = $data['company_postal'];
 
             if(strlen($postal_number) < 4) {
-                $validation_errors->add( 'company_postal_error', __( 'Postnummer skal indeholde 4 cifre!', 'woo-roles-rules-b2b' ) );
+                $validation_errors->add( 'company_postal_error', __( 'Postnummer skal indeholde 4 cifre!', 'clypper-role-pricing' ) );
             }
         }
     }

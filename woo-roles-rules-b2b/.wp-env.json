@@ -1,0 +1,23 @@
+{
+  "phpVersion": "8.3",
+  "plugins": [
+    "."
+  ],
+  "themes": [
+  ],
+  "config": {
+    "WP_DEBUG": true,
+    "WP_DEBUG_LOG": true,
+    "WP_DEBUG_DISPLAY": true,
+    "SCRIPT_DEBUG": true,
+    "WP_ENVIRONMENT_TYPE": "local"
+  },
+  "port": 8888,
+  "env": {
+    "tests": {
+      "mappings": {
+        "wp-content/plugins/clypper-role-pricing": "."
+      }
+    }
+  }
+}

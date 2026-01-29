@@ -25,8 +25,11 @@ class RoleService
 
     /**
      * Add role (like VIP Customer)
+     *
+     * @throws \RuntimeException If role creation fails
+     * @throws \InvalidArgumentException If role already exists
      */
-    public function add_role( $data ): void {
+    public function add_role( $data ): bool {
         $logger   = wc_get_logger();
         $context  = array( 'source' => 'rrb2b-role-log' );
         $wp_roles = wp_roles();
@@ -36,29 +39,31 @@ class RoleService
 
         if ( empty( $name ) || empty( $slug ) ) {
             $logger->warning( 'Missing role name or slug.', $context );
-            return;
+            throw new \InvalidArgumentException( 'Role name and slug are required.' );
         }
 
         // Check if role already exists
         if ( get_role( $slug ) ) {
             $logger->info( 'Role "' . $slug . '" already exists.', $context );
-            return;
+            throw new \InvalidArgumentException( 'A role with this slug already exists.' );
         }
 
         // Validate capability base role
         $cap_role = get_role( $cap );
         if ( ! $cap_role ) {
             $logger->error( 'Base capability role "' . $cap . '" not found.', $context );
-            return;
+            throw new \RuntimeException( 'Base capability role "' . $cap . '" not found.' );
         }
 
         $result = $wp_roles->add_role( $slug, $name, $cap_role->capabilities );
 
         if ( null === $result ) {
             $logger->error( 'Failed to add role "' . $slug . '".', $context );
-        } else {
-            $logger->info( 'Role "' . $slug . '" successfully added.', $context );
+            throw new \RuntimeException( 'Failed to add role "' . $slug . '".' );
         }
+
+        $logger->info( 'Role "' . $slug . '" successfully added.', $context );
+        return true;
     }
 
     /**

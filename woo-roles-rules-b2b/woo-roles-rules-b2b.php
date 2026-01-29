@@ -1,14 +1,14 @@
 <?php
 /**
- * Roles & Rules B2B
+ * Clypper's Role Based Pricing
  *
- * @package  Roles&RulesB2B
+ * @package  ClypperRolePricing
  *
- * Plugin Name: Roles & Rules B2B for WooCommerce
- * Description: Enables role-based pricing, dynamic discounts, VAT exemptions and much more to create tailored B2B and B2C shopping experiences.
+ * Plugin Name: Clypper's Role Based Pricing
+ * Description: Part of the Clypper plugin series. Enables role-based pricing, dynamic discounts, VAT exemptions and much more to create tailored B2B and B2C shopping experiences.
  * Version: 2.5.7
- * Author: Consortia
- * Text Domain: woo-roles-rules-b2b
+ * Author: Clypper Technology
+ * Text Domain: clypper-role-pricing
  * Domain Path: /languages
  *
  * Tested up to: 6.8.1
@@ -17,12 +17,13 @@
  * WC requires at least: 3.5
  * WC tested up to: 9.8.5
  *
- * Copyright: © 2018-2025 Consortia AS.
+ * Copyright: © 2018-2025 Clypper Technology.
  * License: GNU General Public License v3.0
 
  */
 
 use ClypperTechnology\RolePricing\Admin;
+use ClypperTechnology\RolePricing\REST\RestApiRegistry;
 
 require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 
@@ -46,6 +47,14 @@ require_once dirname( __FILE__ ) . '/includes/class-rrb2b-rules.php';
 if(is_admin()) {
     new Admin();
 }
+
+/**
+ * Initialize REST API
+ */
+add_action( 'rest_api_init', function() {
+	$rest_registry = new RestApiRegistry();
+	$rest_registry->register_routes();
+} );
 
 /**
  * Install
@@ -98,8 +107,7 @@ function rrb2b_plugin_roles_page() {
  * Load languages
  */
 function rrb2b_load_textdomain() {
-	//unload_textdomain( 'woo-roles-rules-b2b' );
-	load_plugin_textdomain( 'woo-roles-rules-b2b', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+	load_plugin_textdomain( 'clypper-role-pricing', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 }
 add_action( 'plugins_loaded', 'rrb2b_load_textdomain' );
 

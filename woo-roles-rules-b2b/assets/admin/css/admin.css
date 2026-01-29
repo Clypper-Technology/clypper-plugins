@@ -1,0 +1,321 @@
+/* Product Search Component */
+.crp-product-search {
+    position: relative;
+}
+
+.crp-product-search__spinner {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+}
+
+.crp-product-search__results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10000;
+    margin-top: 4px;
+}
+
+/* Modal search results - ensure they overflow properly */
+.components-modal__content .crp-product-search__results {
+    position: fixed;
+    max-height: 400px;
+    z-index: 999999;
+}
+
+.crp-product-search__result-item {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.crp-product-search__result-item:hover {
+    background: #f5f5f5;
+}
+
+.crp-product-search__result-thumbnail {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.crp-product-search__result-details {
+    flex: 1;
+}
+
+.crp-product-search__result-name {
+    font-weight: 500;
+}
+
+.crp-product-search__result-sku {
+    font-size: 12px;
+    color: #757575;
+}
+
+.crp-product-search__result-price {
+    font-weight: 500;
+    color: #2271b1;
+}
+
+.crp-product-search__no-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    padding: 12px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 4px;
+    color: #757575;
+    font-size: 13px;
+}
+
+/* Product Rule Row */
+.crp-product-row__thumbnail {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.crp-product-row__thumbnail-cell {
+    width: 60px;
+    text-align: center;
+}
+
+.crp-product-row__name-cell {
+    min-width: 200px;
+}
+
+.crp-product-row__sku {
+    font-size: 12px;
+    color: #757575;
+}
+
+.crp-product-row__unsaved-indicator {
+    font-size: 11px;
+    color: #d63638;
+    margin-top: 4px;
+}
+
+.crp-product-row.has-changes {
+    background-color: #fffbf0;
+}
+
+/* Save Banner */
+.crp-save-banner {
+    padding: 12px 16px;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.crp-save-banner__message {
+    color: #856404;
+}
+
+.crp-save-banner__actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Table Styles */
+.crp-table-container {
+    overflow-x: auto;
+}
+
+.crp-table {
+    min-width: 1300px;
+}
+
+.crp-table__checkbox-cell {
+    width: 40px;
+    text-align: center;
+}
+
+.crp-table__image-cell {
+    width: 60px;
+    text-align: center;
+}
+
+.crp-table thead th {
+    width: auto;
+}
+
+.crp-table thead th.checkbox {
+    width: 40px;
+}
+
+.crp-table thead th.image {
+    width: 60px;
+}
+
+.crp-table tbody tr.selected-row {
+    background-color: #f0f6fc;
+}
+
+.crp-table tbody tr.has-changes {
+    background-color: #fffbf0;
+}
+
+/* Empty State */
+.crp-empty-state {
+    padding: 40px;
+    text-align: center;
+    background: #f9f9f9;
+    border-radius: 4px;
+}
+
+.crp-empty-state__text {
+    margin: 0;
+    color: #757575;
+}
+
+/* Spinner Container */
+.crp-spinner-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+}
+
+/* Bulk Actions */
+.crp-bulk-actions {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.crp-bulk-actions__field {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Grid Layout */
+.crp-grid {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.crp-grid--2col {
+    grid-template-columns: 1fr 1fr;
+}
+
+/* Modal Styles */
+.crp-add-product-modal .components-modal__content {
+    padding: 20px;
+}
+
+.crp-add-product-tabs {
+    padding: 20px 0;
+}
+
+.crp-modal__description {
+    margin-bottom: 15px;
+}
+
+.crp-modal__actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.crp-modal__checkbox-label {
+    margin-top: 15px;
+}
+
+.crp-modal__checkbox-input {
+    margin-right: 8px;
+}
+
+/* Tab Content */
+.crp-tab-header {
+    margin-bottom: 20px;
+}
+
+.crp-tab-header__title {
+    font-size: 1.3em;
+    margin: 0 0 8px 0;
+}
+
+.crp-tab-header__description {
+    margin: 0;
+    color: #757575;
+}
+
+.crp-tab-section {
+    margin-bottom: 20px;
+}
+
+/* Tabs */
+.crp-rules-tabs {
+    margin-bottom: 20px;
+}
+
+/* Utility Classes */
+.crp-mt-10 {
+    margin-top: 10px;
+}
+
+.crp-mb-10 {
+    margin-bottom: 10px;
+}
+
+.crp-mb-15 {
+    margin-bottom: 15px;
+}
+
+.crp-mb-20 {
+    margin-bottom: 20px;
+}
+
+.crp-gap-8 {
+    gap: 8px;
+}
+
+.crp-gap-10 {
+    gap: 10px;
+}
+
+.crp-flex {
+    display: flex;
+}
+
+.crp-flex-col {
+    flex-direction: column;
+}
+
+.crp-items-center {
+    align-items: center;
+}
+
+.crp-justify-between {
+    justify-content: space-between;
+}
