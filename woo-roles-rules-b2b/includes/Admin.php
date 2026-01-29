@@ -22,7 +22,6 @@ class Admin {
         add_action( 'admin_post_rrb2b_update_rule', array( $this, 'update_rule' ) );
         add_action( 'admin_menu', array( $this, 'create_admin_menu' ) );
         add_action( 'admin_post_rrb2b_create_role', array( $this, 'create_role' ) );
-        add_action( 'admin_head', array( $this, 'add_button_to_user_page' ) );
         add_filter( 'wp_new_user_notification_email_admin', array( $this, 'add_company_info_to_admin_email' ), 10, 3 );
     }
 
@@ -162,8 +161,8 @@ class Admin {
     /**
      * Create menu
      */
-    public function create_admin_menu() {
-
+    public function create_admin_menu(): void
+    {
         add_submenu_page(
             'woocommerce',
             __( 'Roles & Rules B2B', 'woo-roles-rules-b2b' ),
@@ -174,27 +173,6 @@ class Admin {
             30
         );
     }
-
-    /**
-     * Add button to list users
-     */
-    public function add_button_to_user_page() {
-
-        global $current_screen;
-
-        if ( 'users' !== $current_screen->id ) {
-            return;
-        }
-
-        ?>
-        <script>
-            jQuery(function(){
-                jQuery('h1').append(' <a href="<?php echo esc_url( admin_url( 'admin.php?page=rrb2b' ) ); ?>" class="page-title-action"><?php esc_attr_e( 'Roles & Rules B2B', 'woo-roles-rules-b2b' ); ?></a>');
-            });
-        </script>
-        <?php
-    }
-
 
     /**
      * Combined verification for admin requests

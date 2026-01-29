@@ -40,8 +40,8 @@ class Rrb2b_Rules {
         add_filter( 'woocommerce_product_is_on_sale', array( $this, 'rrb2b_product_is_on_sale' ), 999, 2 );
 
         // x for y banner
-        add_action('woocommerce_before_shop_loop_item', array( $this, 'show_discount_banner'), 999);
-        add_filter('flatsome_custom_single_product_1', array($this, 'show_discount_banner'), 999, 3);
+        add_action('woocommerce_before_shop_loop_item', array( $this, 'show_discount_banner_shop_archive'), 999);
+        add_filter('flatsome_custom_single_product_1', array($this, 'show_discount_banner_product_page'), 999, 3);
     }
 
 
@@ -72,7 +72,17 @@ class Rrb2b_Rules {
         }
     }
 
-    public function show_discount_banner(): void {
+    public function show_discount_banner_shop_archive(): void
+    {
+        $this->show_discount_banner(shortened_message: true);
+    }
+
+    public function show_discount_banner_product_page(): void
+    {
+        $this->show_discount_banner();
+    }
+
+    private function show_discount_banner(bool $shortened_message = false): void {
         global $product;
 
         // Fallback if global not set
@@ -98,10 +108,24 @@ class Rrb2b_Rules {
 
         $message = $applicable_rule->quantityReductionMessage();
 
-        if($applicable_rule->rule->quantity_value) {
+        if(! $applicable_rule->rule->quantity_value) {
+            return;
+        }
+
+        if( $shortened_message ) {
             ?>
             <div class="badge-container absolute right top z-1">
-                <div class="callout badge badge-circle"><div class="badge-inner secondary on-sale"><span class="onsale"><?php echo $message ?></span></div></div>
+                <div class="callout badge badge-circle">
+                    <div class="badge-inner secondary on-sale" style="background-color: #e3ad30"><span class="onsale">Mængderabat!</span></div>
+                </div>
+            </div>
+            <?php
+        } else {
+            ?>
+            <div class="badge-container absolute right top z-1">
+                <div class="callout badge badge-circle">
+                    <div class="badge-inner secondary on-sale" style="background-color: #e3ad30"><span class="onsale"><?php echo $message ?></span></div>
+                </div>
             </div>
             <?php
         }

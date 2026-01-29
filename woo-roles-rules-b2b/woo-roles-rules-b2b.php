@@ -6,7 +6,7 @@
  *
  * Plugin Name: Roles & Rules B2B for WooCommerce
  * Description: Enables role-based pricing, dynamic discounts, VAT exemptions and much more to create tailored B2B and B2C shopping experiences.
- * Version: 2.5.5
+ * Version: 2.5.7
  * Author: Consortia
  * Text Domain: woo-roles-rules-b2b
  * Domain Path: /languages
@@ -27,7 +27,7 @@ use ClypperTechnology\RolePricing\Admin;
 require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 
 
-const CAS_ROLES_RULES_VS   = '2.5.6';
+const CAS_ROLES_RULES_VS   = '2.5.7';
 const CAS_ROLES_RULES_PROD = 'true';
 
 add_action( 'before_woocommerce_init', function() {

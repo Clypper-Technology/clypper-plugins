@@ -18,18 +18,6 @@ defined( 'ABSPATH' ) || exit;
  * Class for functions
  */
 class Rrb2b_Functions {
-
-
-	/**
-	 * Logger
-	 */
-	public $logger;
-
-	/**
-	 * Context
-	 */
-	public $context;
-
     private RuleService $rule_service;
     private RoleService $role_service;
 
@@ -39,8 +27,6 @@ class Rrb2b_Functions {
 	public function __construct() {
         $this->rule_service = new RuleService();
         $this->role_service = new RoleService();
-		$this->logger  = wc_get_logger();
-		$this->context = array( 'source' => 'woo_roles_rules_b2b' );
     }
 
 	/**
