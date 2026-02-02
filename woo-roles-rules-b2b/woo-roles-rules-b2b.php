@@ -27,7 +27,7 @@ use ClypperTechnology\RolePricing\Admin;
 require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 
 
-const CAS_ROLES_RULES_VS   = '2.5.7';
+const CAS_ROLES_RULES_VS   = '2.5.8';
 const CAS_ROLES_RULES_PROD = 'true';
 
 add_action( 'before_woocommerce_init', function() {

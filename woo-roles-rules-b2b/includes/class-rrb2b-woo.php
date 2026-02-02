@@ -43,9 +43,6 @@ class Rrb2b_Woo {
 		 */
 		add_action( 'woocommerce_before_calculate_totals', array( __CLASS__, 'rrb2b_apply_role_based_pricing_to_api_orders' ) );
 
-		//Add roles to orders
-		add_action( 'admin_footer', array( __CLASS__, 'rrb2b_admin_order_scripts' ) );
-
         new AjaxHandler();
         new RegistrationForm();
         new Rrb2b_Rules();
