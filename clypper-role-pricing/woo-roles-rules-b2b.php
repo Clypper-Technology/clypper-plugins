@@ -1,0 +1,112 @@
+<?php
+/**
+ * Clypper's Role Based Pricing
+ *
+ * @package  ClypperRolePricing
+ *
+ * Plugin Name: Clypper's Role Based Pricing
+ * Description: Part of the Clypper plugin series. Enables role-based pricing, dynamic discounts, VAT exemptions and much more to create tailored B2B and B2C shopping experiences.
+ * Version: 2.5.7
+ * Author: Clypper Technology
+ * Text Domain: clypper-role-pricing
+ * Domain Path: /languages
+ *
+ * Tested up to: 6.8.1
+ * Requires at least: 5.0
+ * Requires PHP: 5.6
+ * WC requires at least: 3.5
+ * WC tested up to: 9.8.5
+ *
+ * Copyright: © 2018-2025 Clypper Technology.
+ * License: GNU General Public License v3.0
+
+ */
+
+use ClypperTechnology\RolePricing\Admin;
+use ClypperTechnology\RolePricing\REST\RestApiRegistry;
+
+require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
+
+
+const CAS_ROLES_RULES_VS   = '2.5.7';
+
+add_action( 'before_woocommerce_init', function() {
+	if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+	}
+} );
+
+register_activation_hook( __FILE__, 'rrb2b_install' );
+register_deactivation_hook( __FILE__, 'rrb2b_deactivate' );
+register_uninstall_hook( __FILE__, 'rrb2b_uninstall' );
+
+require_once dirname( __FILE__ ) . '/includes/class-rrb2b-woo.php';
+require_once dirname( __FILE__ ) . '/includes/Rules.php';
+
+if(is_admin()) {
+    new Admin();
+}
+
+/**
+ * Initialize REST API
+ */
+add_action( 'rest_api_init', function() {
+	$rest_registry = new RestApiRegistry();
+	$rest_registry->register_routes();
+} );
+
+/**
+ * Install
+ */
+function rrb2b_install() {
+
+	global $wp_version;
+
+	if ( version_compare( $wp_version, '4.1', '<' ) ) {
+		wp_die( 'This plugin require WordPress 4.1 or higher.' );
+	}
+
+	set_transient( 'rrb2b-admin-notice-activated', true );
+
+	flush_rewrite_rules();
+}
+
+/**
+ * Deactivate
+ */
+function rrb2b_deactivate() {
+
+	flush_rewrite_rules();
+
+}
+
+/**
+ * Uninstall
+ */
+function rrb2b_uninstall() {
+
+}
+
+/**
+ * Roles & Rules
+ */
+function rrb2b_plugin_roles_page() {
+
+	if ( class_exists( 'WooCommerce' ) ) {	
+
+		include_once dirname( __FILE__ ) . '/includes/class-rrb2b-templates.php';
+
+		$main = new Rrb2b_Templates();
+		$main->rrb2b_get_main_page();
+
+	}
+}
+
+/**
+ * Load languages
+ */
+function rrb2b_load_textdomain() {
+	load_plugin_textdomain( 'clypper-role-pricing', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+}
+add_action( 'plugins_loaded', 'rrb2b_load_textdomain' );
+

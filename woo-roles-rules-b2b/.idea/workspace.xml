@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="7313b048-27cf-4a3b-8b90-5e090c140c50" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../woo-roles-rules-b2b.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.phpunit.result.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.wp-env.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/build/categories.asset.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/build/categories.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/build/products.asset.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/build/products.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/build/roles.asset.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/build/roles.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/build/rules.asset.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/build/rules.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/css/admin.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/components/CategoryMultiSelect.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/components/ConfirmDialog.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/components/ErrorBoundary.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/components/ProductSearch.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/components/RoleSelector.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/constants/ruleTypes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/hooks/__tests__/useProducts.test.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/hooks/__tests__/useRoles.test.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/hooks/__tests__/useRules.test.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/hooks/useCategories.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/hooks/useProducts.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/hooks/useRoles.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/hooks/useRules.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/store/rules/actions.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/store/rules/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/store/rules/reducer.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/store/rules/resolvers.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/store/rules/selectors.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/Categories/CategoriesTab.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/Categories/CategoryRuleRow.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/Categories/CategoryRulesTable.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/Categories/CopyRuleForm.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/Categories/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/GeneralRules/AddRuleForm.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/GeneralRules/GeneralRulesTab.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/GeneralRules/RuleRow.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/GeneralRules/RulesTable.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/GeneralRules/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/ManageRoles/ManageRolesTab.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/ManageRoles/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/ManageRules/ManageRulesTab.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/ManageRules/RulesDetailView.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/ManageRules/RulesListView.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/ManageRules/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/Products/AddProductModal.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/Products/ProductRuleRow.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/Products/ProductRulesTable.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/Products/ProductsTab.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/Products/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/Roles/RoleCreateForm.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/Roles/RoleDetailView.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/Roles/RolesList.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/Roles/RolesListView.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/Roles/RolesTab.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/tabs/Roles/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/admin/src/types/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/css/rrb2b-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/css/rrb2b.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/rrb2b.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/changelog.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/consortia-100.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/Admin.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/REST/BaseController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/REST/Controllers/RolesController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/REST/Controllers/RuleCategoriesController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/REST/Controllers/RuleProductsController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/REST/Controllers/RulesController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/REST/RestApiRegistry.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/RegistrationForm.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/Rules/ApplicableRule.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/Rules/CategoryRule.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/Rules/ProductRule.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/Rules/RoleRules.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/Rules/Rule.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/Services/RoleService.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/Services/RuleService.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/Users.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/class-rrb2b-rules.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/class-rrb2b-templates.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/class-rrb2b-woo.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jest.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/languages/clypper-role-pricing-es_ES.mo" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/languages/clypper-role-pricing-es_ES.po" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/languages/clypper-role-pricing-fr_FR.mo" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/languages/clypper-role-pricing-fr_FR.po" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/languages/clypper-role-pricing-nb_NO.mo" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/languages/clypper-role-pricing-nb_NO.po" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/languages/clypper-role-pricing.pot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/phpunit.xml.dist" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Integration/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Integration/AdminTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Integration/REST/RolesControllerTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Integration/REST/RuleCategoriesControllerTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Integration/REST/RuleProductsControllerTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Integration/REST/RulesControllerTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Unit/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Unit/REST/BaseControllerTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Unit/RuleServiceTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/bootstrap.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/frontend/integration/api-integration.test.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/frontend/mocks/wordpress/api-fetch.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/frontend/mocks/wordpress/components.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/frontend/mocks/wordpress/data.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/frontend/mocks/wordpress/element.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/frontend/mocks/wordpress/notices.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/frontend/setup.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/autoload.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/ClassLoader.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/InstalledVersions.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_classmap.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_namespaces.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_psr4.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_real.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_static.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/installed.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/installed.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webpack.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/woo-roles-rules-b2b.php" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
+    <execution>
+      <executable path="composer" />
+    </execution>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="/bin/php">
+    <include_path>
+      <path value="$USER_HOME$/Development/wordpress-develop/src" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/instantiator" />
+      <path value="$PROJECT_DIR$/vendor/myclabs/deep-copy" />
+      <path value="$PROJECT_DIR$/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/vendor/phar-io/manifest" />
+      <path value="$PROJECT_DIR$/vendor/phar-io/version" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-code-coverage" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-file-iterator" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-invoker" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-text-template" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-timer" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/phpunit" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/cli-parser" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/code-unit" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/code-unit-reverse-lookup" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/comparator" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/complexity" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/diff" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/environment" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/exporter" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/global-state" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/lines-of-code" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/object-enumerator" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/object-reflector" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/recursion-context" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/resource-operations" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/type" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/version" />
+      <path value="$PROJECT_DIR$/vendor/theseer/tokenizer" />
+      <path value="$PROJECT_DIR$/vendor/yoast/phpunit-polyfills" />
+    </include_path>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="38wInKDrEp4KrAb4ZDfBFHS64io" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "PHPUnit.RuleServiceTest.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "git-widget-placeholder": "react-admin",
+    "last_opened_file_path": "/home/casper/GitHub/clypper-plugins/clypper-role-pricing",
+    "nodejs_package_manager_path": "npm",
+    "npm.test:php.executor": "Run",
+    "ts.external.directory.path": "/home/casper/GitHub/clypper-plugins/woo-roles-rules-b2b/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="npm.test:php">
+    <configuration name="Main" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner configuration_file="$PROJECT_DIR$/phpunit.xml.dist" scope="XML" use_alternative_configuration_file="true" />
+      <method v="2" />
+    </configuration>
+    <configuration name="RuleServiceTest" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
+      <TestRunner class="ClypperTechnology\RolePricing\Tests\Unit\RuleServiceTest" configuration_file="$PROJECT_DIR$/phpunit.xml.dist" file="$PROJECT_DIR$/tests/Unit/RuleServiceTest.php" scope="Class" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test:php" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="test:php" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.test:php" />
+        <item itemvalue="PHPUnit.RuleServiceTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-PS-253.30387.85" />
+        <option value="bundled-php-predefined-a98d8de5180a-0e0d91225499-com.jetbrains.php.sharedIndexes-PS-253.30387.85" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7313b048-27cf-4a3b-8b90-5e090c140c50" name="Changes" comment="" />
+      <created>1769704372334</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1769704372334</updated>
+      <workItem from="1769704374184" duration="2272000" />
+      <workItem from="1769712685420" duration="495000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WordPressConfiguration" enabled="true">
+    <wordpressPath />
+  </component>
+</project>
