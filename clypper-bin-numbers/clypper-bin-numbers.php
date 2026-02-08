@@ -17,6 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'Clypper_BIN_Numbers' ) ) {
 
     class Clypper_BIN_Numbers {
+        private string $field_id = "clypper_bin_number";
 
         public function __construct() {
             add_action( 'woocommerce_product_options_inventory_product_data', [ $this, 'add_bin_number_field' ] );
@@ -48,7 +49,7 @@ if ( ! class_exists( 'Clypper_BIN_Numbers' ) ) {
          * Save BIN number field value
          */
         public function save_bin_number_field( $post_id ) {
-            $bin_number = isset( $_POST['clypper_bin_number'] ) ? sanitize_text_field( $_POST['clypper_bin_number'] ) : '';
+            $bin_number = isset( $_POST[$this->field_id] ) ? sanitize_text_field( $_POST[$this->field_id] ) : '';
             update_post_meta( $post_id, '_clypper_bin_number', $bin_number );
         }
 
@@ -59,7 +60,7 @@ if ( ! class_exists( 'Clypper_BIN_Numbers' ) ) {
             global $product;
             $bin_number = get_post_meta( $product->get_id(), '_clypper_bin_number', true );
 
-            if ( $bin_number ) {
+            if ( $bin_number ) ;{
                 echo '<div class="product-bin-number">';
                 echo '<strong>' . __( 'BIN Number:', 'clypper-bin-numbers' ) . '</strong> ' . esc_html( $bin_number );
                 echo '</div>';
@@ -69,20 +70,6 @@ if ( ! class_exists( 'Clypper_BIN_Numbers' ) ) {
 
     new Clypper_BIN_Numbers();
 }
-
-/**
- * Display the product's bin location
- */
-add_action( 'wpo_wcpdf_after_item_meta', function( $template_type, $item, $order ) {
-    if( $template_type == 'packing-slip' ) {
-        // check if item exists first
-        if( empty($item) ) return;
-        // Get bin location
-        if( $bin_location = $item['product']->get_meta('_clypper_bin_number') ){
-            echo '<div class="bin-location">BIN: ' . $bin_location . '</div>';
-        }
-    }
-}, 10, 3);
 
 function add_custom_field_to_order_item_meta($item_id, $item, $product) {
 
@@ -96,16 +83,3 @@ function add_custom_field_to_order_item_meta($item_id, $item, $product) {
     }
 }
 add_action('woocommerce_after_order_itemmeta', 'add_custom_field_to_order_item_meta', 10, 3);
-
-
-// Activation and deactivation hooks
-register_activation_hook( __FILE__, 'clypper_bin_numbers_activate' );
-register_deactivation_hook( __FILE__, 'clypper_bin_numbers_deactivate' );
-
-function clypper_bin_numbers_activate() {
-    // Actions to perform on plugin activation
-}
-
-function clypper_bin_numbers_deactivate() {
-    // Actions to perform on plugin deactivation
-}

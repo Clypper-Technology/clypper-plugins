@@ -1,0 +1,16 @@
+{
+    "name": "clypper-technology/clypper-get-offer",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "ClypperTechnology\\ClypperGetOffer\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "casperh123",
+            "email": "casperholten@protonmail.com"
+        }
+    ],
+    "require": {}
+}
