@@ -26,10 +26,11 @@ class Admin
             <div class="options_group">
                 <?php
                 woocommerce_wp_checkbox([
-                    'id'          => '_cl_enable_get_offer',
-                    'label'       => __('Enable Get Offer Button', 'woocommerce'),
-                    'description' => __('Check this to add a "Get Offer" button to the product page.', 'woocommerce'),
-                    'desc_tip'    => false,
+                        'id'          => '_cl_enable_get_offer',
+                        'label'       => __('Enable Get Offer Button', 'woocommerce'),
+                        'description' => __('Check this to add a "Get Offer" button to the product page.', 'woocommerce'),
+                        'desc_tip'    => false,
+                        'value'       => get_post_meta($post->ID, '_cl_enable_get_offer', true), // Shows current state
                 ]);
                 ?>
             </div>

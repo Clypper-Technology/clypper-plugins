@@ -15,7 +15,7 @@ class DisplayGetOffer {
     public function get_offer_button() {
         global $product;
 
-        $display_offer_button = boolval(get_post_meta($product->get_id(), '_cl_enable_get_offer', true));
+        $display_offer_button = get_post_meta($product->get_id(), '_cl_enable_get_offer', true) === 'yes';
 
         if (!$display_offer_button) return "";
 
