@@ -94,9 +94,11 @@ class Rrb2b_Rules {
         self::$generating_qty_price = false;
         self::$processing = false;
 
-        return $price_html . '<div class="rrb2b-quantity-price">'
-                . $qty_price_html
-                . ' pr. styk ved ' . esc_html( $applicable_rule->min_quantity ) . '+ stk</div>';
+        return $price_html .
+                '<div style="margin-top: 20px; padding: 20px; width: 100%; background-color: grey;">' .
+                    '<p style="margin: 0 0 10px 0;"> Ved køb af ' . esc_html( $applicable_rule->min_quantity ) . '+ stk.:</p>' .
+                          $qty_price_html .
+                '</div>';
     }
 
     /**
