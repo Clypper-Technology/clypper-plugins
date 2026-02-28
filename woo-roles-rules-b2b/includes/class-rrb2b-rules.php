@@ -21,33 +21,30 @@ class Rrb2b_Rules {
     private static bool $processing = false;
     private static bool $generating_qty_price = false;
 
-    public function __construct()
+    public function __construct( RuleService $rule_service )
     {
-        $this->rule_service = new RuleService();
+        $this->rule_service = $rule_service;
 
-        if ( !is_product() ) {
-            // Price filters - both use same method
-            add_filter( 'woocommerce_product_get_price', array( $this, 'get_rule_sale_price' ), 20, 2 );
-            add_filter( 'woocommerce_product_variation_get_price', array( $this, 'get_rule_sale_price' ), 20, 2 );
+        add_action( 'wp', [ $this, 'register_hooks' ] );
 
-            // Sale price filters
-            add_filter( 'woocommerce_product_get_sale_price', array( $this, 'get_rule_sale_price' ), 20, 2 );
-            add_filter( 'woocommerce_product_variation_get_sale_price', array( $this, 'get_rule_sale_price' ), 20, 2 );
+        add_filter( 'woocommerce_product_is_on_sale',    [ $this, 'rrb2b_product_is_on_sale' ], 999, 2 );
+        add_action( 'woocommerce_before_shop_loop_item', [ $this, 'show_discount_banner_shop_archive' ], 999 );
+        add_filter( 'flatsome_custom_single_product_1',  [ $this, 'show_discount_banner_product_page' ], 999, 3 );
+        add_filter( 'woocommerce_get_price_html',        [ $this, 'modify_price_html_with_quantity_discount' ], 999, 2 );
+    }
 
-            // Variation price filters
-            add_filter( 'woocommerce_variation_prices_price', array( $this, 'get_rule_sale_price' ), 20, 3 );
-            add_filter( 'woocommerce_variation_prices_sale_price', array( $this, 'get_rule_sale_price' ), 20, 3 );
+    public function register_hooks(): void
+    {
+        if ( is_product() ) {
+            return;
         }
 
-        // On Sale
-        add_filter( 'woocommerce_product_is_on_sale', array( $this, 'rrb2b_product_is_on_sale' ), 999, 2 );
-
-        // x for y banner
-        add_action('woocommerce_before_shop_loop_item', array( $this, 'show_discount_banner_shop_archive'), 999);
-        add_filter('flatsome_custom_single_product_1', array($this, 'show_discount_banner_product_page'), 999, 3);
-
-        // Quantity discount pricing
-        add_filter( 'woocommerce_get_price_html', array( $this, 'modify_price_html_with_quantity_discount' ), 999, 2 );
+        add_filter( 'woocommerce_product_get_price',                [ $this, 'get_rule_sale_price' ], 20, 2 );
+        add_filter( 'woocommerce_product_variation_get_price',      [ $this, 'get_rule_sale_price' ], 20, 2 );
+        add_filter( 'woocommerce_product_get_sale_price',           [ $this, 'get_rule_sale_price' ], 20, 2 );
+        add_filter( 'woocommerce_product_variation_get_sale_price', [ $this, 'get_rule_sale_price' ], 20, 2 );
+        add_filter( 'woocommerce_variation_prices_price',           [ $this, 'get_rule_sale_price' ], 20, 3 );
+        add_filter( 'woocommerce_variation_prices_sale_price',      [ $this, 'get_rule_sale_price' ], 20, 3 );
     }
 
     /**
@@ -88,6 +85,8 @@ class Rrb2b_Rules {
 
         $temp_product = clone $product;
         $temp_product->set_price( $qty_discount_price );
+        $temp_product->set_regular_price( $qty_discount_price );
+        $temp_product->set_sale_price( '' ); // clear sale price so it's NOT marked as on sale
 
         $qty_price_html = $temp_product->get_price_html();
 
@@ -95,9 +94,9 @@ class Rrb2b_Rules {
         self::$processing = false;
 
         return $price_html .
-                '<div style="margin-top: 20px; padding: 20px; width: 100%; background-color: grey;">' .
+                '<div style="margin: 20px 0; padding: 20px; width: 100%; background-color: #e8e8e8; display: flex; flex-direction: column;">' .
                     '<p style="margin: 0 0 10px 0;"> Ved køb af ' . esc_html( $applicable_rule->min_quantity ) . '+ stk.:</p>' .
-                          $qty_price_html .
+                          '<p class="price product-page-price">'. $qty_price_html . '</p>' .
                 '</div>';
     }
 

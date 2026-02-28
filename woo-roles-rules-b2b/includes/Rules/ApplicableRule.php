@@ -22,8 +22,8 @@ readonly class ApplicableRule {
 
         return match($this->rule->quantity_value_type) {
             'percent' => "Køb {$this->min_quantity}+ og spar {$this->rule->quantity_value}%",
-            'fixed' => "Køb {$this->min_quantity}+ og spar " . wc_price($this->rule->quantity_value) . " pr. stk.",
-            'fixed_set' => "{$this->min_quantity} for " . wc_price($this->rule->quantity_value) . " pr. stk.",
+            'fixed' => "Køb {$this->min_quantity}+ og spar " . wc_price($this->rule->quantity_value, array('in_span' => false)) . " pr. stk.",
+            'fixed_set' => "{$this->min_quantity} for " . wc_price($this->rule->quantity_value, array('in_span' => false)) . " pr. stk.",
             default => null
         };
     }

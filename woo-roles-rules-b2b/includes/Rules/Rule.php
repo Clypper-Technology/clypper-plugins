@@ -107,4 +107,19 @@ class Rule
             $rule['quantity_type'] ?? ""
         );
     }
+
+    public static function schema(): array
+    {
+        $types = [ self::TYPE_PERCENT, self::TYPE_PERCENT_ADD, self::TYPE_FIXED, self::TYPE_FIXED_ADD, self::TYPE_FIXED_SET, '' ];
+
+        return [
+            'type'       => 'object',
+            'properties' => [
+                'type'          => [ 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field', 'enum' => $types ],
+                'value'         => [ 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ],
+                'quantity'      => [ 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ],
+                'quantity_type' => [ 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field', 'enum' => $types ],
+            ],
+        ];
+    }
 }

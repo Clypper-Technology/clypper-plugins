@@ -27,24 +27,6 @@ class CategoryRule {
             min_quantity: (int)sanitize_text_field($data['min_qty'] ?? 0),
         );
     }
-
-    /**
-     * Create CategoryRule from WordPress term
-     */
-    public static function fromTerm(WP_Term $term): self {
-        return new self(
-            id: $term->term_id,
-            slug: $term->slug,
-            name: $term->name,
-            rule: new Rule(
-                type: '',
-                value: '',
-                quantity: '',
-                quantity_type:'',
-            )
-        );
-    }
-
     /**
      * Convert to array for storage
      */
@@ -55,6 +37,21 @@ class CategoryRule {
             'name' => esc_attr($this->name),
             'rule' => $this->rule->to_array(),
             'min_qty' => $this->min_quantity,
+        ];
+    }
+
+    public static function schema(): array
+    {
+        return [
+            'type'       => 'object',
+            'properties' => [
+                'id'     => [ 'required' => true, 'type' => 'integer' ],
+                'slug'   => [ 'required' => true, 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ],
+                'name'   => [ 'required' => true, 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ],
+                'remove' => [ 'type' => 'boolean', 'default' => false ],
+                'min_qty'=> [ 'type' => 'integer', 'default' => 0 ],
+                'rule'   => Rule::schema(),
+            ],
         ];
     }
 }

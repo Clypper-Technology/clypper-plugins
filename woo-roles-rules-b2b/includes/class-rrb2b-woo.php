@@ -7,8 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use ClypperTechnology\RolePricing\AjaxHandler;
 use ClypperTechnology\RolePricing\RegistrationForm;
+use ClypperTechnology\RolePricing\Services\RuleService;
 use ClypperTechnology\RolePricing\Users;
 
 require_once __DIR__ . '/class-rrb2b-functions.php';
@@ -18,9 +18,9 @@ require_once __DIR__ . '/class-rrb2b-functions.php';
  */
 class Rrb2b_Woo {
 
+
     public function __construct()
     {
-
     }
 
     /**
@@ -43,9 +43,7 @@ class Rrb2b_Woo {
 		 */
 		add_action( 'woocommerce_before_calculate_totals', array( __CLASS__, 'rrb2b_apply_role_based_pricing_to_api_orders' ) );
 
-        new AjaxHandler();
         new RegistrationForm();
-        new Rrb2b_Rules();
         new Users();
 	}
 
@@ -125,8 +123,8 @@ class Rrb2b_Woo {
 		wp_register_script( 'rrb2b_jquery-ui', 'https://code.jquery.com/ui/1.13.2/jquery-ui.js', array( 'jquery' ), '1.13.2', true );
 		wp_enqueue_script( 'rrb2b_jquery-ui' );
 
-        wp_register_script( 'rrb2b_scripts', plugins_url( '../assets/js/rrb2b.js', __FILE__ ), array( 'jquery' ), CAS_ROLES_RULES_VS, true );
-
+        wp_register_script( 'rrb2b_scripts', plugins_url( '../assets/js/rrb2b.js', __FILE__ ),
+            [ 'jquery', 'wp-api-fetch', 'jquery-ui-autocomplete' ], CAS_ROLES_RULES_VS, true );
 		wp_enqueue_script( 'select2' ); // WooCommerce includes this by default in the admin
 		wp_enqueue_style( 'select2' );  // WooCommerce includes the styles
 

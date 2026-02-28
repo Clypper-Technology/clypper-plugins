@@ -193,79 +193,33 @@
 
 	});
 
-	function rrb2bCopyCategoryRules() {
+	const rrb2bCopyRules = async ( type ) => {
+		const from_rule = $( `#copy_${type}_rule_from option:selected` ).val();
+		const roles     = [];
 
-		var roles     = [];
-		var from_rule = $('#copy_category_rule_from option:selected').val();
-
-		$('#copy_category_rule_to option:selected').each(function(){
-			if ( '' !== this.value ) {
-				roles.push( this.value );
-			}
+		$( `#copy_${type}_rule_to option:selected` ).each( function() {
+			if ( '' !== this.value ) roles.push( parseInt( this.value ) );
 		});
 
-		//Refesh select2
-		$('#copy_category_rule_from').val(null).trigger('change');
-		$('#copy_category_rule_to').val(null).trigger('change');
+		$( `#copy_${type}_rule_from` ).val( null ).trigger( 'change' );
+		$( `#copy_${type}_rule_to` ).val( null ).trigger( 'change' );
 
-		var nonce_val = $( '#_wpnonce' ).val();
-		var json_data = { action: 'rrb2b_copy_rules_to', nonce: nonce_val, type: 'category', from: from_rule, to: roles.toString() };
+		try {
+			await wp.apiFetch({
+				path:   '/rrb2b/v1/rules/copy',
+				method: 'POST',
+				data:   { type, from: parseInt( from_rule ), to: roles },
+			});
 
-		$.ajax(
-			{
-				type: 'POST',
-				url: ajaxurl,
-				datatype: 'json',
-				data: json_data,
-				success: function( response ) {
-					//console.log( response );
-					reloadPage( 200 );
-					$('.cas-notice3').show();
-				},
-				error: function( response ){
-					console.log( response );
-				}
-			}
-		);
+			$( '.cas-notice3' ).show();
+			reloadPage( 200 );
+		} catch ( err ) {
+			console.error( err );
+		}
+	};
 
-	}
-	window.rrb2bCopyCategoryRules = rrb2bCopyCategoryRules;
-
-	function rrb2bCopyProductRules() {
-		var roles     = [];
-		var from_rule = $('#copy_product_rule_from option:selected').val();
-
-		$('#copy_product_rule_to option:selected').each(function(){
-			if ( '' !== this.value ) {
-				roles.push( this.value );
-			}
-		});
-
-		//Refesh select2
-		$('#copy_product_rule_from').val(null).trigger('change');
-		$('#copy_product_rule_to').val(null).trigger('change');
-
-		var nonce_val = $( '#_wpnonce' ).val();
-		var json_data = { action: 'rrb2b_copy_rules_to', nonce: nonce_val, type: 'product', from: from_rule, to: roles.toString() };
-
-		$.ajax(
-			{
-				type: 'POST',
-				url: ajaxurl,
-				datatype: 'json',
-				data: json_data,
-				success: function( response ) {
-					//console.log( response );
-					reloadPage( 200 );
-					$('.cas-notice3').show();
-				},
-				error: function( response ){
-					console.log( response );
-				}
-			}
-		);
-	}
-	window.rrb2bCopyProductRules = rrb2bCopyProductRules;
+	window.rrb2bCopyCategoryRules = () => rrb2bCopyRules( 'category' );
+	window.rrb2bCopyProductRules  = () => rrb2bCopyRules( 'product' );
 
 	function rrb2bFindDuplicates( tableName, removeName ) {
 
@@ -313,24 +267,28 @@
 		formChanged(obj);
 	}
 
-	function deleteRule( obj ) {
+	const deleteRule = async ( obj ) => {
+		const confirmed = confirm( $( '#msg-confirm-delete' ).val() );
 
-		var confirm_delete = confirm( $( '#msg-confirm-delete' ).val() );
+		if ( ! confirmed ) return;
 
-		if ( confirm_delete === true ) {
+		const ruleId = $( obj.form ).find( '[name="id"]' ).val();
 
-			var theForm   = $(obj.form)[0];
-			var nonce_val = $( '#_wpnonce' ).val();
-			var json_data = { action: 'rrb2b_delete_rule_callback', nonce: nonce_val, role_id: theForm['id'].value };
+		try {
+			await wp.apiFetch({
+				path:   `/rrb2b/v1/rules/${ruleId}`,
+				method: 'DELETE',
+			});
 
-			sendJson( ajaxurl, json_data );
-			
-			event.preventDefault();
-
+			reloadPage( 200 );
+		} catch ( err ) {
+			console.error( err );
 		}
 
-	}
-	window.deleteRule = function(obj){
+		event.preventDefault();
+	};
+
+		window.deleteRule = function(obj){
 		deleteRule(obj);
 	}
 
@@ -371,71 +329,55 @@
 		reloadPage(msec);
 	}
 
-	function findCategoryProducts( id ) {
-
-		var nonce_val = $( '#_wpnonce' ).val();
-		var form      = $( "#rrb2b-select-category-" + id );
-		var element   = form[0].elements;
-		var json_data = { action: 'rrb2b_ajax_get_products_category', nonce: nonce_val, page: element['page'].value, 
-							tab: element['tab'].value, category: element['product_cat'].value, 
-							id: element['rule-id'].value, variations: element['variations'].checked };
-		
-		progressBar('start', id);
-		
-		$.ajax(
-			{
-				type: 'POST',
-				url: ajaxurl,
-				datatype: 'json',
-				data: json_data,
-				success: function( response ) {
-					//console.log( response );
-					//reloadPage( 300 );
-					let newUrl = new URL(window.location.href);
-					newUrl.searchParams.set('role', id );
-					window.location.href = newUrl.toString();
-				},
-				error: function( response ){
-					console.log( response );
-					progressBar('stop', id);
-				}
-			}
-		);	
-
+	const findCategoryProducts = async ( id, event ) => {
 		event.preventDefault();
 
-	}
-	window.findCategoryProducts = function(id){
-		findCategoryProducts(id);
-	}
+		const form     = document.querySelector( `#rrb2b-select-category-${id}` );
+		const elements = form.elements;
 
-	function findProducts( id ) {
-		
-		var nonce_val = $( '#_wpnonce' ).val();
-		var json_data = { action: 'rrb2b_ajax_get_products', nonce: nonce_val, search: '', };
-	
-		$( "#product_search_" + id ).autocomplete({
-			source: function( request, response ) {
-				json_data.search = request.term;
-				$.ajax( {
-					url: ajaxurl,
-					data: json_data,
-					dataType: "json", 
-				
-					success: function( data ) {
-						response( data );
-						//console.log(data);
-					}
-					
-				} );
+		progressBar( 'start', id );
+
+		try {
+			await wp.apiFetch({
+				path:   `/rrb2b/v1/rules/${elements['rule-id'].value}/products/import`,
+				method: 'POST',
+				data:   {
+					category:   elements['product_cat'].value,
+					variations: elements['variations'].checked,
+				},
+			});
+
+			const newUrl = new URL( window.location.href );
+			newUrl.searchParams.set( 'role', id );
+			window.location.href = newUrl.toString();
+		} catch ( err ) {
+			console.error( err );
+			progressBar( 'stop', id );
+		}
+	};
+	window.findCategoryProducts = ( id, event ) => findCategoryProducts( id, event );
+
+	const findProducts = ( id ) => {
+		$( `#product_search_${id}` ).autocomplete({
+			source: async ( request, response ) => {
+				try {
+					const products = await wp.apiFetch({
+						path: `/rrb2b/v1/products?search=${encodeURIComponent( request.term )}`,
+					});
+					response( products );
+				} catch {
+					response( [] );
+				}
 			},
 			minLength: 2,
-			select: function( event, ui ) {
-				var url = $( '#product_add_' + id ).attr('href');
-				$( '#product_add_' + id ).attr('href', url + ui.item.data + '&name=' + ui.item.value);
+			select: ( event, ui ) => {
+				const $link = $( `#product_add_${id}` );
+				const url   = $link.attr( 'href' );
+				$link.attr( 'href', `${url}${ui.item.data}&name=${ui.item.value}` );
 			}
 		});
-	}
+	};
+
 	window.findProducts = function(id){
 		findProducts(id);
 	}
@@ -513,151 +455,111 @@
 		rrb2b_filter_categories(id);
 	}
 
-	function updateProducts( id ) {
-
-		var nonce_val = $( '#_wpnonce' ).val();
-		var json_data = { action: 'rrb2b_ajax_update_product_rule', rule_id: id, nonce: nonce_val, rows: [] };
-		var count     = 0;
-
-		$('#updateButton-'+id).removeClass('button-primary');
-		$('.notice-info').hide();
-
-		$( '#rrb2b_table_' + id + ' tbody tr' ).each(
-			function() {
-				var frm           = this.children[1].children[0];
-				var frm_elements  = frm.form.elements;
-				var remove_status = frm_elements['product_remove'].checked;
-
-				var frm_data = {
-					rule_id: id,
-					remove: remove_status,
-					product_id: frm_elements['product_id'].value,
-					product_name: frm_elements['product_name'].value,
-                    rule: {
-                        type: frm_elements['reduce_regular_type'].value,
-                        value: frm_elements['adjust_value'].value,
-                        quantity: frm_elements['adjust_value_qty'].value,
-                        quantity_type: frm_elements['reduce_regular_type_qty'].value,
-                    },
-					min_qty: frm_elements['min_qty'].value,
-					is_variable: frm_elements['variable'].value,
-				};
-				json_data.rows.push( frm_data );
-				count++;
-			
-				if (remove_status) {
-					$(this).hide();
-				}
-			}
-
-		);
-
-		if ( count > 0 ) {
-			
-			localStorage.setItem( 'eid', id );
-			progressBar('start', id);
-
-			$.ajax(
-				{
-					type: 'POST',
-					url: ajaxurl,
-					datatype: 'json',
-					data: json_data,
-					success: function( response ) {
-						//console.log( response );
-						//reloadPageArgs( 200 );
-						$('#cas-notice-product-changed').show();
-						$( '#prod1_'+id ).show();
-						$( '#prod2_'+id ).show();
-						progressBar('stop', id);
-						$('#updateButton-'+id).addClass('button-primary');
-					},
-					error: function( response ){
-						console.log( response );
-						progressBar('stop', id);
-					}
-				}
-			);
-		}
-		
-
-		event.preventDefault();
-	}
-	window.updateProducts = function(id){
-		updateProducts(id);
-	}
-
-	function updateSingleCategories( id ) {
-
-		var nonce_val     = $( '#_wpnonce' ).val();
-		var json_data     = { action: 'rrb2b_ajax_update_single_category_rule', rule_id: id, nonce: nonce_val, rows: [] };
-		var count         = 0;
-
-		$('#updateSingleCatButton-'+id).removeClass('button-primary');
-		$('.notice-info').hide();
-
-		$( '#rrb2b_table_cat_' + id + ' tbody tr' ).each(
-			function() {
-				var frm           = this.children[1].children[0];
-				var frm_elements  = frm.form.elements;
-				var remove_status = frm_elements['category_remove'].checked;
-
-				var frm_data = {
-					rule_id: id,
-					remove: remove_status,
-                    id: frm_elements['id'].value,
-					slug: frm_elements['slug'].value,
-                    name: frm_elements['category_name'].value,
-                    rule: {
-                        type: frm_elements['reduce_regular_type'].value,
-                        value: frm_elements['adjust_value'].value,
-                        quantity: frm_elements['adjust_value_qty'].value,
-                        quantity_type: frm_elements['reduce_regular_type_qty'].value,
-                    },
-                    min_qty: frm_elements['min_qty'].value
-				};
-				json_data.rows.push( frm_data );
-				count++;
-
-				if (remove_status) {
-					$(this).hide();
-				}
-			}
-
-		);
-
-		if ( count > 0 ) {
-			
-			localStorage.setItem( 'eid', id );
-
-			$.ajax(
-				{
-					type: 'POST',
-					url: ajaxurl,
-					datatype: 'json',
-					data: json_data,
-					success: function( response ) {
-						//console.log( response );
-						//reloadPageArgs( 200 );
-						$('#cas-notice-category-changed').show();
-						$( '#div_'+id ).show();
-						$( '#cat_'+id ).show();
-						$('#updateSingleCatButton-'+id).addClass('button-primary');
-					},
-					error: function( response ){
-						console.log( response );
-					}
-				}
-			);
-		}
-		
-
+	const updateProducts = async ( id, event ) => {
 		event.preventDefault();
 
-	}
-	window.updateSingleCategories = function(id){
-		updateSingleCategories(id);
-	}
+		$( `#updateButton-${id}` ).removeClass( 'button-primary' );
+		$( '.notice-info' ).hide();
+
+		const rows = [];
+
+		$( `#rrb2b_table_${id} tbody tr` ).each( function() {
+			const elements = this.children[1].children[0].form.elements;
+			const remove   = elements['product_remove'].checked;
+
+			if ( remove ) {
+				$( this ).hide();
+			}
+
+			rows.push({
+				product_id:   parseInt( elements['product_id'].value ),
+				product_name: elements['product_name'].value,
+				remove,
+				min_qty:      parseInt( elements['min_qty'].value ),
+				is_variable:  elements['variable'].value,
+				rule: {
+					type:          elements['reduce_regular_type'].value,
+					value:         elements['adjust_value'].value,
+					quantity:      elements['adjust_value_qty'].value,
+					quantity_type: elements['reduce_regular_type_qty'].value,
+				},
+			});
+		});
+
+		if ( ! rows.length ) return;
+
+		progressBar( 'start', id );
+
+		try {
+			await wp.apiFetch({
+				path:   `/rrb2b/v1/rules/${id}/products`,
+				method: 'PUT',
+				data:   { rows },
+			});
+
+			$( '#cas-notice-product-changed' ).show();
+			$( `#prod1_${id}` ).show();
+			$( `#prod2_${id}` ).show();
+			$( `#updateButton-${id}` ).addClass( 'button-primary' );
+		} catch ( err ) {
+			console.error( err );
+		} finally {
+			progressBar( 'stop', id );
+		}
+	};
+
+	window.updateProducts = ( id, event ) => updateProducts( id, event );
+
+	const updateSingleCategories = async ( id, event ) => {
+		event.preventDefault();
+
+		$( `#updateSingleCatButton-${id}` ).removeClass( 'button-primary' );
+		$( '.notice-info' ).hide();
+
+		const rows = [];
+
+		$( `#rrb2b_table_cat_${id} tbody tr` ).each( function() {
+			const elements = this.children[1].children[0].form.elements;
+			const remove   = elements['category_remove'].checked;
+
+			if ( remove ) {
+				$( this ).hide();
+			}
+
+			rows.push({
+				id:      parseInt( elements['id'].value ),
+				slug:    elements['slug'].value,
+				name:    elements['category_name'].value,
+				remove,
+				min_qty: parseInt( elements['min_qty'].value ),
+				rule: {
+					type:          elements['reduce_regular_type'].value,
+					value:         elements['adjust_value'].value,
+					quantity:      elements['adjust_value_qty'].value,
+					quantity_type: elements['reduce_regular_type_qty'].value,
+				},
+			});
+		});
+
+		if ( ! rows.length ) return;
+
+		try {
+			await wp.apiFetch({
+				path:   `/rrb2b/v1/rules/${id}/categories`,
+				method: 'PUT',
+				data:   { rows },
+			});
+
+			$( '#cas-notice-category-changed' ).show();
+			$( `#div_${id}` ).show();
+			$( `#cat_${id}` ).show();
+			$( `#updateSingleCatButton-${id}` ).addClass( 'button-primary' );
+		} catch ( err ) {
+			console.error( err );
+		}
+	};
+
+	window.updateSingleCategories = ( id, event ) => updateSingleCategories( id, event );
 
 	function reloadPageArgs( msec ) {
 

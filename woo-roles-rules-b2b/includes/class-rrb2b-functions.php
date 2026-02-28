@@ -38,7 +38,7 @@ class Rrb2b_Functions {
 		$cap_roles = array( 'administrator', 'editor', 'author', 'contributor', 'subscriber', 'customer', 'shop_manager' );
 
 		if ( ! $wp_roles->is_role( 'rrb2b_pending' ) ) {
-			$wp_roles->add_role( 'rrb2b_pending', __( 'Pending (no rights)', 'woo-roles-rules-b2b' ), array() );
+			$wp_roles->add_role( 'rrb2b_pending', __( 'Pending (no rights)', 'woo-roles-rules-b2b' ) );
 		}
 
 		$cap_roles[] = 'rrb2b_pending';
@@ -541,7 +541,7 @@ class Rrb2b_Functions {
 							</td>
 							<td colspan="7">
 								<div style="float:right;">
-									<button type="button" id="updateSingleCatButton-<?php echo esc_js( $rule->id ); ?>" class="button button-primary" onclick="updateSingleCategories('<?php echo esc_js( $rule->id ); ?>');"><i class="fas fa-save"></i> <?php esc_attr_e( 'Save Changes', 'woo-roles-rules-b2b' ); ?></button>
+									<button type="button" id="updateSingleCatButton-<?php echo esc_js( $rule->id ); ?>" class="button button-primary" onclick="updateSingleCategories('<?php echo esc_js( $rule->id ); ?>', event);"><i class="fas fa-save"></i> <?php esc_attr_e( 'Save Changes', 'woo-roles-rules-b2b' ); ?></button>
 								</div>
 							</td>
 						</tr>
@@ -774,7 +774,7 @@ class Rrb2b_Functions {
 								</td>
 								<td colspan="7">
                                     <div style="float:right;">
-                                        <button type="button" id="updateButton-<?php echo esc_js( $rule->id ); ?>" class="button button-primary" onclick="updateProducts('<?php echo esc_js( $rule->id ); ?>');"><i class="fas fa-save"></i> <?php esc_attr_e( 'Save changes', 'woo-roles-rules-b2b' ); ?></button>
+                                        <button type="button" id="updateButton-<?php echo esc_js( $rule->id ); ?>" class="button button-primary" onclick="updateProducts('<?php echo esc_js( $rule->id ); ?>', event);"><i class="fas fa-save"></i> <?php esc_attr_e( 'Save changes', 'woo-roles-rules-b2b' ); ?></button>
                                     </div>
 								</td>
 							</tr>
@@ -859,68 +859,6 @@ class Rrb2b_Functions {
 			<?php
 		}
 
-	}
-
-	/**
-	 * Get category list
-	 * 
-	 * @param var $cat_list category array.
-	 */
-	public function rrb2b_get_category_list( $cat_list ) {
-
-		$args = array(
-			'taxonomy'   => 'product_cat',
-			'orderby'    => 'name', 
-			'order'      => 'ASC',
-			'parent'     => 0,
-			'hide_empty' => 0,
-			'pad_counts' => 0,
-		);
-
-		$categories = get_categories( $args );
-
-		foreach ( $categories as $category ) {
-			$res = false;
-			if ( isset( $cat_list ) ) {
-				foreach ( (array) $cat_list as $citem ) {
-					$res = in_array( $category->slug, array_keys( $citem ), true );
-					if ( false !== $res ) {
-						break;
-					}
-				}
-			}
-			?>
-			<input class="cas-check-cat" type="checkbox" <?php echo ( false !== $res ) ? 'checked="checked"' : ''; ?> name="__<?php esc_attr_e( $category->slug ); ?>" value="<?php esc_attr_e( $category->term_id ); ?>"> <?php esc_attr_e( $category->name . ' (' . $category->category_count . ')' ); ?><br/>
-			<?php
-			$spaceing = 0;
-			$this->rrb2b_get_sub_categories( $category, $spaceing, $cat_list );
-
-		}
-
-	}
-
-	/**
-	 * Get sub categories
-	 */
-	private function rrb2b_get_sub_categories($category, $spacing, $cat_list ) {
-		$sub_categories = get_categories( array( 'taxonomy' => 'product_cat', 'parent' => $category->term_id, 'orderby' => 'name', 'order' => 'ASC' ) );
-		$spacing      += 20;
-
-		foreach ( $sub_categories as $sub ) {
-			$res_sub = false;
-			if ( isset( $cat_list ) ) {
-				foreach ( (array) $cat_list as $cat_item ) {
-					$res_sub = in_array( $sub->slug, array_keys( $cat_item ), true );
-					if ( false !== $res_sub ) {
-						break;
-					}
-				}
-			}
-			?>
-			<input class="cas-check-cat" <?php echo ( false !== $res_sub ) ? 'checked="checked"' : ''; ?> style="margin-left: <?php echo esc_js( $spacing ); ?>px;" type="checkbox" name="__<?php esc_attr_e( $sub->slug ); ?>" value="<?php esc_attr_e( $sub->term_id ); ?>"> <?php esc_attr_e( $sub->name . ' (' . $sub->category_count . ')' ); ?><br/>
-			<?php
-			$this->rrb2b_get_sub_categories( $sub, $spacing, $cat_list );
-		}
 	}
 
 	/**

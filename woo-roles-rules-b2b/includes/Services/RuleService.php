@@ -66,20 +66,16 @@ class RuleService {
     /**
      * Update single category rules
      */
-    public function update_category_rule( array $data ): bool {
-        $rule_id = intval( $data[ 'rule_id' ] );
+    public function update_category_rule( int $rule_id, array $categories ): bool {
         $role_rules = $this->get_rules_by_id( $rule_id );
-        $new_categories = $data['rows'] ?? [];
         $categories_to_add = [];
 
         if ( ! $role_rules ) {
             return false;
         }
 
-        foreach ($new_categories as $item) {
-            $remove = sanitize_text_field( $item[ 'remove' ] );
-
-            if ( 'false' === $remove ) {
+        foreach ( $categories as $item ) {
+            if ( ! $item['remove'] ) {
                 $categories_to_add[] = CategoryRule::from_array( $item );
             }
         }
@@ -89,25 +85,21 @@ class RuleService {
     }
 
 
-    public function update_product_rule($data): bool {
-        $rule_id = intval($data['rule_id']);
+    public function update_product_rule( int $rule_id, array $products = []): bool {
         $role_rules = $this->get_rules_by_id($rule_id);
-        $new_products = $data['rows'] ?? [];
         $products_to_add = [];
 
         if (!$role_rules) {
             return false;
         }
 
-        foreach ($new_products as $item) {
-            $remove = sanitize_text_field($item['remove']);
-
-            if ('false' === $remove) {
+        foreach ($products as $item) {
+            if ( ! $item['remove'] ) {
                 $products_to_add[] = new ProductRule(
-                    (int)sanitize_text_field($item['product_id']),
-                    sanitize_text_field($item['product_name']),
+                    $item['product_id'],
+                    $item['product_name'],
                     Rule::from_array( $item['rule'] ),
-                    (int)sanitize_text_field($item['min_qty']),
+                    $item['min_qty'],
                 );
             }
         }
@@ -127,36 +119,31 @@ class RuleService {
     /**
      * Copy rules from one role to multiple roles
      */
-    public function copy_rules($data): bool {
-        $type = $data['type'];
-        $from_id = intval($data['from']);
-        $to_ids = !empty($data['to']) ? array_map('intval', explode(',', $data['to'])) : [];
-
-        if (empty($from_id)) {
+    public function copy_rules( int $from_id, string $type, array $to_ids ): bool {
+        if ( empty( $from_id ) ) {
             return false;
         }
 
-        // Get source rule
-        $from_role_rules = $this->get_rules_by_id($from_id);
-        if (!$from_role_rules) {
+        $from_role_rules = $this->get_rules_by_id( $from_id );
+        if ( ! $from_role_rules ) {
             return false;
         }
 
         $success_count = 0;
 
-        foreach ($to_ids as $to_id) {
-            $to_role_rules = $this->get_rules_by_id($to_id);
-            if (!$to_role_rules) {
+        foreach ( $to_ids as $to_id ) {
+            $to_role_rules = $this->get_rules_by_id( $to_id );
+            if ( ! $to_role_rules ) {
                 continue;
             }
 
-            if ('category' === $type) {
+            if ( 'category' === $type ) {
                 $to_role_rules->single_categories = $from_role_rules->single_categories;
             } else {
                 $to_role_rules->products = $from_role_rules->products;
             }
 
-            if ($this->save_role_rules($to_role_rules)) {
+            if ( $this->save_role_rules( $to_role_rules ) ) {
                 $success_count++;
             }
         }
@@ -304,5 +291,36 @@ class RuleService {
         }
 
         return null;
+    }
+
+    public function import_products_from_category( int $rule_id, string $category, bool $variations = false ): int
+    {
+        $products = wc_get_products([
+            'category' => [ $category ],
+            'status'   => 'publish',
+            'limit'    => -1,
+        ]);
+
+        $imported = 0;
+
+        foreach ( $products as $product ) {
+            $children = $product->get_children();
+
+            if ( $variations && ! empty( $children ) ) {
+                foreach ( $children as $child_id ) {
+                    $child      = wc_get_product( $child_id );
+                    $attributes = array_filter( $child->get_attributes(), fn( $v ) => is_string( $v ) && strlen( $v ) > 0 );
+                    $name       = implode( ', ', [ $child->get_title(), ...array_map( 'ucfirst', $attributes ) ] );
+
+                    $this->add_product_to_rule( $child_id, $name, $rule_id );
+                }
+            } else {
+                $this->add_product_to_rule( $product->get_id(), $product->get_name(), $rule_id );
+            }
+
+            $imported++;
+        }
+
+        return $imported;
     }
 }
