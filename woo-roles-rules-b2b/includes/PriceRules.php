@@ -5,46 +5,49 @@
  * @package Roles&RulesB2B/includes
  */
 
+namespace ClypperTechnology\RolePricing;
+
 use ClypperTechnology\RolePricing\Rules\ApplicableRule;
 use ClypperTechnology\RolePricing\Rules\RoleRules;
-use ClypperTechnology\RolePricing\Services\RuleService;
+use ClypperTechnology\RolePricing\Services\RuleService;use WC_Product;
 
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 
 /**
  * Class for rules
  */
-class Rrb2b_Rules {
+class Rrb2b_Rules
+{
     private RuleService $rule_service;
 
     private static bool $processing = false;
     private static bool $generating_qty_price = false;
 
-    public function __construct( RuleService $rule_service )
+    public function __construct(RuleService $rule_service)
     {
         $this->rule_service = $rule_service;
 
-        add_action( 'wp', [ $this, 'register_hooks' ] );
+        add_action('wp', [$this, 'register_hooks']);
 
-        add_filter( 'woocommerce_product_is_on_sale',    [ $this, 'rrb2b_product_is_on_sale' ], 999, 2 );
-        add_action( 'woocommerce_before_shop_loop_item', [ $this, 'show_discount_banner_shop_archive' ], 999 );
-        add_filter( 'flatsome_custom_single_product_1',  [ $this, 'show_discount_banner_product_page' ], 999, 3 );
-        add_filter( 'woocommerce_get_price_html',        [ $this, 'modify_price_html_with_quantity_discount' ], 999, 2 );
+        add_filter('woocommerce_product_is_on_sale', [$this, 'rrb2b_product_is_on_sale'], 999, 2);
+        add_action('woocommerce_before_shop_loop_item', [$this, 'show_discount_banner_shop_archive'], 999);
+        add_filter('flatsome_custom_single_product_1', [$this, 'show_discount_banner_product_page'], 999, 3);
+        add_filter('woocommerce_get_price_html', [$this, 'modify_price_html_with_quantity_discount'], 999, 2);
     }
 
     public function register_hooks(): void
     {
-        if ( is_product() ) {
+        if (is_product()) {
             return;
         }
 
-        add_filter( 'woocommerce_product_get_price',                [ $this, 'get_rule_sale_price' ], 20, 2 );
-        add_filter( 'woocommerce_product_variation_get_price',      [ $this, 'get_rule_sale_price' ], 20, 2 );
-        add_filter( 'woocommerce_product_get_sale_price',           [ $this, 'get_rule_sale_price' ], 20, 2 );
-        add_filter( 'woocommerce_product_variation_get_sale_price', [ $this, 'get_rule_sale_price' ], 20, 2 );
-        add_filter( 'woocommerce_variation_prices_price',           [ $this, 'get_rule_sale_price' ], 20, 3 );
-        add_filter( 'woocommerce_variation_prices_sale_price',      [ $this, 'get_rule_sale_price' ], 20, 3 );
+        add_filter('woocommerce_product_get_price', [$this, 'get_rule_sale_price'], 20, 2);
+        add_filter('woocommerce_product_variation_get_price', [$this, 'get_rule_sale_price'], 20, 2);
+        add_filter('woocommerce_product_get_sale_price', [$this, 'get_rule_sale_price'], 20, 2);
+        add_filter('woocommerce_product_variation_get_sale_price', [$this, 'get_rule_sale_price'], 20, 2);
+        add_filter('woocommerce_variation_prices_price', [$this, 'get_rule_sale_price'], 20, 3);
+        add_filter('woocommerce_variation_prices_sale_price', [$this, 'get_rule_sale_price'], 20, 3);
     }
 
     /**
@@ -54,39 +57,40 @@ class Rrb2b_Rules {
      * @param WC_Product $product The product object
      * @return string Modified price HTML
      */
-    public function modify_price_html_with_quantity_discount( string $price_html, $product ): string {
-        if ( is_admin() || self::$processing || self::$generating_qty_price || !$this->user_has_rule() || !is_product()) {
+    public function modify_price_html_with_quantity_discount(string $price_html, $product): string
+    {
+        if (is_admin() || self::$processing || self::$generating_qty_price || !$this->user_has_rule() || !is_product()) {
             return $price_html;
         }
 
         $rule = $this->rule_service->get_rule_by_current_role();
-        $applicable_rule = $this->get_applicable_rule( $rule, $product );
+        $applicable_rule = $this->get_applicable_rule($rule, $product);
 
-        if ( !$applicable_rule || !$applicable_rule->rule->has_quantity_value() ) {
+        if (!$applicable_rule || !$applicable_rule->rule->has_quantity_value()) {
             return $price_html;
         }
 
-        if ( $this->get_cart_item_qty($product->get_id()) >= $applicable_rule->min_quantity ) {
+        if ($this->get_cart_item_qty($product->get_id()) >= $applicable_rule->min_quantity) {
             return $price_html;
         }
 
         self::$processing = true;
 
-        $original_price = wc_get_price_including_tax( $product );
+        $original_price = wc_get_price_including_tax($product);
 
         // Calculate quantity discount price (bypasses regular role discount)
-        $qty_discount_price = $applicable_rule->calculatePrice( $original_price, $applicable_rule->min_quantity );
+        $qty_discount_price = $applicable_rule->calculatePrice($original_price, $applicable_rule->min_quantity);
 
-        if ( !$qty_discount_price ) {
+        if (!$qty_discount_price) {
             return $price_html;
         }
 
         self::$generating_qty_price = true;
 
         $temp_product = clone $product;
-        $temp_product->set_price( $qty_discount_price );
-        $temp_product->set_regular_price( $qty_discount_price );
-        $temp_product->set_sale_price( '' ); // clear sale price so it's NOT marked as on sale
+        $temp_product->set_price($qty_discount_price);
+        $temp_product->set_regular_price($qty_discount_price);
+        $temp_product->set_sale_price(''); // clear sale price so it's NOT marked as on sale
 
         $qty_price_html = $temp_product->get_price_html();
 
@@ -95,8 +99,8 @@ class Rrb2b_Rules {
 
         return $price_html .
                 '<div style="margin: 20px 0; padding: 20px; width: 100%; background-color: #e8e8e8; display: flex; flex-direction: column;">' .
-                    '<p style="margin: 0 0 10px 0;"> Ved køb af ' . esc_html( $applicable_rule->min_quantity ) . '+ stk.:</p>' .
-                          '<p class="price product-page-price">'. $qty_price_html . '</p>' .
+                '<p style="margin: 0 0 10px 0;"> Ved køb af ' . esc_html($applicable_rule->min_quantity) . '+ stk.:</p>' .
+                '<p class="price product-page-price">' . $qty_price_html . '</p>' .
                 '</div>';
     }
 
@@ -106,7 +110,8 @@ class Rrb2b_Rules {
      * @param bool $is_on_sale bool value.
      * @param var $product product.
      */
-    public function rrb2b_product_is_on_sale(bool $is_on_sale, $product): bool {
+    public function rrb2b_product_is_on_sale(bool $is_on_sale, $product): bool
+    {
         if (is_admin() || self::$processing || !$this->user_has_rule()) {
             return $is_on_sale;
         }
@@ -137,7 +142,8 @@ class Rrb2b_Rules {
         $this->show_discount_banner();
     }
 
-    private function show_discount_banner(bool $shortened_message = false): void {
+    private function show_discount_banner(bool $shortened_message = false): void
+    {
         global $product;
 
         // Fallback if global not set
@@ -151,23 +157,24 @@ class Rrb2b_Rules {
 
         $rule = $this->rule_service->get_rule_by_current_role();
 
-        if(!$rule || !$rule->rule_active) {
+        if (!$rule || !$rule->rule_active) {
             return;
         }
 
-        $applicable_rule = $this->get_applicable_rule( $rule, $product );
+        $applicable_rule = $this->get_applicable_rule($rule, $product);
 
-        if(!$applicable_rule || ! $applicable_rule->rule->quantity_value) {
+        if (!$applicable_rule || !$applicable_rule->rule->quantity_value) {
             return;
         }
 
         $message = $applicable_rule->quantityReductionMessage();
 
-        if( $shortened_message ) {
+        if ($shortened_message) {
             ?>
             <div class="badge-container absolute right top z-1">
                 <div class="callout badge badge-circle">
-                    <div class="badge-inner secondary on-sale" style="background-color: #e3ad30"><span class="onsale">Mængderabat!</span></div>
+                    <div class="badge-inner secondary on-sale" style="background-color: #e3ad30"><span class="onsale">Mængderabat!</span>
+                    </div>
                 </div>
             </div>
             <?php
@@ -175,7 +182,8 @@ class Rrb2b_Rules {
             ?>
             <div class="badge-container absolute right top z-1">
                 <div class="callout badge badge-circle">
-                    <div class="badge-inner secondary on-sale" style="background-color: #e3ad30"><span class="onsale"><?php echo $message ?></span></div>
+                    <div class="badge-inner secondary on-sale" style="background-color: #e3ad30"><span
+                                class="onsale"><?php echo $message ?></span></div>
                 </div>
             </div>
             <?php
@@ -186,7 +194,8 @@ class Rrb2b_Rules {
     /**
      * Check if user has a role or is guest frontend
      */
-    public function user_has_rule(): bool {
+    public function user_has_rule(): bool
+    {
         $rule = $this->rule_service->get_rule_by_current_role();
 
         if ($rule == null) {
@@ -202,8 +211,9 @@ class Rrb2b_Rules {
      * @param var $price current price.
      * @param var $product current product.
      */
-    public function get_rule_sale_price( $price, $product ) {
-        if ( self::$processing || ! $this->user_has_rule() ) {
+    public function get_rule_sale_price($price, $product)
+    {
+        if (self::$processing || !$this->user_has_rule()) {
             return $price;
         }
 
@@ -231,44 +241,48 @@ class Rrb2b_Rules {
         }
     }
 
-    public function role_price(RoleRules $rule, $product, float $price_new, int $cart_qty) : ?float {
-        $applicable_rule = $this->get_applicable_rule( $rule, $product );
+    public function role_price(RoleRules $rule, $product, float $price_new, int $cart_qty): ?float
+    {
+        $applicable_rule = $this->get_applicable_rule($rule, $product);
 
         return $applicable_rule?->calculatePrice($price_new, $cart_qty);
     }
 
-    private function get_applicable_rule( RoleRules $rule, $product ): ?ApplicableRule {
-        $category_ids = $this->get_category_ids( $product );
+    private function get_applicable_rule(RoleRules $rule, $product): ?ApplicableRule
+    {
+        $category_ids = $this->get_category_ids($product);
 
-        if( is_wp_error($category_ids) ) {
+        if (is_wp_error($category_ids)) {
             $category_ids = [];
         }
 
-        return $rule->get_applicable_rule( $product->get_id(), $category_ids );
+        return $rule->get_applicable_rule($product->get_id(), $category_ids);
     }
 
 
     /**
      * Get cart quantity for a given product.
      */
-    private  function get_cart_item_qty(int $product_id ): int {
+    private function get_cart_item_qty(int $product_id): int
+    {
         $cart = WC()->cart;
 
-        if ( ! $cart ) {
+        if (!$cart) {
             return 0;
         }
 
         $quantities = $cart->get_cart_item_quantities();
 
-        return intval( $quantities[ $product_id ] ?? 0);
+        return intval($quantities[$product_id] ?? 0);
     }
 
     /**
      * @return int[]
      */
-    private function get_category_ids( $product ): array{
+    private function get_category_ids($product): array
+    {
         return ('variation' === $product->get_type()) ?
-            wc_get_product_term_ids($product->get_parent_id(), 'product_cat') :
-            wc_get_product_term_ids($product->get_id(), 'product_cat');
+                wc_get_product_term_ids($product->get_parent_id(), 'product_cat') :
+                wc_get_product_term_ids($product->get_id(), 'product_cat');
     }
 }

@@ -1,0 +1,16 @@
+{
+    "name": "clypper-technology/role-pricing",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "ClypperTechnology\\RolePricing\\": "includes/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Clypper Technology",
+            "email": "contact@clyppertechnology.com"
+        }
+    ],
+    "require": {}
+}

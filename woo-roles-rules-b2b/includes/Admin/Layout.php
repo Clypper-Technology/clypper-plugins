@@ -5,9 +5,11 @@
  * @package Roles&RulesB2B/includes
  */
 
+use ClypperTechnology\RolePricing\Admin\Templates;
+
 defined( 'ABSPATH' ) || exit;
 
-require_once __DIR__ . '/class-rrb2b-functions.php';
+require_once __DIR__ . '/class-adminTemplates.php';
 
 /**
  * Class for templates
@@ -22,18 +24,10 @@ class Rrb2b_Templates {
 	public $functions;
 
 	/**
-	 * Options
-	 *
-	 * @var var $options.
-	 */
-	public $options;
-
-	/**
 	 * Constructor
 	 */
 	public function __construct() {
-		$this->functions = new Rrb2b_Functions();
-		$this->options   = get_option( 'rrb2b_options' );
+		$this->functions = new Templates();
 	}
 
 	/**
@@ -58,9 +52,6 @@ class Rrb2b_Templates {
 				break;
 			case 'products':
 				$this->rrb2b_get_rules_products_table();
-				break;
-			case 'roles':
-				$this->rrb2b_manage_roles();
 				break;
 		}
 
@@ -306,86 +297,10 @@ class Rrb2b_Templates {
 			?>
 
 			<br/>
-				
+
 		</div>
 		<?php
 	}
-
-	/**
-	 * Show and add roles
-	 */
-	public function rrb2b_manage_roles() {
-
-		?>
-		<div class="rrb2b-r-row">
-		
-		<div class="col-left">
-
-		<div class="form-wrap rrb2b-role-form">
-			<h2><?php esc_attr_e( 'Add New Role', 'woo-roles-rules-b2b' ); ?></h2>
-			<form id="addrole" method="post" action="<?php esc_attr_e( admin_url( 'admin-post.php' ) ); ?>" class="validate">
-				<input type="hidden" name="action" value="rrb2b_create_role">
-				<?php wp_nonce_field( 'rrb2b_id' ); ?>
-				<div class="form-field form-required">
-					<label for="role-name"><?php esc_attr_e( 'Name', 'woo-roles-rules-b2b' ); ?></label>
-					<input name="role-name" id="role-name" type="text" value="" size="40" required="required">
-					<p><?php esc_attr_e( 'Role name (i.e Wholesaler 10)', 'woo-roles-rules-b2b' ); ?></p>
-				</div>
-				<div class="form-field form-required">
-					<label for="role-slug"><?php esc_attr_e( 'Slug', 'woo-roles-rules-b2b' ); ?></label>
-					<input name="role-slug" id="role-slug" type="text" value="" size="40" required="required">
-					<p><?php esc_attr_e( 'Role slug (i.e wholesaler_10)', 'woo-roles-rules-b2b' ); ?></p>
-				</div>
-				<div class="form-field">
-					<label for="role-cap"><?php esc_attr_e( 'Capabilities', 'woo-roles-rules-b2b' ); ?></label>
-					<select name="role-cap">
-					<?php $this->functions->rrb2b_select_role(); ?>
-					</select>
-					<p><?php esc_attr_e( 'Select the capabilities for this role i.e Customer (minimum rights)', 'woo-roles-rules-b2b' ); ?></p>
-				</div>
-				<p class="submit">
-					<input type="submit" name="submit_role" id="submit_role" class="button button-primary" value="<?php esc_attr_e( 'Add New Role', 'woo-roles-rules-b2b' ); ?>">	<span class="spinner"></span>
-				</p>
-			</form>
-		</div>
-		</div>
-
-		<div class="col-right">
-			<div class="col-wrap">
-
-			<table class="wp-list-table widefat fixed striped table-view-list tags" id="rrb2b-role-table">
-				<thead>
-				<tr>
-					<th scope="col" id="name" style="width: 200px;">
-						<span><?php esc_attr_e( 'Roles', 'woo-roles-rules-b2b' ); ?></span>
-					</th>
-					<th scope="col" id="name">
-						<span><?php esc_attr_e( 'Capabilities', 'woo-roles-rules-b2b' ); ?></span>
-					</th>
-					<th style="width: 100px;text-align:center;">
-						<span><?php esc_attr_e( 'Delete role', 'woo-roles-rules-b2b' ); ?></span>
-					</th>
-				</tr>
-				</thead>
-				<tbody id="the-list" data-wp-lists="list:tag">
-					<?php $this->functions->rrb2b_get_roles(); ?>	
-				<tfoot>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				</tfoot>
-			</table>
-
-			</div>
-		</div>
-		</div>
-
-		<?php
-	}
-
-
 }
 
 

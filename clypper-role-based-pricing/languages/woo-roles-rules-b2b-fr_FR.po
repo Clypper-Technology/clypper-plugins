@@ -1,0 +1,1226 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Roles & Rules B2B for WooCommerce\n"
+"POT-Creation-Date: 2024-09-05 14:16+0200\n"
+"PO-Revision-Date: 2024-09-05 14:20+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.3.2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: woo-roles-rules-b2b.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+"X-Poedit-SearchPathExcluded-1: vendor\n"
+
+#: includes/class-rrb2b-functions.php:28 includes/class-rrb2b-functions.php:101
+msgid "Pending (no rights)"
+msgstr "En attente (aucun droit)"
+
+#: includes/class-rrb2b-functions.php:48
+msgid "Slug:"
+msgstr "Slug :"
+
+#: includes/class-rrb2b-functions.php:111
+msgid " ( default )"
+msgstr " ( par défaut )"
+
+#: includes/class-rrb2b-functions.php:202
+#: includes/class-rrb2b-functions.php:503
+#: includes/class-rrb2b-functions.php:738
+msgid "Guest"
+msgstr "Invité"
+
+#: includes/class-rrb2b-functions.php:203
+#: includes/class-rrb2b-functions.php:504
+#: includes/class-rrb2b-functions.php:739
+msgid "Regular guests (B2C)"
+msgstr "Invités réguliers (B2C)"
+
+#: includes/class-rrb2b-functions.php:205
+msgid ""
+"When active (checked) this rule(s) overrides your current sales prices! Read "
+"more in the documentation."
+msgstr ""
+"Lorsqu’elles sont actives (cochées), cette ou ces règles remplacent vos prix "
+"de vente actuels! Pour en savoir plus, consultez la documentation."
+
+#: includes/class-rrb2b-functions.php:246
+#: includes/class-rrb2b-functions.php:530
+#: includes/class-rrb2b-functions.php:763
+msgid "ACTIVE"
+msgstr "ACTIF"
+
+#: includes/class-rrb2b-functions.php:248
+#: includes/class-rrb2b-functions.php:532
+#: includes/class-rrb2b-functions.php:765
+msgid "NOT ACTIVATED"
+msgstr "NON ACTIVATE"
+
+#: includes/class-rrb2b-functions.php:253
+#: includes/class-rrb2b-functions.php:537
+#: includes/class-rrb2b-functions.php:770
+msgid "Users:"
+msgstr "Utilisateurs :"
+
+#: includes/class-rrb2b-functions.php:265
+#: includes/class-rrb2b-functions.php:544
+#: includes/class-rrb2b-functions.php:777
+msgid "Ex. VAT for role"
+msgstr "Ex. TVA pour le rôle"
+
+#: includes/class-rrb2b-functions.php:270
+#: includes/class-rrb2b-functions.php:549
+#: includes/class-rrb2b-functions.php:782
+msgid "Tax exempt for role"
+msgstr "Exemption fiscale pour le rôle"
+
+#: includes/class-rrb2b-functions.php:279
+#: includes/class-rrb2b-functions.php:607
+#: includes/class-rrb2b-functions.php:661
+#: includes/class-rrb2b-functions.php:840
+#: includes/class-rrb2b-functions.php:934
+#: includes/class-rrb2b-functions.php:1652
+msgid "Select"
+msgstr "Sélectionner"
+
+#: includes/class-rrb2b-functions.php:280
+#: includes/class-rrb2b-functions.php:608
+#: includes/class-rrb2b-functions.php:662
+#: includes/class-rrb2b-functions.php:841
+#: includes/class-rrb2b-functions.php:935
+msgid "Reduce by percent (%)"
+msgstr "Réduction en pourcentage (%)"
+
+#: includes/class-rrb2b-functions.php:281
+#: includes/class-rrb2b-functions.php:609
+#: includes/class-rrb2b-functions.php:663
+#: includes/class-rrb2b-functions.php:842
+#: includes/class-rrb2b-functions.php:936
+msgid "Reduce by fixed amount"
+msgstr "Réduction en montant fixe"
+
+#: includes/class-rrb2b-functions.php:282
+#: includes/class-rrb2b-functions.php:610
+#: includes/class-rrb2b-functions.php:664
+#: includes/class-rrb2b-functions.php:843
+#: includes/class-rrb2b-functions.php:937
+msgid "Increase by percent (%)"
+msgstr "Augmentation en pourcentage (%)"
+
+#: includes/class-rrb2b-functions.php:283
+#: includes/class-rrb2b-functions.php:611
+#: includes/class-rrb2b-functions.php:665
+#: includes/class-rrb2b-functions.php:844
+#: includes/class-rrb2b-functions.php:938
+msgid "Increase by fixed amount"
+msgstr "Augmentation en montant fixe"
+
+#: includes/class-rrb2b-functions.php:288
+msgid ""
+"General rule for all products: (Tip: Use Product tab for better "
+"customization)"
+msgstr ""
+"Règle générale pour tous les produits : (Conseil : utilisez l'onglet Produit "
+"pour une meilleure personnalisation)"
+
+#: includes/class-rrb2b-functions.php:289
+msgid "e.g. 10"
+msgstr "p. ex. 10"
+
+#: includes/class-rrb2b-functions.php:292
+msgid ""
+"General rule for selected categories: (Tip: Use Category tab for better "
+"customization)"
+msgstr ""
+"Règle générale pour les catégories sélectionnées : (Conseil : utilisez "
+"l'onglet Catégorie pour une meilleure personnalisation)"
+
+#: includes/class-rrb2b-functions.php:293
+msgid "e.g. 20"
+msgstr "ex. 20"
+
+#: includes/class-rrb2b-functions.php:294
+msgid "Set selected category products: On Sale"
+msgstr "Définir les produits de la catégorie sélectionnée : En vente"
+
+#: includes/class-rrb2b-functions.php:300
+msgid "Check / uncheck all categories"
+msgstr "Cocher / décocher toutes les catégories"
+
+#: includes/class-rrb2b-functions.php:303
+msgid "Automatically apply a coupon for checkout discounts"
+msgstr "Appliquer automatiquement un coupon pour réductions au paiement"
+
+#: includes/class-rrb2b-functions.php:305
+msgid "Edit Coupons"
+msgstr "Modifier les coupons"
+
+#: includes/class-rrb2b-functions.php:310
+msgid "Set up a storewide sale for rule (overrides other rules)"
+msgstr ""
+"Définir une règle de promotion sur toute la boutique (prévaut sur les autres "
+"règles)"
+
+#: includes/class-rrb2b-functions.php:312
+msgid "Reduce prices by"
+msgstr "Réduire les prix par"
+
+#: includes/class-rrb2b-functions.php:313
+#: includes/class-rrb2b-functions.php:621
+#: includes/class-rrb2b-functions.php:675
+#: includes/class-rrb2b-functions.php:855
+#: includes/class-rrb2b-functions.php:949
+msgid "Percent (%)"
+msgstr "Pourcentage (%)"
+
+#: includes/class-rrb2b-functions.php:314
+#: includes/class-rrb2b-functions.php:622
+#: includes/class-rrb2b-functions.php:676
+#: includes/class-rrb2b-functions.php:856
+#: includes/class-rrb2b-functions.php:950
+msgid "Fixed amount"
+msgstr "Montant fixe"
+
+#: includes/class-rrb2b-functions.php:316
+msgid "i.e 30"
+msgstr "ex. 30"
+
+#: includes/class-rrb2b-functions.php:318
+msgid "Date start"
+msgstr "Date début"
+
+#: includes/class-rrb2b-functions.php:319
+msgid "Date end"
+msgstr "Date fin"
+
+#: includes/class-rrb2b-functions.php:322
+msgid "Start time"
+msgstr "Heure de début"
+
+#: includes/class-rrb2b-functions.php:324
+msgid "End time"
+msgstr "Heure de fin"
+
+#: includes/class-rrb2b-functions.php:331
+msgid "Active Sale!"
+msgstr "Vente active!"
+
+#: includes/class-rrb2b-functions.php:338
+msgid "Changes in rule, please save!"
+msgstr "Changements de règle, s’il vous plaît enregistrer!"
+
+#: includes/class-rrb2b-functions.php:339
+msgid "Save rule"
+msgstr "Sauvegarder règle"
+
+#: includes/class-rrb2b-functions.php:340
+msgid "Clear sale"
+msgstr "Effacer la promotion"
+
+#: includes/class-rrb2b-functions.php:341
+msgid "Delete rule"
+msgstr "Supprimer la règle"
+
+#: includes/class-rrb2b-functions.php:344
+msgid "Last modified:"
+msgstr "Modifié dernièrement :"
+
+#: includes/class-rrb2b-functions.php:345
+msgid " by:"
+msgstr " par :"
+
+#: includes/class-rrb2b-functions.php:563
+msgid "Check all"
+msgstr "Tout cocher"
+
+#: includes/class-rrb2b-functions.php:564
+msgid "Add categories"
+msgstr "Ajouter des catégories"
+
+#: includes/class-rrb2b-functions.php:571
+#: includes/class-rrb2b-functions.php:804
+msgid "Edit"
+msgstr "Modifier"
+
+#: includes/class-rrb2b-functions.php:578
+#: includes/class-rrb2b-functions.php:811
+msgid "Search"
+msgstr "Rechercher"
+
+#: includes/class-rrb2b-functions.php:583
+#: includes/class-rrb2b-functions.php:817
+msgid "Remove"
+msgstr "Supprimer"
+
+#: includes/class-rrb2b-functions.php:584
+msgid "Category"
+msgstr "Catégorie"
+
+#: includes/class-rrb2b-functions.php:585
+#: includes/class-rrb2b-functions.php:820
+msgid "Hide"
+msgstr "Cacher"
+
+#: includes/class-rrb2b-functions.php:586
+msgid "Sale"
+msgstr "Promotion"
+
+#: includes/class-rrb2b-functions.php:587
+#: includes/class-rrb2b-functions.php:822
+msgid "Rule"
+msgstr "Règle"
+
+#: includes/class-rrb2b-functions.php:588
+#: includes/class-rrb2b-functions.php:590
+#: includes/class-rrb2b-functions.php:823
+#: includes/class-rrb2b-functions.php:825
+msgid "Value"
+msgstr "Valeur"
+
+#: includes/class-rrb2b-functions.php:589
+#: includes/class-rrb2b-functions.php:824
+msgid "Rule: Qty or more"
+msgstr "Règle: Qté ou plus"
+
+#: includes/class-rrb2b-functions.php:597
+#: includes/class-rrb2b-functions.php:832
+msgid "Bulk set values here"
+msgstr "Valeurs définies en bloc ici"
+
+#: includes/class-rrb2b-functions.php:620
+#: includes/class-rrb2b-functions.php:674
+#: includes/class-rrb2b-functions.php:854
+#: includes/class-rrb2b-functions.php:948
+msgid "Reduce by"
+msgstr "Réduire de"
+
+#: includes/class-rrb2b-functions.php:692
+#: includes/class-rrb2b-functions.php:968
+msgid "Find Duplicates"
+msgstr "Recherche de doublons"
+
+#: includes/class-rrb2b-functions.php:696
+msgid "Save Changes"
+msgstr "Sauvegarder les changements"
+
+#: includes/class-rrb2b-functions.php:790
+msgid "Search product"
+msgstr "Rechercher produit"
+
+#: includes/class-rrb2b-functions.php:791
+msgid "Add"
+msgstr "Ajouter"
+
+#: includes/class-rrb2b-functions.php:819
+msgid "Product"
+msgstr "Produit"
+
+#: includes/class-rrb2b-functions.php:821
+msgid "Price"
+msgstr "Prix"
+
+#: includes/class-rrb2b-functions.php:845
+#: includes/class-rrb2b-functions.php:939
+msgid "Fixed price"
+msgstr "Prix fixe"
+
+#: includes/class-rrb2b-functions.php:857
+#: includes/class-rrb2b-functions.php:951
+msgid "Set fixed price"
+msgstr "Fixer un prix fixe"
+
+#: includes/class-rrb2b-functions.php:915
+msgid "Category: "
+msgstr "Catégorie : "
+
+#: includes/class-rrb2b-functions.php:972
+msgid "Save changes"
+msgstr "Sauvegarder les modifications"
+
+#: includes/class-rrb2b-functions.php:1376
+msgid "Select coupon ( clear )"
+msgstr "Sélectionner coupon (supprimer)"
+
+#: includes/class-rrb2b-functions.php:1448
+#: includes/class-rrb2b-functions.php:1476
+msgid " ("
+msgstr " ("
+
+#: includes/class-rrb2b-functions.php:1494
+msgid "Add Category Products"
+msgstr "Ajouter une catégorie de produits"
+
+#: includes/class-rrb2b-functions.php:1513
+msgid "Include variations"
+msgstr "Inclure les variations"
+
+#: includes/class-rrb2b-functions.php:1514
+msgid "Get products"
+msgstr "Obtenir des produits"
+
+#: includes/class-rrb2b-functions.php:1529
+#: includes/class-rrb2b-settings.php:286
+msgid "First name"
+msgstr "Prénom"
+
+#: includes/class-rrb2b-functions.php:1530
+#: includes/class-rrb2b-settings.php:307
+msgid "Last name"
+msgstr "Nom"
+
+#: includes/class-rrb2b-functions.php:1531
+#: includes/class-rrb2b-settings.php:328
+msgid "Phone"
+msgstr "Téléphone"
+
+#: includes/class-rrb2b-functions.php:1532
+#: includes/class-rrb2b-settings.php:349
+msgid "Company"
+msgstr "Entreprise"
+
+#: includes/class-rrb2b-functions.php:1533
+#: includes/class-rrb2b-settings.php:386
+msgid "Address line 1"
+msgstr "Adresse ligne 1"
+
+#: includes/class-rrb2b-functions.php:1534
+#: includes/class-rrb2b-settings.php:400
+msgid "Address line 2"
+msgstr "Adresse ligne 2"
+
+#: includes/class-rrb2b-functions.php:1535
+#: includes/class-rrb2b-settings.php:414
+msgid "City"
+msgstr "Ville"
+
+#: includes/class-rrb2b-functions.php:1536
+#: includes/class-rrb2b-settings.php:428
+msgid "Postcode / ZIP"
+msgstr "Code postal"
+
+#: includes/class-rrb2b-functions.php:1537
+msgid "Country"
+msgstr "Pays"
+
+#: includes/class-rrb2b-functions.php:1538
+#: includes/class-rrb2b-settings.php:456
+msgid "State / County"
+msgstr "Etat / Région"
+
+#: includes/class-rrb2b-functions.php:1539
+msgid "User role"
+msgstr "Rôle utilisateur"
+
+#: includes/class-rrb2b-functions.php:1540
+msgid "Message"
+msgstr "Message"
+
+#: includes/class-rrb2b-functions.php:1690
+msgid "Nonce verification failed."
+msgstr "Échec de la vérification."
+
+#: includes/class-rrb2b-functions.php:1694
+msgid "<strong>Error</strong>: First name is required!"
+msgstr "<strong>Error</strong>: Le prénom est obligatoire !"
+
+#: includes/class-rrb2b-functions.php:1698
+msgid "<strong>Error</strong>: Last name is required!"
+msgstr "<strong>Erreur</strong>: le nom de famille est obligatoire!"
+
+#: includes/class-rrb2b-functions.php:1702
+msgid "<strong>Error</strong>: Company is required!"
+msgstr "<strong>Erreur</strong>: L’entreprise est requise !"
+
+#: includes/class-rrb2b-functions.php:1706
+msgid "<strong>Error</strong>: Phone is required!"
+msgstr "<strong>Erreur</strong>: Le téléphone est requis !"
+
+#. translators: text for dynamic price labels
+#: includes/class-rrb2b-rules.php:1010
+#, php-format
+msgid "Buy %s or more"
+msgstr "Acheter %s ou plus"
+
+#. translators: text for dynamic price labels percent
+#: includes/class-rrb2b-rules.php:1012
+#, php-format
+msgid ", get %s%% discount"
+msgstr ", bénéficiez d'%s%% réduction"
+
+#. translators: text for dynamic price labels fixed
+#: includes/class-rrb2b-rules.php:1014
+#, php-format
+msgid " get %s discount"
+msgstr " obtenez %s réduction"
+
+#. translators: text for dynamic price labels fixed price
+#: includes/class-rrb2b-rules.php:1016
+#, php-format
+msgid " for %s"
+msgstr " pour %s"
+
+#: includes/class-rrb2b-rules.php:1746
+msgid "Extra discount"
+msgstr "Réduction supplémentaire"
+
+#: includes/class-rrb2b-settings.php:28 includes/class-rrb2b-settings.php:52
+#: includes/class-rrb2b-settings.php:183 includes/class-rrb2b-settings.php:271
+#: includes/class-rrb2b-templates.php:237 includes/class-rrb2b-woo.php:132
+#: includes/class-rrb2b-woo.php:508 includes/class-rrb2b-woo.php:661
+#: includes/class-rrb2b-woo.php:662 includes/class-rrb2b-woo.php:679
+msgid "Roles & Rules B2B"
+msgstr "Roles & Rules B2B"
+
+#: includes/class-rrb2b-settings.php:54
+msgid "The following options are used to configure Roles & Rules B2B"
+msgstr "Les options suivantes sont utilisées pour configurer Roles & Rules B2B"
+
+#: includes/class-rrb2b-settings.php:59
+msgid "Private store"
+msgstr "App Store privé"
+
+#: includes/class-rrb2b-settings.php:60
+msgid ""
+"Hides prices and add to cart button for not logged in users (Guest user role "
+"must not be active)"
+msgstr ""
+"Masque les prix et ajoute au bouton de panier pour les utilisateurs non "
+"connectés (le rôle d’utilisateur invité ne doit pas être actif)"
+
+#: includes/class-rrb2b-settings.php:67
+msgid "Private store: Not logged in price text"
+msgstr "Magasin privé : non connecté au texte de prix"
+
+#: includes/class-rrb2b-settings.php:68
+msgid "Set text like: Login for price"
+msgstr "Définir un texte tel que : Se connecter pour voir les prix"
+
+#: includes/class-rrb2b-settings.php:75
+msgid "Hide retail price"
+msgstr "Cacher le prix au détail"
+
+#: includes/class-rrb2b-settings.php:76
+msgid "Hides retail price, show only B2B price for logged in user"
+msgstr ""
+"Cache le prix au détail, n'affiche que le prix B2B pour les utilisateurs "
+"connectés"
+
+#: includes/class-rrb2b-settings.php:83
+msgid "Hide variable retail price: from - to"
+msgstr "Cacher le prix variable au détail : de - à"
+
+#: includes/class-rrb2b-settings.php:84
+msgid "Hides variable retail price: from - to, show only calculated B2B price"
+msgstr ""
+"Cache le prix variable au détail : de - à, n'affiche que le prix B2B calculé"
+
+#: includes/class-rrb2b-settings.php:91
+msgid "Text before variable B2B price"
+msgstr "Texte avant le prix B2B variable"
+
+#: includes/class-rrb2b-settings.php:92
+msgid "Set text before variable price like: From"
+msgstr "Définir le texte avant le prix variable, tel que : À partir de"
+
+#: includes/class-rrb2b-settings.php:99
+msgid "Text after Retail price"
+msgstr "Texte après prix au détail"
+
+#: includes/class-rrb2b-settings.php:100
+msgid "Set text like: Retail price"
+msgstr "Définir le texte, tel que : Prix au détail"
+
+#: includes/class-rrb2b-settings.php:107
+msgid "Text after B2B price"
+msgstr "Texte après prix B2B"
+
+#: includes/class-rrb2b-settings.php:108
+msgid ""
+"Display suffix like: inc. VAT (if net prices - use text after net prices)"
+msgstr ""
+"Afficher le suffixe comme: TVA incluse (si les prix nets - utilisez le texte "
+"après les prix nets)"
+
+#: includes/class-rrb2b-settings.php:115
+msgid "Show reduction in %"
+msgstr "Afficher la réduction en %"
+
+#: includes/class-rrb2b-settings.php:116
+msgid "Show the reduction in %"
+msgstr "Affiche la réduction en %"
+
+#: includes/class-rrb2b-settings.php:123
+msgid "Text before reduction %"
+msgstr "Texte avant % de réduction"
+
+#: includes/class-rrb2b-settings.php:124
+msgid "Set text like: You save %"
+msgstr "D´€finir le texte, tel que : Vous économisez %"
+
+#: includes/class-rrb2b-settings.php:131
+msgid "Set reduction text after %"
+msgstr "Définir le texte de réduction après %"
+
+#: includes/class-rrb2b-settings.php:132
+msgid "Will show like this: % reduction"
+msgstr "Sera affiché tel que : % de réduction"
+
+#: includes/class-rrb2b-settings.php:139
+msgid "Coupon label"
+msgstr "Étiquette du coupon"
+
+#: includes/class-rrb2b-settings.php:140
+msgid "In cart totals, default: Extra discount"
+msgstr "Totaux dans le panier, par défaut : Réduction supplémentaire"
+
+#: includes/class-rrb2b-settings.php:147
+msgid "Roles with net prices (ex.VAT)"
+msgstr "Rôles avec prix nets (ex. TVA)"
+
+#: includes/class-rrb2b-settings.php:148
+msgid ""
+"Select roles to use net prices (ex.VAT) - overrides WooCommerce tax settings"
+msgstr ""
+"Sélectionnez les rôles pour utiliser les prix nets (ex. TVA) - remplace les "
+"paramètres de taxe WooCommerce"
+
+#: includes/class-rrb2b-settings.php:156
+msgid "Text after net prices (ex.VAT)"
+msgstr "Texte après prix nets (ex. TVA)"
+
+#: includes/class-rrb2b-settings.php:157
+msgid "Display suffix like: ex. VAT (overrides text after B2B prices)"
+msgstr ""
+"Suffixe d’affichage comme: hors TVA (remplace le texte après les prix B2B)"
+
+#: includes/class-rrb2b-settings.php:164
+msgid "Roles with tax exempt"
+msgstr "Rôles avec exonération fiscale"
+
+#: includes/class-rrb2b-settings.php:165
+msgid ""
+"Select roles to use tax exempt. Orders done by roles with tax exempt are "
+"executed without taxes (otherwise taxes will be added to orders)"
+msgstr ""
+"Sélectionnez les rôles pour utiliser l'exemption de taxe. Les commandes "
+"effectuées par des rôles avec exonération de taxes sont exécutées sans taxes "
+"(sinon les taxes seront ajoutées aux commandes)"
+
+#: includes/class-rrb2b-settings.php:185
+msgid ""
+"The following options are used to configure Roles & Rules B2B. Use percent "
+"sign and s where you like the discount value."
+msgstr ""
+"Les options suivantes sont utilisées pour configurer rôles &règles B2B. "
+"Utilisez le signe de pourcentage et s là où vous aimez la valeur de la "
+"remise."
+
+#: includes/class-rrb2b-settings.php:190
+msgid "Dynamic price label"
+msgstr "Étiquette de prix dynamique"
+
+#: includes/class-rrb2b-settings.php:191
+msgid "Buy X or more - will be used as default"
+msgstr "Acheter X ou plus - sera utilisé par défaut"
+
+#: includes/class-rrb2b-settings.php:199
+msgid "Dynamic price label (%)"
+msgstr "Étiquette de prix dynamique (%)"
+
+#: includes/class-rrb2b-settings.php:200
+#, php-format
+msgid "get X%% discount - will be added to Buy X or more"
+msgstr "obtenez X%% réduction - sera ajouté à Acheter X ou plus"
+
+#: includes/class-rrb2b-settings.php:208
+msgid "Dynamic price label (fixed)"
+msgstr "Étiquette de prix dynamique (fixe)"
+
+#: includes/class-rrb2b-settings.php:209
+msgid "get $10 discount - will be added to Buy X or more"
+msgstr "obtenez un rabais de 10 $ - sera ajouté à Acheter X ou plus"
+
+#: includes/class-rrb2b-settings.php:217
+msgid "Dynamic price label (fixed price)"
+msgstr "Étiquette de prix dynamique (prix fixe)"
+
+#: includes/class-rrb2b-settings.php:218
+msgid "for $10 - will be added to Buy X or more"
+msgstr "pour 10 $ - sera ajouté à Acheter X ou plus"
+
+#: includes/class-rrb2b-settings.php:226
+msgid "Font size"
+msgstr "Taille de police"
+
+#: includes/class-rrb2b-settings.php:227
+msgid ""
+"Font size i.e 10px, uses H5 html tag, style using CSS class: "
+"rrb2b_qty_discount"
+msgstr ""
+"Taille de police, c’est-à-dire 10px, utilise la balise html H5, style "
+"utilisant la classe CSS: rrb2b_qty_discount"
+
+#: includes/class-rrb2b-settings.php:234
+msgid "Font color"
+msgstr "Couleur de la police"
+
+#: includes/class-rrb2b-settings.php:235
+msgid "Font color - use web colors or style CSS class: rrb2b_qty_discount"
+msgstr ""
+"Couleur de police - utilisez des couleurs Web ou une classe CSS de style: "
+"rrb2b_qty_discount"
+
+#: includes/class-rrb2b-settings.php:244
+msgid "Background color"
+msgstr "Couleur de l'arrière-plan"
+
+#: includes/class-rrb2b-settings.php:245
+msgid ""
+"Background color - default none, use web colors or style CSS class: "
+"rrb2b_qty_discount"
+msgstr ""
+"Couleur d’arrière-plan - aucune par défaut, utilisez des couleurs Web ou une "
+"classe CSS de style: rrb2b_qty_discount"
+
+#: includes/class-rrb2b-settings.php:254
+msgid "Disable dynamic price labels"
+msgstr "Désactiver les étiquettes de prix dynamiques"
+
+#: includes/class-rrb2b-settings.php:255
+msgid ""
+"If dynamic prices is not in use, you can disable this for minor performance "
+"increase"
+msgstr ""
+"Si les prix dynamiques ne sont pas utilisés, vous pouvez désactiver cela "
+"pour une augmentation mineure des performances"
+
+#: includes/class-rrb2b-settings.php:273
+msgid ""
+"The form is shown on My account page. In WooCommerce > Settings > Accounts & "
+"Privacy enable Allow customers to create an account... for this to work."
+msgstr ""
+"Le formulaire s’affiche sur la page Mon compte. Dans WooCommerce > "
+"Paramètres > Comptes et confidentialité permettent aux clients de créer un "
+"compte... pour que cela fonctionne."
+
+#: includes/class-rrb2b-settings.php:278
+msgid "Prevent automatic login on registration"
+msgstr "Empêcher la connexion automatique lors de l’inscription"
+
+#: includes/class-rrb2b-settings.php:279
+msgid "If on, new customers will need to verify by e.mail before login"
+msgstr ""
+"Si cette option est activée, les nouveaux clients devront vérifier par e-"
+"mail avant de se connecter"
+
+#: includes/class-rrb2b-settings.php:292
+msgid "First name (label)"
+msgstr "Prénom (étiquette)"
+
+#: includes/class-rrb2b-settings.php:293 includes/class-rrb2b-settings.php:314
+#: includes/class-rrb2b-settings.php:335 includes/class-rrb2b-settings.php:356
+#: includes/class-rrb2b-settings.php:379 includes/class-rrb2b-settings.php:393
+#: includes/class-rrb2b-settings.php:407 includes/class-rrb2b-settings.php:421
+#: includes/class-rrb2b-settings.php:435 includes/class-rrb2b-settings.php:449
+#: includes/class-rrb2b-settings.php:463 includes/class-rrb2b-settings.php:471
+#: includes/class-rrb2b-settings.php:493
+msgid "Label for the field in the form"
+msgstr "Étiquette du champ dans le formulaire"
+
+#: includes/class-rrb2b-settings.php:299
+msgid "First name (required)"
+msgstr "Prénom (obligatoire)"
+
+#: includes/class-rrb2b-settings.php:300 includes/class-rrb2b-settings.php:321
+#: includes/class-rrb2b-settings.php:342 includes/class-rrb2b-settings.php:363
+msgid "Set as required field"
+msgstr "Définir comme champ obligatoire"
+
+#: includes/class-rrb2b-settings.php:313
+msgid "Last name (label)"
+msgstr "Nom de famille (étiquette)"
+
+#: includes/class-rrb2b-settings.php:320
+msgid "Last name (required)"
+msgstr "Nom de famille (obligatoire)"
+
+#: includes/class-rrb2b-settings.php:334
+msgid "Phone (label)"
+msgstr "Téléphone (étiquette)"
+
+#: includes/class-rrb2b-settings.php:341
+msgid "Phone (required)"
+msgstr "Téléphone (Obligatoire)"
+
+#: includes/class-rrb2b-settings.php:355
+msgid "Company (label)"
+msgstr "Entreprise (label)"
+
+#: includes/class-rrb2b-settings.php:362
+msgid "Company (required)"
+msgstr "Entreprise (obligatoire)"
+
+#: includes/class-rrb2b-settings.php:370
+msgid "Email (required)"
+msgstr "Email (requis)"
+
+#: includes/class-rrb2b-settings.php:371
+msgid "Default field (can not be removed)"
+msgstr "Champ par défaut (ne peut pas être supprimé)"
+
+#: includes/class-rrb2b-settings.php:378
+msgid "Email (label)"
+msgstr "Courriel (étiquette)"
+
+#: includes/class-rrb2b-settings.php:392
+msgid "Address line 1 (label)"
+msgstr "Ligne d'adresse 1 (étiquette)"
+
+#: includes/class-rrb2b-settings.php:406
+msgid "Address line 2 (label)"
+msgstr "Ligne d'adresse 2 (étiquette)"
+
+#: includes/class-rrb2b-settings.php:420
+msgid "City (label)"
+msgstr "Ville (étiquette)"
+
+#: includes/class-rrb2b-settings.php:434
+msgid "Postcode / ZIP (label)"
+msgstr "Code postal / ZIP (étiquette)"
+
+#: includes/class-rrb2b-settings.php:442
+msgid "Country / Region"
+msgstr "Pays / État (province)"
+
+#: includes/class-rrb2b-settings.php:448
+msgid "Country / Region (label)"
+msgstr "Pays / Région (étiquette)"
+
+#: includes/class-rrb2b-settings.php:462
+msgid "State / County (label)"
+msgstr "État / Comté (étiquette)"
+
+#: includes/class-rrb2b-settings.php:470
+msgid "User roles (label)"
+msgstr "Rôles des utilisateurs (label)"
+
+#: includes/class-rrb2b-settings.php:477
+msgid "User roles"
+msgstr "Rôles utilisateur"
+
+#: includes/class-rrb2b-settings.php:478
+msgid "Select roles that user can request (no roles = hidden)"
+msgstr ""
+"Sélectionnez les rôles que l’utilisateur peut demander (aucun rôle = masqué)"
+
+#: includes/class-rrb2b-settings.php:486
+msgid "Customer message (text area)"
+msgstr "Message du client (zone de texte)"
+
+#: includes/class-rrb2b-settings.php:492
+msgid "Customer message (label)"
+msgstr "Message du client (étiquette)"
+
+#: includes/class-rrb2b-settings.php:534
+msgid "General"
+msgstr "Général"
+
+#: includes/class-rrb2b-settings.php:535
+msgid "Dynamic price labels"
+msgstr "Étiquettes de prix dynamiques"
+
+#: includes/class-rrb2b-settings.php:536
+msgid "Registration form"
+msgstr "Formulaire d'enregistrement"
+
+#: includes/class-rrb2b-templates.php:69
+msgid "You are about to delete a rule, are you sure?"
+msgstr "Vous êtes sur le point de supprimer une règle, en êtes-vous sûr ?"
+
+#: includes/class-rrb2b-templates.php:93 includes/class-rrb2b-templates.php:163
+#: includes/class-rrb2b-templates.php:203
+msgid "Active"
+msgstr "Actif"
+
+#: includes/class-rrb2b-templates.php:94 includes/class-rrb2b-templates.php:164
+#: includes/class-rrb2b-templates.php:204
+msgid "Role"
+msgstr "Rôle"
+
+#: includes/class-rrb2b-templates.php:95
+msgid "Rule: General"
+msgstr "Règle : Général"
+
+#: includes/class-rrb2b-templates.php:96
+msgid "Rule: Storwide Sales"
+msgstr "Règle : Ventes à l'échelle de l'entrepôt"
+
+#: includes/class-rrb2b-templates.php:124
+msgid "Product Rules Saved!"
+msgstr "Règles relatives aux produits sauvegardées !"
+
+#: includes/class-rrb2b-templates.php:130
+msgid "Categories Rules Saved!"
+msgstr "Catégories Règles sauvées !"
+
+#: includes/class-rrb2b-templates.php:136
+msgid "Rules Copied"
+msgstr "Règles copiées"
+
+#: includes/class-rrb2b-templates.php:165
+msgid "Rule: Products (overrides category rule)"
+msgstr "Règle : Produits (remplace la règle de la catégorie)"
+
+#: includes/class-rrb2b-templates.php:205
+msgid "Rule: Products in Category"
+msgstr "Règle : Produits dans la catégorie"
+
+#: includes/class-rrb2b-templates.php:241
+msgid "General Rules"
+msgstr "Règles générales"
+
+#: includes/class-rrb2b-templates.php:242
+msgid "Category Rules"
+msgstr "Règles de catégorie"
+
+#: includes/class-rrb2b-templates.php:243
+msgid "Product Rules"
+msgstr "Règles du produit"
+
+#: includes/class-rrb2b-templates.php:244
+#: includes/class-rrb2b-templates.php:389
+msgid "Roles"
+msgstr "Rôles"
+
+#: includes/class-rrb2b-templates.php:253
+#: includes/class-rrb2b-templates.php:289
+#: includes/class-rrb2b-templates.php:314
+msgid "Filter by role ( none )"
+msgstr "Filtrer par rôle ( aucun )"
+
+#: includes/class-rrb2b-templates.php:261
+msgid "Add rule for:"
+msgstr "Ajouter une règle pour :"
+
+#: includes/class-rrb2b-templates.php:263
+msgid "Select role"
+msgstr "Sélectionner un rôle"
+
+#: includes/class-rrb2b-templates.php:264
+msgid "Guest ( B2C customers )"
+msgstr "Invité ( clients B2C )"
+
+#: includes/class-rrb2b-templates.php:268
+msgid "Add Rule for Role"
+msgstr "Ajouter une règle pour le rôle"
+
+#: includes/class-rrb2b-templates.php:269
+#: includes/class-rrb2b-templates.php:280 includes/class-rrb2b-woo.php:464
+msgid "Settings"
+msgstr "Paramètres"
+
+#: includes/class-rrb2b-templates.php:279
+msgid "Add Users to Role"
+msgstr "Ajouter des utilisateurs au rôle"
+
+#: includes/class-rrb2b-templates.php:294
+#: includes/class-rrb2b-templates.php:319
+msgid "Copy Rule:"
+msgstr "Règle de copie :"
+
+#: includes/class-rrb2b-templates.php:296
+#: includes/class-rrb2b-templates.php:321
+msgid "Rule to Copy"
+msgstr "Règle à copier"
+
+#: includes/class-rrb2b-templates.php:302
+#: includes/class-rrb2b-templates.php:327
+msgid "Rule Destination(s)"
+msgstr "Règle Destination(s)"
+
+#: includes/class-rrb2b-templates.php:305
+#: includes/class-rrb2b-templates.php:330
+msgid "Copy and overwrite existing rules"
+msgstr "Copier et écraser les règles existantes"
+
+#: includes/class-rrb2b-templates.php:305
+#: includes/class-rrb2b-templates.php:330
+msgid "Copy"
+msgstr "Copier"
+
+#: includes/class-rrb2b-templates.php:354
+#: includes/class-rrb2b-templates.php:376
+msgid "Add New Role"
+msgstr "Ajouter nouveau rôle"
+
+#: includes/class-rrb2b-templates.php:359
+msgid "Name"
+msgstr "Nom"
+
+#: includes/class-rrb2b-templates.php:361
+msgid "Role name (i.e Wholesaler 10)"
+msgstr "Nom du rôle (ex. Grossiste 10)"
+
+#: includes/class-rrb2b-templates.php:364
+msgid "Slug"
+msgstr "Slug"
+
+#: includes/class-rrb2b-templates.php:366
+msgid "Role slug (i.e wholesaler_10)"
+msgstr "Slug du rôle (ex. grossiste_10)"
+
+#: includes/class-rrb2b-templates.php:369
+#: includes/class-rrb2b-templates.php:392
+msgid "Capabilities"
+msgstr "Capacités"
+
+#: includes/class-rrb2b-templates.php:373
+msgid "Select the capabilities for this role i.e Customer (minimum rights)"
+msgstr ""
+"Sélectionnez les fonctionnalités de ce rôle, c’est-à-dire Client (droits "
+"minimaux)"
+
+#: includes/class-rrb2b-templates.php:395
+msgid "Ex. VAT"
+msgstr "Ex TVA"
+
+#: includes/class-rrb2b-templates.php:398
+msgid "Tax exempt"
+msgstr "Exonéré de taxes"
+
+#: includes/class-rrb2b-templates.php:401
+msgid "Delete role"
+msgstr "Supprimer le rôle"
+
+#: includes/class-rrb2b-woo.php:158
+msgid "Customer information"
+msgstr "Informations client"
+
+#: includes/class-rrb2b-woo.php:162
+msgid "Registration message"
+msgstr "Message d'enregistrement"
+
+#: includes/class-rrb2b-woo.php:209
+msgid "Use role prices (for active roles)"
+msgstr "Utiliser les prix des rôles (pour les rôles actifs)"
+
+#: includes/class-rrb2b-woo.php:211
+msgid "Select a role"
+msgstr "Sélectionner un rôle"
+
+#: includes/class-rrb2b-woo.php:224
+msgid "Recalculate Prices"
+msgstr "Recalculer les prix"
+
+#: includes/class-rrb2b-woo.php:226
+msgid "Instructions"
+msgstr "Instructions"
+
+#: includes/class-rrb2b-woo.php:226
+msgid "Click to show"
+msgstr "Cliquez pour afficher"
+
+#: includes/class-rrb2b-woo.php:228
+msgid ""
+"Save the order after adding items. Any changes in order items needs to be "
+"saved before recalculate."
+msgstr ""
+"Sauvegarder la commande après avoir ajouté des articles. Toute modification "
+"des éléments de la commande doit être enregistrée avant d'être recalculée."
+
+#: includes/class-rrb2b-woo.php:229
+msgid "Click Recalculate Prices to update the prices and totals."
+msgstr ""
+"Cliquez sur Recalculer les prix pour mettre à jour les prix et les totaux."
+
+#. translators: %s: url for documentation
+#: includes/class-rrb2b-woo.php:451
+#, php-format
+msgid ""
+"Read the <a href=\"%1$s\" target=\"_blank\"> extension documentation </a> "
+"for more information."
+msgstr ""
+"Lire la <a href=\"%1$s\" target=\"_blank\"> documentation de l'extension </"
+"a> pour plus d'informations."
+
+#: includes/class-rrb2b-woo.php:457
+msgid "Dismiss"
+msgstr "Abandonner"
+
+#: includes/class-rrb2b-woo.php:459
+msgid ""
+"Thank you for installing Roles & Rules B2B for WooCommerce. You can now "
+"start creating roles and rules. "
+msgstr ""
+"Merci d’avoir installé Roles & Rules B2B pour WooCommerce. Vous pouvez "
+"maintenant commencer à créer des rôles et des règles. "
+
+#: includes/class-rrb2b-woo.php:463
+msgid "Start Roles & Rules"
+msgstr "Démarrer Roles & Rules"
+
+#. translators: %s: url to vendor and logo
+#: includes/class-rrb2b-woo.php:484
+#, php-format
+msgid "- developed by %1$s%2$s%3$s"
+msgstr "- développé par %1$s%2$s%3$s"
+
+#: includes/class-rrb2b-woo.php:628
+msgid "You are about to delete the role: "
+msgstr "Vous êtes sur le point de supprimer le rôle : "
+
+#: includes/class-rrb2b-woo.php:629
+msgid ", are you sure?"
+msgstr "Es-tu sûr?"
+
+#: includes/class-rrb2b-woo.php:696
+msgctxt "Post Type General Name"
+msgid "Rules"
+msgstr "Règles"
+
+#: includes/class-rrb2b-woo.php:697
+msgctxt "Post Type Singular Name"
+msgid "Rule"
+msgstr "Règle"
+
+#: includes/class-rrb2b-woo.php:698
+msgid "Rules"
+msgstr "Règles"
+
+#: includes/class-rrb2b-woo.php:699
+msgid "Parent Rule"
+msgstr "Règle parent"
+
+#: includes/class-rrb2b-woo.php:700
+msgid "All Rules"
+msgstr "Toutes les règles"
+
+#: includes/class-rrb2b-woo.php:701
+msgid "View Rule"
+msgstr "Voir règle"
+
+#: includes/class-rrb2b-woo.php:702
+msgid "Add New Rule"
+msgstr "Ajouter nouvelle règle"
+
+#: includes/class-rrb2b-woo.php:703
+msgid "Add New"
+msgstr "Ajouter nouveau"
+
+#: includes/class-rrb2b-woo.php:704
+msgid "Edit Rule"
+msgstr "Modifier une règle"
+
+#: includes/class-rrb2b-woo.php:705
+msgid "Update Rule"
+msgstr "Mettre à jour une règle"
+
+#: includes/class-rrb2b-woo.php:706
+msgid "Search Rule"
+msgstr "Rechercher une règle"
+
+#: includes/class-rrb2b-woo.php:707
+msgid "Not Found"
+msgstr "Introuvable"
+
+#: includes/class-rrb2b-woo.php:708
+msgid "Not found in Trash"
+msgstr "Introuvable dans la corbeille"
+
+#. Plugin Name of the plugin/theme
+msgid "Roles & Rules B2B for WooCommerce"
+msgstr "Roles & Rules B2B pour WooCommerce"
+
+#. Plugin URI of the plugin/theme
+msgid "https://woocommerce.com/products/roles-rules-b2b/"
+msgstr "https://woocommerce.com/products/roles-rules-b2b/"
+
+#. Description of the plugin/theme
+msgid ""
+"Roles & Rules B2B, an easy way to add roles, price and category rules, and "
+"set up sales in your B2B/B2C store."
+msgstr ""
+"Rôles et règles B2B, un moyen facile d’ajouter des rôles, des règles de prix "
+"et de catégorie, et de configurer les ventes dans votre magasin B2B / B2C."
+
+#. Author of the plugin/theme
+msgid "Consortia"
+msgstr "Consortia"
+
+#. Author URI of the plugin/theme
+msgid "https://www.consortia.no/en/"
+msgstr "https://www.consortia.no/home-fr/"
+
+#~ msgid "General price rule for products:"
+#~ msgstr "Règle générale de prix pour les produits :"
+
+#~ msgid "Adjust price by"
+#~ msgstr "Ajuster le prix par"
+
+#~ msgid "i.e 10"
+#~ msgstr "ex. 10"
+
+#~ msgid "Reduce/increase value for selected categories (same as rule)"
+#~ msgstr ""
+#~ "Réduire/augmenter la valeur pour les catégories sélectionnées (identique "
+#~ "à la règle)"
+
+#~ msgid "i.e 20"
+#~ msgstr "ex. 20"
+
+#~ msgid "00:00"
+#~ msgstr "00:00"
+
+#~ msgid "23:59"
+#~ msgstr "23:59"
+
+#~ msgid " "
+#~ msgstr " "
+
+#~ msgid "Net prices on orders"
+#~ msgstr "Prix nets sur les commandes"
+
+#~ msgid "Rule: Products"
+#~ msgstr "Règle : Produits"
+
+#~ msgid "Net prices (from settings)"
+#~ msgstr "Prix nets ( à partir des paramètres )"
+
+#~ msgid "General rule for categories:"
+#~ msgstr "Règle générale pour les catégories :"
+
+#~ msgid ""
+#~ "This overrides tax settings and show prices excluding tax in B2B store"
+#~ msgstr ""
+#~ "Cela l’emporte sur les paramètres fiscaux et affiche les prix hors taxes "
+#~ "dans les magasins B2B"
+
+#~ msgid "The new roles created here get the same rights as a Customer role."
+#~ msgstr ""
+#~ "Les nouveaux rôles créés ici obtiennent les mêmes droits qu’un rôle "
+#~ "Client."
+
+#~ msgid "Role Name"
+#~ msgstr "Nom du rôle"
+
+#~ msgid "Adjust"
+#~ msgstr "Ajuster"
+
+#~ msgid "Hide prices"
+#~ msgstr "Cacher les prix"
+
+#~ msgid "Set up roles and rules for B2B prices and sales"
+#~ msgstr "Définir des ròles et règles pour les prix B2B et promotions"
+
+#~ msgid "Set text like: Your price"
+#~ msgstr "Définir le texte, tel que : Votre prix"
