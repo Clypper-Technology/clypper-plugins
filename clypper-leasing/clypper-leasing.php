@@ -17,7 +17,7 @@
 	require_once CL_DIR . 'shortcodes/leasing-form.php';
 
 	function cl_enqueue_plugin_styles() {
-		wp_enqueue_style('clypper-leasing-style', CL_URL . "assets/css/clypper-leasing.css", array(), '1.0.3');
+		wp_enqueue_style('clypper-leasing-style', CL_URL . "assets/css/clypper-get-offer.css", array(), '1.0.3');
 	}
 
 	add_action('wp_enqueue_scripts', 'cl_enqueue_plugin_styles');

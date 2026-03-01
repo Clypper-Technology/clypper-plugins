@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/clypper-bin-numbers/src" isTestSource="false" packagePrefix="ClypperTechnology\BinNumbers\" />
+      <sourceFolder url="file://$MODULE_DIR$/woo-roles-rules-b2b/includes" isTestSource="false" packagePrefix="ClypperTechnology\RolePricing\" />
+      <excludeFolder url="file://$MODULE_DIR$/clypper-bin-numbers/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/woo-roles-rules-b2b/vendor/composer" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

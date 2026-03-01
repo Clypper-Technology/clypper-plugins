@@ -1,0 +1,17 @@
+{
+    "name": "clypper-technology/bin-numbers",
+    "type": "project",
+    "license": "GPL-3.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "ClypperTechnology\\BinNumbers\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "casperh123",
+            "email": "casperholten@protonmail.com"
+        }
+    ],
+    "require": {}
+}
