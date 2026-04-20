@@ -1,5 +1,5 @@
 <?php
-
+if (!defined('ABSPATH')) { exit; }
 global $product;
 
 $image_path = CL_URL . "assets/images/pacta-leasing.png";

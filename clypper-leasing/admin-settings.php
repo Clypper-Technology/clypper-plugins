@@ -1,6 +1,7 @@
 
 <?php
 
+if (!defined('ABSPATH')) { exit; }
 	add_filter('woocommerce_product_data_tabs', 'cl_add_custom_product_data_tab', 50, 1);
 	function cl_add_custom_product_data_tab($tabs) {
 		$tabs['cl_leasing_options'] = array(

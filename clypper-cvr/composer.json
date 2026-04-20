@@ -1,0 +1,16 @@
+{
+    "name": "clypper-technology/clypper-cvr",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "ClypperTechnology\\ClypperCvr\\": ""
+        }
+    },
+    "authors": [
+        {
+            "name": "casperh123",
+            "email": "casperholten@protonmail.com"
+        }
+    ],
+    "require": {}
+}

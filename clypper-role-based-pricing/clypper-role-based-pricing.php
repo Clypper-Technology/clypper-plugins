@@ -22,13 +22,11 @@
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
 use ClypperTechnology\RolePricing\Admin\Admin;
 use ClypperTechnology\RolePricing\Admin\Layout;
-use ClypperTechnology\RolePricing\RegistrationForm;
 use ClypperTechnology\RolePricing\REST\ProductController;
 use ClypperTechnology\RolePricing\REST\RuleController;
 use ClypperTechnology\RolePricing\PriceRules;
 use ClypperTechnology\RolePricing\Services\RoleService;
 use ClypperTechnology\RolePricing\Services\RuleService;
-use ClypperTechnology\RolePricing\Users;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -97,8 +95,6 @@ add_action( 'woocommerce_loaded', function() use ( &$rule_service, &$role_servic
     $rule_service = new RuleService( $role_service );
 
     new PriceRules( $rule_service );
-    new RegistrationForm();
-    new Users();
 
     if ( is_admin() ) {
         new Admin( $rule_service, $role_service );

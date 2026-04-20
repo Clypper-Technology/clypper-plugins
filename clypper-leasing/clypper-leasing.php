@@ -7,6 +7,7 @@
     * Author URI: https://clyppertechnology.com
 	 */
 
+if (!defined('ABSPATH')) { exit; }
 // Define constants for plugin directory paths
 	define('CL_DIR', plugin_dir_path(__FILE__));
 	define('CL_URL', plugin_dir_url(__FILE__));
@@ -17,7 +18,7 @@
 	require_once CL_DIR . 'shortcodes/leasing-form.php';
 
 	function cl_enqueue_plugin_styles() {
-		wp_enqueue_style('clypper-leasing-style', CL_URL . "assets/css/clypper-get-offer.css", array(), '1.0.3');
+		wp_enqueue_style('clypper-leasing-style', CL_URL . "assets/css/clypper-leasing.css", array(), '1.0.3');
 	}
 
 	add_action('wp_enqueue_scripts', 'cl_enqueue_plugin_styles');

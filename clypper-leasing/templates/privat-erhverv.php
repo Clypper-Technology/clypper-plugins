@@ -1,4 +1,5 @@
 <?php
+if (!defined('ABSPATH')) { exit; }
 ?>
 	<div class="leasing-grid">
 		<?php

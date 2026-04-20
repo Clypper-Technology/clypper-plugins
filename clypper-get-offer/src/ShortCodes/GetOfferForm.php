@@ -2,9 +2,7 @@
 
 namespace ClypperTechnology\ClypperGetOffer\ShortCodes;
 
-if (!defined('ABSPATH')) {
-    exit; // Exit if accessed directly
-}
+if (!defined('ABSPATH')) { exit; }
 
 class GetOfferForm {
 
@@ -56,7 +54,7 @@ class GetOfferForm {
             <label for="message">Besked</label>
             <textarea id="message" name="message"></textarea>
 
-            <input type="submit" name="submit_contact_form" value="Send">
+            <input type="submit" name="submit_offer_form" value="Send">
         </form>
         <?php
 
@@ -64,8 +62,8 @@ class GetOfferForm {
     }
 
     public function get_offer_form_submission(): void {
-        if (isset($_POST['submit_contact_form'])) {
-            // Verify the nonce:
+        if (isset($_POST['submit_offer_form'])) {
+            // Verify the nonce:z
             if (!isset($_POST['get_offer_form_nonce']) || !wp_verify_nonce($_POST['get_offer_form_nonce'], 'get_offer_form')) {
                 die('Security check failed.');
             }

@@ -1,19 +1,15 @@
 <?php
 
-namespace ClypperTechnology\RolePricing;
+namespace ClypperTechnology\ClypperCvr\includes;
 
 defined( 'ABSPATH' ) || exit;
 
-class Users
+class Admin
 {
     public function __construct()
     {
-        // Add CVR column to admin users list
         add_filter( 'manage_users_columns', array( $this, 'add_cvr_column' ) );
         add_action( 'manage_users_custom_column', array( $this, 'show_cvr_column_content' ), 10, 3 );
-        add_action( 'woocommerce_account_dashboard', array( $this, 'display_company_info_dashboard' ) );
-
-        // Add custom fields to admin user edit page
         add_action( 'show_user_profile', array( $this, 'show_custom_customer_fields' ) );
         add_action( 'edit_user_profile', array( $this, 'show_custom_customer_fields' ) );
     }
@@ -64,25 +60,4 @@ class Users
         }
         return $value;
     }
-
-    public function display_company_info_dashboard(): void {
-        $customer_id = get_current_user_id();
-        $company_cvr = get_user_meta( $customer_id, 'company_cvr', true );
-        $company_type = get_user_meta( $customer_id, 'company_type', true );
-
-        if ( $company_cvr || $company_type ) {
-            ?>
-            <div class="woocommerce-MyAccount-content">
-                <h3><?php _e( 'Virksomhedsoplysninger', 'woo-roles-rules-b2b' ); ?></h3>
-                <?php if ( $company_cvr ) : ?>
-                    <p><strong><?php _e( 'CVR:', 'woo-roles-rules-b2b' ); ?></strong> <?php echo esc_html( $company_cvr ); ?></p>
-                <?php endif; ?>
-                <?php if ( $company_type ) : ?>
-                    <p><strong><?php _e( 'Industri:', 'woo-roles-rules-b2b' ); ?></strong> <?php echo esc_html( $company_type ); ?></p>
-                <?php endif; ?>
-            </div>
-            <?php
-        }
-    }
-
 }

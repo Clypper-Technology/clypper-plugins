@@ -1,0 +1,16 @@
+{
+    "name": "clypper-technology/resurs-widget",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "ClypperTechnology\\ResursWidget\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "casperh123",
+            "email": "casperholten@protonmail.com"
+        }
+    ],
+    "require": {}
+}

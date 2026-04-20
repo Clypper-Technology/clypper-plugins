@@ -1,5 +1,7 @@
 <?php
 
+if (!defined('ABSPATH')) { exit; }
+
 	function cl_custom_contact_form_shortcode() {
 		// Check for trailer in the query string
 		$trailer = isset($_GET['trailer']) ? sanitize_text_field($_GET['trailer']) : '';
@@ -21,7 +23,7 @@
 		ob_start(); // Start output buffering to capture the form HTML
 
 		?>
-        <form action="" method="post">
+        <form action="<?php echo esc_url($_SERVER['REQUEST_URI']); ?>" method="post">
 
 			<?php wp_nonce_field('cl_contact_form', 'cl_contact_form_nonce'); ?>
 
@@ -43,7 +45,7 @@
             <label for="message">Besked</label>
             <textarea id="message" name="message"></textarea>
 
-            <input type="submit" name="submit_contact_form" value="Send">
+            <input type="submit" name="submit_leasing_form" value="Send">
         </form>
 		<?php
 
@@ -51,9 +53,9 @@
 	}
 	add_shortcode('leasing_contact_form', 'cl_custom_contact_form_shortcode');
 
-	add_action('init', 'cl_handle_contact_form_submission');
+	add_action('template_redirect', 'cl_handle_contact_form_submission');
 	function cl_handle_contact_form_submission(): void {
-		if (isset($_POST['submit_contact_form'])) {
+		if (isset($_POST['submit_leasing_form'])) {
 			// Verify the nonce:
 			if (!isset($_POST['cl_contact_form_nonce']) || !wp_verify_nonce($_POST['cl_contact_form_nonce'], 'cl_contact_form')) {
 				die('Security check failed.');
@@ -80,7 +82,7 @@
 				set_transient('mail_send_status', 'failure', 60);
 			}
 
-			wp_redirect(add_query_arg('form', 'sent', $_SERVER['REQUEST_URI']));
+            wp_redirect(add_query_arg('form', 'sent', wp_unslash(esc_url_raw($_SERVER['REQUEST_URI']))));
 			exit;
 		}
 	}
