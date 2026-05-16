@@ -87,24 +87,23 @@ function clypper_rbp_migrate_post_type(): void
     flush_rewrite_rules();
 }
 
-$rule_service = null;
-$role_service = null;
+$role_service = new RoleService();
+$rule_service = new RuleService( $role_service );
+
+add_action( 'rest_api_init', function() use ( $rule_service, $role_service ) {
+    $namespace = 'rrb2b/v1';
+
+    ( new ProductController( $namespace ) )->register_routes();
+    ( new RuleController( $namespace, $rule_service ) )->register_routes();
+    ( new \ClypperTechnology\RolePricing\REST\RoleController( $namespace, $role_service ) )->register_routes();
+});
 
 add_action( 'woocommerce_loaded', function() use ( &$rule_service, &$role_service ) {
-    $role_service = new RoleService();
-    $rule_service = new RuleService( $role_service );
-
     new PriceRules( $rule_service );
 
     if ( is_admin() ) {
         new Admin( $rule_service, $role_service );
     }
-
-    add_action( 'rest_api_init', function() use ( $rule_service ) {
-        $namespace = 'rrb2b/v1';
-        ( new ProductController( $namespace ) )->register_routes();
-        ( new RuleController( $namespace, $rule_service ) )->register_routes();
-    });
 });
 
 function rrb2b_plugin_roles_page(): void

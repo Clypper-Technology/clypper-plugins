@@ -26,50 +26,21 @@ class Admin {
 
     public function enqueue_scripts( string $hook ): void
     {
-
         if ( 'woocommerce_page_rrb2b' !== $hook ) {
             return;
         }
 
-        wp_register_script( 'rrb2b_jquery-ui', 'https://code.jquery.com/ui/1.13.2/jquery-ui.js', array( 'jquery' ), '1.13.2', true );
-        wp_enqueue_script( 'rrb2b_jquery-ui' );
+        $asset = include RRB2B_PLUGIN_PATH . 'build/index.asset.php';
 
-        wp_register_script( 'rrb2b_scripts', RRB2B_PLUGIN_URL . 'assets/js/rrb2b.js',
-            [ 'jquery', 'wp-api-fetch', 'jquery-ui-autocomplete' ], CAS_ROLES_RULES_VS, true );
-        wp_enqueue_script( 'select2' );
-        wp_enqueue_style( 'select2' );
-
-
-        wp_register_style( 'woocommerce_admin', plugins_url( '../plugins/woocommerce/assets/css/admin.css' ), array(), '1.12.1' );
-        wp_enqueue_style( 'woocommerce_admin' );
-
-        wp_register_style( 'fonta', 'https://use.fontawesome.com/releases/v6.4.2/css/all.css', array(), '6.4.2' );
-        wp_enqueue_style( 'fonta' );
-
-        wp_register_style( 'jquery-ui-css', 'https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css', array(), '1.13.2', 'all' );
-        wp_enqueue_style( 'jquery-ui-css' );
-
-        wp_register_style( 'rrb2b_css',      RRB2B_PLUGIN_URL . 'assets/css/rrb2b.css',      [], CAS_ROLES_RULES_VS );
-        wp_enqueue_style( 'rrb2b_css' );
-
-        wp_register_style( 'rrb2b_dark_css', plugins_url( '../assets/css/rrb2b-dark.css', __FILE__ ), array(), CAS_ROLES_RULES_VS );
-        wp_register_style( 'rrb2b_dark_css', RRB2B_PLUGIN_URL . 'assets/css/rrb2b-dark.css', [], CAS_ROLES_RULES_VS );
-
-        // Localize the script with new data
-        $translation = array(
-            'delete_role_txt'     => __( 'You are about to delete the role: ', 'clypper-role-pricing' ),
-            'delete_role_confirm' => __( ', are you sure?', 'clypper-role-pricing' ),
-            'filter_by_role'      => __( 'Filter by Role', 'clypper-role-pricing' ),
-            'select_role'         => __( 'Select Role', 'clypper-role-pricing' ),
-            'rule_to_copy'        => __( 'Rule to Copy', 'clypper-role-pricing' ),
-            'rule_destination'    => __( 'Rule Destination(s)', 'clypper-role-pricing' ),
-            'add_cat_products'    => __( 'Add Category Products', 'clypper-role-pricing' ),
-            'select_coupon'       => __( 'Select Coupon', 'clypper-role-pricing' ),
-            'add_categories'      => __( 'Categories to Add', 'clypper-role-pricing' ),
-            'select_categories'   => __( 'Select Categories', 'clypper-role-pricing' ),
+        wp_enqueue_script(
+            'clypper-rbp-admin',
+            RRB2B_PLUGIN_URL . 'build/index.js',
+            $asset['dependencies'],
+            $asset['version'],
+            [ 'in_footer' => true ]
         );
-        wp_localize_script( 'rrb2b_scripts', 'cyp_object', $translation );
-        wp_enqueue_script( 'rrb2b_scripts' );
+
+        wp_enqueue_style( 'wp-components' );
     }
 
     public function add_company_info_to_admin_email( $wp_new_user_notification_email, $user, $blogname )
@@ -134,18 +105,19 @@ class Admin {
         }
     }
 
-    public function create_admin_menu(): void
-    {
-        add_submenu_page(
-            'woocommerce',
-            __( 'Roles & Rules B2B', 'clypper-role-pricing' ),
-            __( 'Roles & Rules B2B', 'clypper-role-pricing' ),
-            'manage_woocommerce',
-            'rrb2b',
-            'rrb2b_plugin_roles_page',
-            30
-        );
-    }
+  public function create_admin_menu(): void
+  {
+      add_submenu_page(
+          'woocommerce',
+          __( 'Roles & Rules B2B', 'clypper-role-pricing' ),
+          __( 'Roles & Rules B2B', 'clypper-role-pricing' ),
+          'manage_woocommerce',
+          'rrb2b',
+          function (): void {
+              echo '<div id="clypper-rbp-app"></div>';
+          }
+      );
+  }
 
     private function verify_admin_request( string $action = 'rrb2b_id', string $capability = 'manage_woocommerce' ): void
     {

@@ -23,6 +23,9 @@ class RoleService
         return $users['avail_roles'][ $role['name'] ] ?? 0;
     }
 
+    public function get_all_roles(): array {
+        return wp_roles()->get_names();    }
+
     /**
      * Get user role or 'guest' if user has no role or is not logged in
      *
