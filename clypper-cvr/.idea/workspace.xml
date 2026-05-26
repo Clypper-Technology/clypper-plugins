@@ -2,24 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3e2c280d-c517-429e-b955-35bd8afa2787" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/includes/Admin.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../clypper-get-offer/src/ShortCodes/GetOfferForm.php" beforeDir="false" afterPath="$PROJECT_DIR$/../clypper-get-offer/src/ShortCodes/GetOfferForm.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../clypper-leasing/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../clypper-leasing/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../clypper-leasing/admin-settings.php" beforeDir="false" afterPath="$PROJECT_DIR$/../clypper-leasing/admin-settings.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../clypper-leasing/clypper-leasing.php" beforeDir="false" afterPath="$PROJECT_DIR$/../clypper-leasing/clypper-leasing.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../clypper-leasing/shortcodes/leasing-form.php" beforeDir="false" afterPath="$PROJECT_DIR$/../clypper-leasing/shortcodes/leasing-form.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../clypper-leasing/template-selection.php" beforeDir="false" afterPath="$PROJECT_DIR$/../clypper-leasing/template-selection.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../clypper-leasing/templates/erhverv.php" beforeDir="false" afterPath="$PROJECT_DIR$/../clypper-leasing/templates/erhverv.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../clypper-leasing/templates/privat-erhverv.php" beforeDir="false" afterPath="$PROJECT_DIR$/../clypper-leasing/templates/privat-erhverv.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../clypper-leasing/templates/privat.php" beforeDir="false" afterPath="$PROJECT_DIR$/../clypper-leasing/templates/privat.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../clypper-role-based-pricing/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../clypper-role-based-pricing/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../clypper-role-based-pricing/build.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../clypper-role-based-pricing/build.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../clypper-role-based-pricing/clypper-role-based-pricing.php" beforeDir="false" afterPath="$PROJECT_DIR$/../clypper-role-based-pricing/clypper-role-based-pricing.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../clypper-role-based-pricing/dist/clypper-role-based-pricing-.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../clypper-role-based-pricing/dist/woo-roles-rules-b2b-2.5.7.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../clypper-role-based-pricing/dist/woo-roles-rules-b2b-2.5.8.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../clypper-role-based-pricing/includes/RegistrationForm.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../clypper-role-based-pricing/includes/Users.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,8 +41,9 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;SHELLCHECK.PATH&quot;: &quot;/home/casper/.local/share/JetBrains/PhpStorm2025.3/Shell Script/shellcheck&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/casper/DevKinsta/public/trekantenstrailercenterdk&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/casper/GitHub/clypper-plugins/clypper-custom-checkout&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -67,8 +51,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-PS-253.32098.40" />
-        <option value="bundled-php-predefined-a98d8de5180a-0e0d91225499-com.jetbrains.php.sharedIndexes-PS-253.32098.40" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-PS-261.23567.149" />
+        <option value="bundled-php-predefined-a98d8de5180a-022fa7b8ab75-com.jetbrains.php.sharedIndexes-PS-261.23567.149" />
       </set>
     </attachedChunks>
   </component>
@@ -84,6 +68,8 @@
       <workItem from="1773313767016" duration="13000" />
       <workItem from="1774275960097" duration="1204000" />
       <workItem from="1774343374529" duration="17000" />
+      <workItem from="1777446015246" duration="33000" />
+      <workItem from="1778656646508" duration="70000" />
     </task>
     <servers />
   </component>
