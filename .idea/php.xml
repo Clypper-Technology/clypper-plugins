@@ -12,8 +12,12 @@
   </component>
   <component name="PhpIncludePathManager">
     <include_path>
-      <path value="$PROJECT_DIR$/clypper-bin-numbers/vendor/composer" />
       <path value="$PROJECT_DIR$/woo-roles-rules-b2b/vendor/composer" />
+      <path value="$PROJECT_DIR$/clypper-cvr/vendor/composer" />
+      <path value="$PROJECT_DIR$/clypper-get-offer/vendor/composer" />
+      <path value="$PROJECT_DIR$/clypper-role-based-pricing/vendor/composer" />
+      <path value="$PROJECT_DIR$/clypper-resurs-widget/vendor/composer" />
+      <path value="$PROJECT_DIR$/clypper-bin-numbers/vendor/composer" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.3">
