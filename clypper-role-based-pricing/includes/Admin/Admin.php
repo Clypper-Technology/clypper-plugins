@@ -40,6 +40,13 @@ class Admin {
             [ 'in_footer' => true ]
         );
 
+        wp_enqueue_style(
+                'clypper-rbp-admin',
+                RRB2B_PLUGIN_URL . 'build/index.css',
+                [ 'wp-components' ],
+                $asset['version']
+            );
+
         wp_enqueue_style( 'wp-components' );
     }
 

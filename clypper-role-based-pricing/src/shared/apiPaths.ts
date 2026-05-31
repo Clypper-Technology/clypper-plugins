@@ -8,4 +8,8 @@ export class ApiPath {
   public static rolesPath(): string {
     return `${ApiBase.Base}${ApiBase.Roles}`
   }
+
+  public static rolePath(roleId: string): string {
+    return this.rolesPath() + "/" + roleId;
+  }
 }

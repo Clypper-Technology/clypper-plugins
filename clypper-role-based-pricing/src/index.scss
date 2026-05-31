@@ -1,0 +1,16 @@
+.row-card-body {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.roles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.roles-list {
+  padding-right: 20px;
+}

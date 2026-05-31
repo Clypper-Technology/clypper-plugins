@@ -17,6 +17,8 @@
         "typescript": "^6.0.3"
     },
     "dependencies": {
-        "@wordpress/api-fetch": "^7.46.0"
+        "@types/wordpress__components": "^23.0.12",
+        "@wordpress/api-fetch": "^7.46.0",
+        "react-router-dom": "^7.16.0"
     }
 }

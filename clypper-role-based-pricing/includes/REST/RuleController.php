@@ -21,14 +21,6 @@ class RuleController extends \WP_REST_Controller
 
     public function register_routes(): void
     {
-        register_rest_route( $this->namespace, '/' . $this->resource_name, [
-            [
-                'methods'               => \WP_REST_Server::READABLE,
-                'callback'              => [ $this, 'get_items'],
-                'permission_callback' => [ $this, 'permissions_check' ],
-            ],
-        ]);
-
         register_rest_route( $this->namespace, '/' . $this->resource_name . '/(?P<id>\d+)', [
             [
                 'methods'             => \WP_REST_Server::DELETABLE,
@@ -95,12 +87,6 @@ class RuleController extends \WP_REST_Controller
     public function permissions_check( $request ): \WP_Error|bool
     {
         return current_user_can( 'manage_woocommerce' );
-    }
-
-    public function get_items( $request ): \WP_REST_Response {
-        $rules = $this->rule_service->get_all_role_rules();
-
-        return new \WP_REST_Response( $rules, 200 );
     }
 
     public function delete_item( $request ): \WP_REST_Response
