@@ -11,16 +11,21 @@ interface AddRolesModalProps {
 
 export const AddRolesModal = (props: AddRolesModalProps) => {
   const [isOpen, setOpen] = useState(false);
+  const [isLoadingSlug, setIsLoadingSlug] = useState("");
+
   const openModal = () => setOpen(true);
   const closeModal = () => setOpen(false);
+  
   const roles = props.allRoles.filter(
       role => !props.existingRoles.find(existing => existing.slug === role.slug)
   );
 
   const addRole = async (role: Role) => {
+    setIsLoadingSlug(role.slug);
     const id = await RuleService.addRules(role.slug);
 
     props.onRoleAdded(role);
+    setIsLoadingSlug("");
   }
   
   return (
@@ -30,9 +35,9 @@ export const AddRolesModal = (props: AddRolesModalProps) => {
         <Modal title="Add Roles" onRequestClose={ closeModal }>
           <div>
             {roles.map(role => (
-              <div className="row space-between">
+              <div key={role.slug} className="row space-between">
                 <p>{role.name}</p>
-                <Button onClick={() => addRole(role)} variant="primary">Add</Button>
+                <Button onClick={() => addRole(role)} variant="primary" isBusy={isLoadingSlug === role.slug}>Add</Button>
               </div>
             ))}
           </div>

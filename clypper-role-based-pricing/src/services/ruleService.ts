@@ -8,6 +8,14 @@ import apifetch from '@wordpress/api-fetch';
 export class RuleService {
   private static resource = ApiPath.rulesPath();
 
+  public static async getRule(id: number): Promise<RoleRules> {
+    const rule = await apifetch<RoleRules>({
+      path: ApiPath.rulePath(id)
+    });
+
+    return rule;
+  }
+
   public static async getRules(): Promise<RoleRules[]> {
     const rules = await apifetch<RoleRules[]>({ path: this.resource})
 

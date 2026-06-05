@@ -1,19 +1,16 @@
 import { RoleService } from "@/services/roleService";
 import { Role } from "@/types/role";
 import { useEffect, useState } from "react";
-import { Button, Card, CardBody, Spinner } from '@wordpress/components';
-import { useNavigate } from "react-router-dom";
+import { Spinner } from '@wordpress/components';
 import { AddRolesModal } from "../modals/addRoleModal";
 import { RuleService } from "@/services/ruleService";
+import { RoleCard } from "../cards/roleCard";
 
 
 export function Roles() {
-
   const [allRoles, setAllRoles] = useState<Role[]>([]);
   const [existingRoles, setExistingRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const getRoles = async () => {
@@ -30,7 +27,7 @@ export function Roles() {
   }, []);
 
   const deleteRole = async (role: Role) => {
-    RuleService.deleteRule(role.id);
+    await RuleService.deleteRule(role.id);
 
     setExistingRoles(prev => prev.filter(r => r.slug !== role.slug));
   }
@@ -50,16 +47,7 @@ export function Roles() {
           <Spinner></Spinner>
         ) : (
           existingRoles.map(role => (
-            <Card className="row-card">
-              <CardBody className="row-card-body">
-                <span>{role.name}</span>
-                
-                <div class="row">
-                  <Button onClick={() => navigate(`/role/${role.slug}`)} variant="primary">Edit</Button>
-                  <Button isDestructive variant="primary" onClick={() => deleteRole(role)}>Delete</Button>
-                </div>
-              </CardBody>
-            </Card>
+            <RoleCard role={role} onRoleDeleted={deleteRole}/>
           ))
         )}  
       </div>

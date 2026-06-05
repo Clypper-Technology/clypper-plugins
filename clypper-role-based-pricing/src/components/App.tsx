@@ -7,7 +7,7 @@ export default function App() {
     <HashRouter>
       <Routes>
         <Route path="/" element={<Roles />}/>
-        <Route path="/:role/:id" element={<Rules />}/>
+        <Route path="/role/:id" element={<Rules />}/>
       </Routes>
     </HashRouter>
   )
