@@ -5,7 +5,14 @@ export class ApiPath {
     return `${ApiBase.Base}${ApiBase.Rules}`
   }
 
-  public static rolesPath(): string {
+  public static rulePath(ruleId: number): string {
+    return `${this.rulesPath()}/${ruleId}`
+  }
+
+  public static rolesPath(status = ""): string {
+    if(status) {
+      return `${ApiBase.Base}${ApiBase.Roles}?status=${status}`
+    }
     return `${ApiBase.Base}${ApiBase.Roles}`
   }
 

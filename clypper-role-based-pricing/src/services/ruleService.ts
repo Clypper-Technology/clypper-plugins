@@ -13,4 +13,25 @@ export class RuleService {
 
     return rules;
   }
+
+  public static async addRules(slug: string): Promise<number> {
+    const id = await apifetch<number>({
+      path: this.resource,
+      method: "POST",
+      data: {
+        slug: slug
+      }
+    })
+
+    return id;
+  }
+
+  public static async deleteRule(id: number): Promise<void> {
+    await apifetch({
+      path: ApiPath.rulePath(id),
+      method: "DELETE",
+    })
+
+
+  }
 }

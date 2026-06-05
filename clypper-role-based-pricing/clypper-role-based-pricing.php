@@ -95,7 +95,7 @@ add_action( 'rest_api_init', function() use ( $rule_service, $role_service ) {
 
     ( new ProductController( $namespace ) )->register_routes();
     ( new RuleController( $namespace, $rule_service ) )->register_routes();
-    ( new \ClypperTechnology\RolePricing\REST\RoleController( $namespace, $role_service ) )->register_routes();
+    ( new \ClypperTechnology\RolePricing\REST\RoleController( $namespace, $role_service, $rule_service ) )->register_routes();
 });
 
 add_action( 'woocommerce_loaded', function() use ( &$rule_service, &$role_service ) {

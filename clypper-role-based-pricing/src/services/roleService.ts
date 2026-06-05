@@ -6,13 +6,18 @@ type RolesResponse = Record<string, string>;
 
 export class RoleService {
   public static async getRoles(): Promise<Role[]> {
-    const response = await apiFetch<RolesResponse>({
+    const response = await apiFetch<Role[]>({
       path: ApiPath.rolesPath(),
     });
 
-    return Object.entries(response).map(([slug, name]) => ({
-      slug,
-      name,
-    }));
+    return response;
+  }
+
+  public static async getExistingRoles(): Promise<Role[]> {
+    const response = await apiFetch<Role[]>({
+      path: ApiPath.rolesPath("existing"),
+    })
+
+    return response;
   }
 }

@@ -18,4 +18,15 @@
   padding-right: 20px;
 }
 
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
 /*# sourceMappingURL=index.css.map*/

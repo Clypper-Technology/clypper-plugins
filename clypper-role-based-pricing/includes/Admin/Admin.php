@@ -26,7 +26,7 @@ class Admin {
 
     public function enqueue_scripts( string $hook ): void
     {
-        if ( 'woocommerce_page_rrb2b' !== $hook ) {
+        if ( 'woocommerce_page_crbp' !== $hook ) {
             return;
         }
 
@@ -74,43 +74,6 @@ class Admin {
         return $wp_new_user_notification_email;
     }
 
-    public function add_rule(): void
-    {
-        $this->verify_admin_request();
-
-        $rule_name = sanitize_text_field( wp_unslash( $_POST['role'] ?? '' ) );
-
-        if ( empty( $rule_name ) ) {
-            $this->redirect_with_error( __( 'Rule name is required.', 'clypper-role-pricing' ) );
-        }
-
-        try {
-            $rule_id = $this->rule_service->add_rule( $rule_name );
-            $this->redirect_with_success( 'rules', [ 'message' => 'rule_created', 'rule_id' => $rule_id ] );
-        } catch ( \Exception $e ) {
-            error_log( 'Rule creation failed: ' . $e->getMessage() );
-            $this->redirect_with_error( __( 'Failed to create rule. Please try again.', 'clypper-role-pricing' ) );
-        }
-    }
-
-    public function update_rule(): void
-    {
-        $this->verify_admin_request();
-
-        $rule_id = intval( wp_unslash( $_POST['id'] ?? 0 ) );
-
-        if ( empty( $rule_id ) ) {
-            $this->redirect_with_error( __( 'Rule ID is required.', 'clypper-role-pricing' ) );
-        }
-
-        try {
-            $this->rule_service->update_rule( wp_unslash( $_POST ) );
-            $this->redirect_with_success( 'rules', [ 'message' => 'rule_updated' ] );
-        } catch ( \Exception $e ) {
-            error_log( 'Rule update failed: ' . $e->getMessage() );
-            $this->redirect_with_error( __( 'Failed to update rule. Please try again.', 'clypper-role-pricing' ) );
-        }
-    }
 
   public function create_admin_menu(): void
   {
@@ -119,46 +82,10 @@ class Admin {
           __( 'Roles & Rules B2B', 'clypper-role-pricing' ),
           __( 'Roles & Rules B2B', 'clypper-role-pricing' ),
           'manage_woocommerce',
-          'rrb2b',
+          'crbp',
           function (): void {
               echo '<div id="clypper-rbp-app"></div>';
           }
       );
   }
-
-    private function verify_admin_request( string $action = 'rrb2b_id', string $capability = 'manage_woocommerce' ): void
-    {
-        if ( ! wp_verify_nonce( $_POST['_wpnonce'] ?? '', $action ) ) {
-            wp_die(
-                __( 'Security check failed. Please try again.', 'clypper-role-pricing' ),
-                __( 'Security Error', 'clypper-role-pricing' ),
-                [ 'response' => 403 ]
-            );
-        }
-
-        if ( ! current_user_can( $capability ) ) {
-            wp_die(
-                __( 'You do not have permission to perform this action.', 'clypper-role-pricing' ),
-                __( 'Permission Error', 'clypper-role-pricing' ),
-                [ 'response' => 403 ]
-            );
-        }
-    }
-
-    private function admin_url( string $tab, array $args = [] ): string
-    {
-        return add_query_arg( $args, admin_url( "admin.php?page=rrb2b&tab={$tab}" ) );
-    }
-
-    private function redirect_with_success( string $tab, array $args = [] ): void
-    {
-        wp_redirect( $this->admin_url( $tab, $args ) );
-        exit;
-    }
-
-    private function redirect_with_error( string $message, string $tab = 'rules' ): void
-    {
-        wp_redirect( $this->admin_url( $tab, [ 'error' => urlencode( $message ) ] ) );
-        exit;
-    }
 }

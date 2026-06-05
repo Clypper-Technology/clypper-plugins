@@ -37,6 +37,62 @@ function App() {
 
 /***/ },
 
+/***/ "./src/components/modals/addRoleModal.tsx"
+/*!************************************************!*\
+  !*** ./src/components/modals/addRoleModal.tsx ***!
+  \************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AddRolesModal: () => (/* binding */ AddRolesModal)
+/* harmony export */ });
+/* harmony import */ var _services_ruleService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/services/ruleService */ "./src/services/ruleService.ts");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+const AddRolesModal = props => {
+  const [isOpen, setOpen] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
+  const openModal = () => setOpen(true);
+  const closeModal = () => setOpen(false);
+  const roles = props.allRoles.filter(role => !props.existingRoles.find(existing => existing.slug === role.slug));
+  const addRole = async role => {
+    const id = await _services_ruleService__WEBPACK_IMPORTED_MODULE_0__.RuleService.addRules(role.slug);
+    props.onRoleAdded(role);
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+      onClick: openModal,
+      variant: "primary",
+      children: "Add Role"
+    }), isOpen && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Modal, {
+      title: "Add Roles",
+      onRequestClose: closeModal,
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+        children: roles.map(role => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+          className: "row space-between",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("p", {
+            children: role.name
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+            onClick: () => addRole(role),
+            variant: "primary",
+            children: "Add"
+          })]
+        }))
+      })
+    })]
+  });
+};
+
+/***/ },
+
 /***/ "./src/components/pages/roles.tsx"
 /*!****************************************!*\
   !*** ./src/components/pages/roles.tsx ***!
@@ -53,39 +109,69 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/development/chunk-QUQL4437.mjs");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _modals_addRoleModal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../modals/addRoleModal */ "./src/components/modals/addRoleModal.tsx");
+/* harmony import */ var _services_ruleService__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/services/ruleService */ "./src/services/ruleService.ts");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__);
+
+
 
 
 
 
 
 function Roles() {
-  const [roles, setRoles] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
+  const [allRoles, setAllRoles] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
+  const [existingRoles, setExistingRoles] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
   const [loading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
   const navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_3__.useNavigate)();
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const getRoles = async () => {
+      setLoading(true);
       const roles = await _services_roleService__WEBPACK_IMPORTED_MODULE_0__.RoleService.getRoles();
-      setRoles(roles);
+      const existingRoles = await _services_roleService__WEBPACK_IMPORTED_MODULE_0__.RoleService.getExistingRoles();
+      setAllRoles(roles);
+      setExistingRoles(existingRoles);
       setLoading(false);
     };
     getRoles();
   }, []);
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("h1", {
-      children: "Role"
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+  const deleteRole = async role => {
+    _services_ruleService__WEBPACK_IMPORTED_MODULE_5__.RuleService.deleteRule(role.id);
+    setExistingRoles(prev => prev.filter(r => r.slug !== role.slug));
+  };
+  const onRoleAdded = role => {
+    setExistingRoles(prev => [...prev, role]);
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("h1", {
+        children: "Roles"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_modals_addRoleModal__WEBPACK_IMPORTED_MODULE_4__.AddRolesModal, {
+        existingRoles: existingRoles,
+        allRoles: allRoles,
+        onRoleAdded: onRoleAdded
+      })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
       className: "roles-list",
-      children: loading ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Spinner, {}) : roles.map(role => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Card, {
+      children: loading ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Spinner, {}) : existingRoles.map(role => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Card, {
         className: "row-card",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.CardBody, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.CardBody, {
           className: "row-card-body",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("span", {
             children: role.name
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
-            onClick: () => navigate(`/role/${role.slug}`),
-            children: "Edit"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+            class: "row",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+              onClick: () => navigate(`/role/${role.slug}`),
+              variant: "primary",
+              children: "Edit"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+              isDestructive: true,
+              variant: "primary",
+              onClick: () => deleteRole(role),
+              children: "Delete"
+            })]
           })]
         })
       }))
@@ -136,10 +222,56 @@ class RoleService {
     const response = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default()({
       path: _shared_apiPaths__WEBPACK_IMPORTED_MODULE_0__.ApiPath.rolesPath()
     });
-    return Object.entries(response).map(([slug, name]) => ({
-      slug,
-      name
-    }));
+    return response;
+  }
+  static async getExistingRoles() {
+    const response = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default()({
+      path: _shared_apiPaths__WEBPACK_IMPORTED_MODULE_0__.ApiPath.rolesPath("existing")
+    });
+    return response;
+  }
+}
+
+/***/ },
+
+/***/ "./src/services/ruleService.ts"
+/*!*************************************!*\
+  !*** ./src/services/ruleService.ts ***!
+  \*************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   RuleService: () => (/* binding */ RuleService)
+/* harmony export */ });
+/* harmony import */ var _shared_apiPaths__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../shared/apiPaths */ "./src/shared/apiPaths.ts");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1__);
+
+
+class RuleService {
+  static resource = _shared_apiPaths__WEBPACK_IMPORTED_MODULE_0__.ApiPath.rulesPath();
+  static async getRules() {
+    const rules = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default()({
+      path: this.resource
+    });
+    return rules;
+  }
+  static async addRules(slug) {
+    const id = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default()({
+      path: this.resource,
+      method: "POST",
+      data: {
+        slug: slug
+      }
+    });
+    return id;
+  }
+  static async deleteRule(id) {
+    await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default()({
+      path: _shared_apiPaths__WEBPACK_IMPORTED_MODULE_0__.ApiPath.rulePath(id),
+      method: "DELETE"
+    });
   }
 }
 
@@ -161,7 +293,13 @@ class ApiPath {
   static rulesPath() {
     return `${_types_apiBases__WEBPACK_IMPORTED_MODULE_0__.ApiBase.Base}${_types_apiBases__WEBPACK_IMPORTED_MODULE_0__.ApiBase.Rules}`;
   }
-  static rolesPath() {
+  static rulePath(ruleId) {
+    return `${this.rulesPath()}/${ruleId}`;
+  }
+  static rolesPath(status = "") {
+    if (status) {
+      return `${_types_apiBases__WEBPACK_IMPORTED_MODULE_0__.ApiBase.Base}${_types_apiBases__WEBPACK_IMPORTED_MODULE_0__.ApiBase.Roles}?status=${status}`;
+    }
     return `${_types_apiBases__WEBPACK_IMPORTED_MODULE_0__.ApiBase.Base}${_types_apiBases__WEBPACK_IMPORTED_MODULE_0__.ApiBase.Roles}`;
   }
   static rolePath(roleId) {

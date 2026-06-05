@@ -160,10 +160,6 @@ class RuleService {
      * @throws RuntimeException If creation fails
      */
     public function add_rule(string $name): int {
-        if (post_exists($name, '', '', 'clypper_rbp')) {
-            throw new InvalidArgumentException("Rule '{$name}' already exists");
-        }
-
         $rule = [
             'post_title'   => $name,
             'post_content' => '',
