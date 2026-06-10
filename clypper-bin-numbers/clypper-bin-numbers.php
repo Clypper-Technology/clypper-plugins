@@ -22,6 +22,7 @@ if ( ! class_exists( 'Clypper_BIN_Numbers' ) ) {
         public function __construct() {
             add_action( 'woocommerce_product_options_inventory_product_data', [ $this, 'add_bin_number_field' ] );
             add_action( 'woocommerce_process_product_meta', [ $this, 'save_bin_number_field' ], 25 );
+            add_filter('flatsome_custom_single_product_1', [ $this, 'display_bin_number' ], 30 );
         }
 
         /**
@@ -57,10 +58,15 @@ if ( ! class_exists( 'Clypper_BIN_Numbers' ) ) {
          * Display BIN number on the product page
          */
         public function display_bin_number() {
+            if(!(is_user_logged_in() && current_user_can("edit_shop_orders"))) {
+                return;
+            }
+
             global $product;
+
             $bin_number = get_post_meta( $product->get_id(), '_clypper_bin_number', true );
 
-            if ( $bin_number ) ;{
+            if ( $bin_number ) {
                 echo '<div class="product-bin-number">';
                 echo '<strong>' . __( 'BIN Number:', 'clypper-bin-numbers' ) . '</strong> ' . esc_html( $bin_number );
                 echo '</div>';

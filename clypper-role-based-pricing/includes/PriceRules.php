@@ -94,7 +94,7 @@ class PriceRules
 
         return $price_html .
                 '<div style="margin: 20px 0; padding: 20px; width: 100%; background-color: #e8e8e8; display: flex; flex-direction: column;">' .
-                '<p style="margin: 0 0 10px 0;"> Ved køb af ' . esc_html($applicable_rule->min_quantity) . '+ stk.:</p>' .
+                '<p style="margin: 0 0 10px 0;"> Stykprivs v/ ' . esc_html($applicable_rule->min_quantity) . '+ stk.:</p>' .
                 '<p class="price product-page-price">' . $qty_price_html . '</p>' .
                 '</div>';
     }

@@ -20,6 +20,7 @@
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
 use ClypperTechnology\ClypperCvr\includes\Admin;
+use ClypperTechnology\ClypperCvr\includes\Checkout;
 use ClypperTechnology\ClypperCvr\includes\RegistrationForm;
 use ClypperTechnology\ClypperCvr\includes\FrontEnd;
 
@@ -28,29 +29,6 @@ defined( 'ABSPATH' ) || exit;
 require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
 
 const CAS_CVR_VERSION   = '1.0.0';
-
-register_activation_hook( __FILE__, 'clypper_cvr_install' );
-register_deactivation_hook( __FILE__, 'clypper_cvr_deactivate' );
-register_uninstall_hook( __FILE__, 'clypper_cvr_uninstall');
-
-function clypper_cvr_install(): void
-{
-    global $wp_version;
-
-    if ( version_compare( $wp_version, '4.1', '<' ) ) {
-        wp_die( 'This plugin requires WordPress 4.1 or higher.' );
-    }
-
-    set_transient( 'rrb2b-admin-notice-activated', true );
-    flush_rewrite_rules();
-}
-
-function clypper_cvr_deactivate(): void
-{
-    flush_rewrite_rules();
-}
-
-function clypper_cvr_uninstall(): void {}
 
 add_action( 'before_woocommerce_init', function() {
     if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
@@ -61,6 +39,7 @@ add_action( 'before_woocommerce_init', function() {
 add_action( 'plugins_loaded', function() {
     new RegistrationForm();
     new FrontEnd();
+    new Checkout();
 
     if ( is_admin() ) {
         new Admin( );
