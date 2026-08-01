@@ -19,11 +19,16 @@ class Admin
 
 
     public function display_fields_in_admin($order): void {
-
-        $cpr_number = get_post_meta($order->get_id(), 'CPR Number', true);
+        $cpr_number    = $order->get_meta('_cpr_number');
+        $invoice_email = $order->get_meta('_invoice_email');
+        $regular_invoice = $order->get_billing_email();
 
         if ($cpr_number) {
-            echo '<p><strong>' . __('CPR Nummer') . ':</strong> ' . esc_html($cpr_number) . '</p>';
+            echo '<p><strong>CPR Nummer:</strong> ' . esc_html($cpr_number) . '</p>';
+        }
+
+        if ($invoice_email && $regular_invoice !== $invoice_email) {
+            echo '<p><strong>Faktura Mail:</strong> ' . esc_html($invoice_email) . '</p>';
         }
     }
 

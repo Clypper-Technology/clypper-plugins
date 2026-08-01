@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Plugin Name: Clypper's CVR numre
+ * Plugin Name: Clypper's Bussiness Suite
  * Description: Adds CVR numbers to the registration form and autopopulates the CVR field in checkout
  * Version: 1.0.0
  * Author: Clypper Technology

@@ -24,13 +24,12 @@ class Checkout
         ?>
         <div id="invoice-email-field">
             <h3><?= esc_html__( 'Faktura e-mail' ) ?></h3>
-            <p><?= esc_html__( 'Din faktura e-mail bruges udelukkende ved fakturakøb, hvor vi også sender fakturaen direkte til dit bogholderi.' ) ?></p>
+            <p><?= esc_html__( 'Ved fakturakøb sender vi også fakturaen direkte til denne e-mail.' ) ?></p>
             <?php if ( empty( $invoice_email ) ) : ?>
                 <p class="form-row form-row-wide">
                     <em>
                         <?= esc_html__( 'Du har ikke sat en faktura e-mail endnu.' ) ?>
                         <a href="<?= esc_url( $edit_url ) ?>"><?= esc_html__( 'Tilføj den på din profilside' ) ?></a>
-                        <?= esc_html__( 'før du gennemfører købet.' ) ?>
                     </em>
                 </p>
             <?php else : ?>
@@ -102,9 +101,18 @@ class Checkout
 
     public function save_checkout_fields( $order_id ): void
     {
-        if ( ! $this->should_display_fields() ) return;
+        $order = wc_get_order( $order_id );
+        $cpr = sanitize_text_field( $_POST['cpr_number'] );
+        $invoice_email = get_user_meta( get_current_user_id(), CustomerFields::INVOICE_EMAIL, true );
 
-        update_post_meta( $order_id, 'CPR Number', sanitize_text_field( $_POST['cpr_number'] ) );
+        if( !$order ) return;
+
+        if ( $this->should_display_fields() ) {
+            $order->update_meta_data('_cpr_number', $cpr);
+        }
+
+        $order->update_meta_data('_invoice_email', $invoice_email);
+        $order->save();
     }
 
     public function enqueue_checkout_script(): void

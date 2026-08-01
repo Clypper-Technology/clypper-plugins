@@ -1,10 +1,10 @@
 #!/bin/bash
 
-PLUGIN_NAME="clypper-cvr"
+PLUGIN_NAME="clypper-business-accounts"
 DIST_DIR="dist"
 BUILD_DIR="${DIST_DIR}/${PLUGIN_NAME}"
 
-VERSION=$(grep -oP 'Version:\s*\K[\d.]+' clypper-bussiness-fields.php)
+VERSION=$(grep -oP 'Version:\s*\K[\d.]+' clypper-business-accounts.php)
 BUILD_FILE="${PLUGIN_NAME}-${VERSION}.zip"
 
 # Clean previous builds
@@ -26,7 +26,7 @@ cp -R assets "$BUILD_DIR/"
 cp -R vendor "$BUILD_DIR/"
 cp readme.txt "$BUILD_DIR/"
 cp changelog.txt "$BUILD_DIR/"
-cp clypper-bussiness-fields.php "$BUILD_DIR/"
+cp clypper-business-accounts.php "$BUILD_DIR/"
 
 # Create ZIP inside dist
 echo "Creating ZIP..."
