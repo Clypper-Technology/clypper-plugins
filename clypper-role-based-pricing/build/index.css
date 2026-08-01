@@ -33,4 +33,18 @@
   gap: 20px;
 }
 
+.status-indicator {
+  border-radius: 100%;
+  width: 12px;
+  height: 12px;
+}
+
+.active {
+  background-color: green;
+}
+
+.inactive {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
 /*# sourceMappingURL=index.css.map*/

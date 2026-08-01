@@ -12,7 +12,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ App)
 /* harmony export */ });
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/development/chunk-QUQL4437.mjs");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/development/chunk-62JRHF6Z.mjs");
 /* harmony import */ var _pages_roles__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./pages/roles */ "./src/components/pages/roles.tsx");
 /* harmony import */ var _pages_rules__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pages/rules */ "./src/components/pages/rules.tsx");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
@@ -51,9 +51,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/development/chunk-QUQL4437.mjs");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/development/chunk-62JRHF6Z.mjs");
+/* harmony import */ var _feedback_roleStatus__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../feedback/roleStatus */ "./src/components/feedback/roleStatus.tsx");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
+
 
 
 
@@ -62,33 +64,46 @@ const RoleCard = props => {
   const [isLoading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const role = props.role;
   const navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_2__.useNavigate)();
-  async function deleteRole(role) {
+  async function changeStatus(role) {
     setLoading(true);
-    await props.onRoleDeleted(role);
+    await props.onRoleChanged(role);
     setLoading(false);
   }
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Card, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Card, {
     className: "row-card",
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.CardBody, {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.CardBody, {
       className: "row-card-body",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
-        children: role.name
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
         className: "row",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
-          onClick: () => navigate(`/role/${role.id}`),
-          variant: "primary",
-          isBusy: isLoading,
-          disabled: isLoading,
-          children: "Edit"
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
-          isDestructive: true,
-          variant: "primary",
-          onClick: () => deleteRole(role),
-          isBusy: isLoading,
-          disabled: isLoading,
-          children: "Delete"
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_feedback_roleStatus__WEBPACK_IMPORTED_MODULE_3__.RoleStatus, {
+          active: role.active
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
+          children: role.name
         })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+        className: "row",
+        children: role.active ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+            onClick: () => navigate(`/role/${role.id}`),
+            variant: "primary",
+            isBusy: isLoading,
+            disabled: isLoading,
+            children: "Edit"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+            isDestructive: true,
+            variant: "primary",
+            onClick: () => changeStatus(role),
+            isBusy: isLoading,
+            disabled: isLoading,
+            children: "Disable"
+          })]
+        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+          variant: "primary",
+          onClick: () => changeStatus(role),
+          isBusy: isLoading,
+          disabled: isLoading,
+          children: "Activate"
+        })
       })]
     })
   });
@@ -144,61 +159,22 @@ const ProductRulesPanel = props => {
 
 /***/ },
 
-/***/ "./src/components/modals/addRoleModal.tsx"
+/***/ "./src/components/feedback/roleStatus.tsx"
 /*!************************************************!*\
-  !*** ./src/components/modals/addRoleModal.tsx ***!
+  !*** ./src/components/feedback/roleStatus.tsx ***!
   \************************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   AddRolesModal: () => (/* binding */ AddRolesModal)
+/* harmony export */   RoleStatus: () => (/* binding */ RoleStatus)
 /* harmony export */ });
-/* harmony import */ var _services_ruleService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/services/ruleService */ "./src/services/ruleService.ts");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 
-
-
-
-const AddRolesModal = props => {
-  const [isOpen, setOpen] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
-  const [isLoadingSlug, setIsLoadingSlug] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)("");
-  const openModal = () => setOpen(true);
-  const closeModal = () => setOpen(false);
-  const roles = props.allRoles.filter(role => !props.existingRoles.find(existing => existing.slug === role.slug));
-  const addRole = async role => {
-    setIsLoadingSlug(role.slug);
-    const id = await _services_ruleService__WEBPACK_IMPORTED_MODULE_0__.RuleService.addRules(role.slug);
-    props.onRoleAdded(role);
-    setIsLoadingSlug("");
-  };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-      onClick: openModal,
-      variant: "primary",
-      children: "Add Role"
-    }), isOpen && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Modal, {
-      title: "Add Roles",
-      onRequestClose: closeModal,
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
-        children: roles.map(role => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
-          className: "row space-between",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("p", {
-            children: role.name
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-            onClick: () => addRole(role),
-            variant: "primary",
-            isBusy: isLoadingSlug === role.slug,
-            children: "Add"
-          })]
-        }, role.slug))
-      })
-    })]
+const RoleStatus = props => {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    className: "status-indicator " + (props.active ? "active" : "inactive")
   });
 };
 
@@ -219,13 +195,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _modals_addRoleModal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../modals/addRoleModal */ "./src/components/modals/addRoleModal.tsx");
-/* harmony import */ var _services_ruleService__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/services/ruleService */ "./src/services/ruleService.ts");
-/* harmony import */ var _cards_roleCard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../cards/roleCard */ "./src/components/cards/roleCard.tsx");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__);
-
-
+/* harmony import */ var _cards_roleCard__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../cards/roleCard */ "./src/components/cards/roleCard.tsx");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
 
 
 
@@ -233,40 +205,30 @@ __webpack_require__.r(__webpack_exports__);
 
 function Roles() {
   const [allRoles, setAllRoles] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
-  const [existingRoles, setExistingRoles] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
   const [loading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const getRoles = async () => {
       setLoading(true);
       const roles = await _services_roleService__WEBPACK_IMPORTED_MODULE_0__.RoleService.getRoles();
-      const existingRoles = await _services_roleService__WEBPACK_IMPORTED_MODULE_0__.RoleService.getExistingRoles();
       setAllRoles(roles);
-      setExistingRoles(existingRoles);
       setLoading(false);
     };
     getRoles();
   }, []);
-  const deleteRole = async role => {
-    await _services_ruleService__WEBPACK_IMPORTED_MODULE_4__.RuleService.deleteRule(role.id);
-    setExistingRoles(prev => prev.filter(r => r.slug !== role.slug));
+  const setActiveStatus = async (role, active) => {
+    role.active = active;
+    await _services_roleService__WEBPACK_IMPORTED_MODULE_0__.RoleService.updateRole(role);
   };
-  const onRoleAdded = role => {
-    setExistingRoles(prev => [...prev, role]);
-  };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("h1", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("h1", {
         children: "Roles"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_modals_addRoleModal__WEBPACK_IMPORTED_MODULE_3__.AddRolesModal, {
-        existingRoles: existingRoles,
-        allRoles: allRoles,
-        onRoleAdded: onRoleAdded
-      })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+      })
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
       className: "roles-list",
-      children: loading ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Spinner, {}) : existingRoles.map(role => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_cards_roleCard__WEBPACK_IMPORTED_MODULE_5__.RoleCard, {
+      children: loading ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Spinner, {}) : allRoles.map(role => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_cards_roleCard__WEBPACK_IMPORTED_MODULE_3__.RoleCard, {
         role: role,
-        onRoleDeleted: deleteRole
+        onRoleChanged: async role => await setActiveStatus(role, !role.active)
       }))
     })]
   });
@@ -287,7 +249,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_ruleService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/services/ruleService */ "./src/services/ruleService.ts");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/development/chunk-QUQL4437.mjs");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/development/chunk-62JRHF6Z.mjs");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _editingSections_ProductRulesPanel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../editingSections/ProductRulesPanel */ "./src/components/editingSections/ProductRulesPanel.tsx");
@@ -361,6 +323,13 @@ class RoleService {
       path: _shared_apiPaths__WEBPACK_IMPORTED_MODULE_0__.ApiPath.rolesPath()
     });
     return response;
+  }
+  static async updateRole(role) {
+    await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default()({
+      path: _shared_apiPaths__WEBPACK_IMPORTED_MODULE_0__.ApiPath.rolesPath(),
+      method: "PATCH",
+      data: role
+    });
   }
   static async getExistingRoles() {
     const response = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default()({
@@ -544,13 +513,13 @@ module.exports = window["wp"]["element"];
 
 /***/ },
 
-/***/ "./node_modules/react-router/dist/development/chunk-QUQL4437.mjs"
+/***/ "./node_modules/react-router/dist/development/chunk-62JRHF6Z.mjs"
 /*!***********************************************************************!*\
-  !*** ./node_modules/react-router/dist/development/chunk-QUQL4437.mjs ***!
+  !*** ./node_modules/react-router/dist/development/chunk-62JRHF6Z.mjs ***!
   \***********************************************************************/
 (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
 
-var react__WEBPACK_IMPORTED_MODULE_0___namespace_cache;
+let react__WEBPACK_IMPORTED_MODULE_0___namespace_cache;
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Action: () => (/* binding */ Action),
@@ -580,6 +549,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Navigate: () => (/* binding */ Navigate),
 /* harmony export */   NavigationContext: () => (/* binding */ NavigationContext),
 /* harmony export */   Outlet: () => (/* binding */ Outlet),
+/* harmony export */   PROTOCOL_RELATIVE_URL_REGEX: () => (/* binding */ PROTOCOL_RELATIVE_URL_REGEX),
 /* harmony export */   PrefetchPageLinks: () => (/* binding */ PrefetchPageLinks),
 /* harmony export */   RSCRouterContext: () => (/* binding */ RSCRouterContext),
 /* harmony export */   RemixErrorBoundary: () => (/* binding */ RemixErrorBoundary),
@@ -630,12 +600,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   generatePath: () => (/* binding */ generatePath),
 /* harmony export */   getManifestPath: () => (/* binding */ getManifestPath),
 /* harmony export */   getPatchRoutesOnNavigationFunction: () => (/* binding */ getPatchRoutesOnNavigationFunction),
+/* harmony export */   getPathsWithAncestors: () => (/* binding */ getPathsWithAncestors),
 /* harmony export */   getSingleFetchDataStrategyImpl: () => (/* binding */ getSingleFetchDataStrategyImpl),
 /* harmony export */   getStaticContextFromError: () => (/* binding */ getStaticContextFromError),
 /* harmony export */   getTurboStreamSingleFetchDataStrategy: () => (/* binding */ getTurboStreamSingleFetchDataStrategy),
+/* harmony export */   hasInvalidProtocol: () => (/* binding */ hasInvalidProtocol),
 /* harmony export */   hydrationRouteProperties: () => (/* binding */ hydrationRouteProperties),
 /* harmony export */   instrumentHandler: () => (/* binding */ instrumentHandler),
-/* harmony export */   invalidProtocols: () => (/* binding */ invalidProtocols),
 /* harmony export */   invariant: () => (/* binding */ invariant),
 /* harmony export */   isDataWithResponseInit: () => (/* binding */ isDataWithResponseInit),
 /* harmony export */   isMutationMethod: () => (/* binding */ isMutationMethod),
@@ -700,7 +671,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /**
- * react-router v7.16.0
+ * react-router v7.18.2
  *
  * Copyright (c) Remix Software Inc.
  *
@@ -716,6 +687,13 @@ var __accessCheck = (obj, member, msg) => member.has(obj) || __typeError("Cannot
 var __privateGet = (obj, member, getter) => (__accessCheck(obj, member, "read from private field"), getter ? getter.call(obj) : member.get(obj));
 var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
 var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
+
+// lib/router/url.ts
+var ABSOLUTE_URL_REGEX = /^(?:[a-z][a-z0-9+.-]*:|[\\/]{2})/i;
+var PROTOCOL_RELATIVE_URL_REGEX = /^[\\/]{2}/;
+function normalizeProtocolRelativeUrl(url, protocol) {
+  return protocol + url.replace(/\\/g, "/");
+}
 
 // lib/router/history.ts
 var Action = /* @__PURE__ */ ((Action2) => {
@@ -1074,7 +1052,7 @@ function createBrowserURLImpl(windowImpl, to, isAbsolute = false) {
   invariant(base, "No window.location.(origin|href) available to create URL");
   let href = typeof to === "string" ? to : createPath(to);
   href = href.replace(/ $/, "%20");
-  if (!isAbsolute && href.startsWith("//")) {
+  if (!isAbsolute && PROTOCOL_RELATIVE_URL_REGEX.test(href)) {
     href = base + href;
   }
   return new URL(href, base);
@@ -1292,7 +1270,18 @@ function flattenRoutes(routes, branches = [], parentsMeta = [], parentPath = "",
     branches.push({
       path,
       score: computeScore(path, route.index),
-      routesMeta
+      routesMeta: routesMeta.map((meta2, i) => {
+        let [matcher, params] = compilePath(
+          meta2.relativePath,
+          meta2.caseSensitive,
+          i === routesMeta.length - 1
+        );
+        return {
+          ...meta2,
+          matcher,
+          compiledParams: params
+        };
+      })
     });
   };
   routes.forEach((route, index) => {
@@ -1381,9 +1370,19 @@ function matchRouteBranch(branch, pathname, allowPartial = false) {
     let meta = routesMeta[i];
     let end = i === routesMeta.length - 1;
     let remainingPathname = matchedPathname === "/" ? pathname : pathname.slice(matchedPathname.length) || "/";
-    let match = matchPath(
-      { path: meta.relativePath, caseSensitive: meta.caseSensitive, end },
-      remainingPathname
+    let pattern = {
+      path: meta.relativePath,
+      caseSensitive: meta.caseSensitive,
+      end
+    };
+    let match = (
+      // Use precomputed matcher if it exists
+      meta.matcher && meta.compiledParams ? matchPathImpl(
+        pattern,
+        remainingPathname,
+        meta.matcher,
+        meta.compiledParams
+      ) : matchPath(pattern, remainingPathname)
     );
     let route = meta.route;
     if (!match && end && allowPartial && !routesMeta[routesMeta.length - 1].route.index) {
@@ -1451,6 +1450,9 @@ function matchPath(pattern, pathname) {
     pattern.caseSensitive,
     pattern.end
   );
+  return matchPathImpl(pattern, pathname, matcher, compiledParams);
+}
+function matchPathImpl(pattern, pathname, matcher, compiledParams) {
   let match = pathname.match(matcher);
   if (!match) return null;
   let matchedPathname = match[0];
@@ -1540,7 +1542,6 @@ function prependBasename({
 }) {
   return pathname === "/" ? basename : joinPaths([basename, pathname]);
 }
-var ABSOLUTE_URL_REGEX = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
 var isAbsoluteUrl = (url) => ABSOLUTE_URL_REGEX.test(url);
 function resolvePath(to, fromPathname = "/") {
   let {
@@ -1637,7 +1638,7 @@ function resolveTo(toArg, routePathnames, locationPathname, isPathRelative = fal
   }
   return path;
 }
-var removeDoubleSlashes = (path) => path.replace(/\/\/+/g, "/");
+var removeDoubleSlashes = (path) => path.replace(/[\\/]{2,}/g, "/");
 var joinPaths = (paths) => removeDoubleSlashes(paths.join("/"));
 var removeTrailingSlash = (path) => path.replace(/\/+$/, "");
 var normalizePathname = (pathname) => removeTrailingSlash(pathname).replace(/^\/*/, "/");
@@ -1677,6 +1678,14 @@ var replace = (url, init) => {
   response.headers.set("X-Remix-Replace", "true");
   return response;
 };
+var SUPPORTED_ERROR_TYPES = [
+  "EvalError",
+  "RangeError",
+  "ReferenceError",
+  "SyntaxError",
+  "TypeError",
+  "URIError"
+];
 var ErrorResponseImpl = class {
   constructor(status, statusText, data2, internal = false) {
     this.status = status;
@@ -1712,7 +1721,7 @@ function parseToInfo(_to, basename) {
   if (isBrowser) {
     try {
       let currentUrl = new URL(window.location.href);
-      let targetUrl = to.startsWith("//") ? new URL(currentUrl.protocol + to) : new URL(to);
+      let targetUrl = PROTOCOL_RELATIVE_URL_REGEX.test(to) ? new URL(normalizeProtocolRelativeUrl(to, currentUrl.protocol)) : new URL(to);
       let path = stripBasename(targetUrl.pathname, basename);
       if (targetUrl.origin === currentUrl.origin && path != null) {
         to = path + targetUrl.search + targetUrl.hash;
@@ -5904,11 +5913,20 @@ var invalidProtocols = [
   // eslint-disable-next-line no-script-url
   "javascript:"
 ];
+function hasInvalidProtocol(location) {
+  try {
+    return invalidProtocols.includes(new URL(location).protocol);
+  } catch {
+    return false;
+  }
+}
 function normalizeRedirectLocation(location, currentUrl, basename, historyInstance) {
   if (isAbsoluteUrl(location)) {
     let normalizedLocation = location;
-    let url = normalizedLocation.startsWith("//") ? new URL(currentUrl.protocol + normalizedLocation) : new URL(normalizedLocation);
-    if (invalidProtocols.includes(url.protocol)) {
+    let url = PROTOCOL_RELATIVE_URL_REGEX.test(normalizedLocation) ? new URL(
+      normalizeProtocolRelativeUrl(normalizedLocation, currentUrl.protocol)
+    ) : new URL(normalizedLocation);
+    if (hasInvalidProtocol(url.toString())) {
       throw new Error("Invalid redirect location");
     }
     let isSameBasename = stripBasename(url.pathname, basename) != null;
@@ -5918,7 +5936,7 @@ function normalizeRedirectLocation(location, currentUrl, basename, historyInstan
   }
   try {
     let url = historyInstance.createURL(location);
-    if (invalidProtocols.includes(url.protocol)) {
+    if (hasInvalidProtocol(url.toString())) {
       throw new Error("Invalid redirect location");
     }
   } catch (e) {
@@ -6437,7 +6455,7 @@ function createDeferred() {
 }
 
 // lib/context.ts
-
+;
 var DataRouterContext = react__WEBPACK_IMPORTED_MODULE_0__.createContext(null);
 DataRouterContext.displayName = "DataRouter";
 var DataRouterStateContext = react__WEBPACK_IMPORTED_MODULE_0__.createContext(null);
@@ -6847,9 +6865,13 @@ function RSCErrorHandler({
       let existingRedirect = errorRedirectHandledMap.get(error);
       if (existingRedirect) throw existingRedirect;
       let parsed = parseToInfo(redirect2.location, basename);
+      let target = parsed.absoluteURL || parsed.to;
+      if (hasInvalidProtocol(target)) {
+        throw new Error("Invalid redirect location");
+      }
       if (isBrowser && !errorRedirectHandledMap.get(error)) {
         if (parsed.isExternal || redirect2.reloadDocument) {
-          window.location.href = parsed.absoluteURL || parsed.to;
+          window.location.href = target;
         } else {
           const redirectPromise = Promise.resolve().then(
             () => window.__reactRouterDataRouter.navigate(parsed.to, {
@@ -6860,13 +6882,7 @@ function RSCErrorHandler({
           throw redirectPromise;
         }
       }
-      return /* @__PURE__ */ react__WEBPACK_IMPORTED_MODULE_0__.createElement(
-        "meta",
-        {
-          httpEquiv: "refresh",
-          content: `0;url=${parsed.absoluteURL || parsed.to}`
-        }
-      );
+      return /* @__PURE__ */ react__WEBPACK_IMPORTED_MODULE_0__.createElement("meta", { httpEquiv: "refresh", content: `0;url=${target}` });
     }
   }
   return children;
@@ -7242,7 +7258,7 @@ function useRouterState() {
 }
 
 // lib/components.tsx
-
+;
 
 // lib/server-runtime/warnings.ts
 var alreadyWarned2 = {};
@@ -8097,7 +8113,7 @@ function getFormSubmissionInfo(target, basename) {
 }
 
 // lib/dom/ssr/single-fetch.tsx
-
+;
 
 // vendor/turbo-stream-v2/utils.ts
 var HOLE = -1;
@@ -8118,14 +8134,6 @@ var TYPE_SET = "S";
 var TYPE_SYMBOL = "Y";
 var TYPE_URL = "U";
 var TYPE_PREVIOUS_RESOLVED = "Z";
-var SUPPORTED_ERROR_TYPES = [
-  "EvalError",
-  "RangeError",
-  "ReferenceError",
-  "SyntaxError",
-  "TypeError",
-  "URIError"
-];
 var Deferred2 = class {
   constructor() {
     this.promise = new Promise((resolve, reject) => {
@@ -9355,7 +9363,7 @@ function createDeferred2() {
 }
 
 // lib/dom/ssr/errorBoundaries.tsx
-
+;
 
 // lib/dom/ssr/components.tsx
 
@@ -9593,7 +9601,7 @@ function isPreloadSupported() {
 }
 
 // lib/dom/ssr/fog-of-war.ts
-
+;
 
 // lib/dom/ssr/routes.tsx
 
@@ -9601,9 +9609,11 @@ function isPreloadSupported() {
 // lib/dom/ssr/fallback.tsx
 
 function RemixRootDefaultHydrateFallback() {
+  let { nonce } = useFrameworkContext();
   return /* @__PURE__ */ react__WEBPACK_IMPORTED_MODULE_0__.createElement(BoundaryShell, { title: "Loading...", renderScripts: true }, ENABLE_DEV_WARNINGS ? /* @__PURE__ */ react__WEBPACK_IMPORTED_MODULE_0__.createElement(
     "script",
     {
+      nonce,
       dangerouslySetInnerHTML: {
         __html: `
               console.log(
@@ -10023,6 +10033,21 @@ var nextPaths = /* @__PURE__ */ new Set();
 var discoveredPathsMaxSize = 1e3;
 var discoveredPaths = /* @__PURE__ */ new Set();
 var URL_LIMIT = 7680;
+function getPathsWithAncestors(paths) {
+  let result = /* @__PURE__ */ new Set();
+  paths.forEach((path) => {
+    if (!path.startsWith("/")) {
+      path = `/${path}`;
+    }
+    for (let i = 1; i < path.length; i++) {
+      if (path[i] === "/") {
+        result.add(path.slice(0, i));
+      }
+    }
+    result.add(path);
+  });
+  return Array.from(result);
+}
 function isFogOfWarEnabled(routeDiscovery, ssr) {
   return routeDiscovery.mode === "lazy" && ssr === true;
 }
@@ -10144,6 +10169,7 @@ function getManifestPath(_manifestPath, basename) {
 }
 var MANIFEST_VERSION_STORAGE_KEY = "react-router-manifest-version";
 async function fetchAndApplyManifestPatches(paths, errorReloadPath, manifest, routeModules, ssr, isSpaMode, basename, manifestPath, patchRoutes, signal) {
+  paths = getPathsWithAncestors(paths);
   const searchParams = new URLSearchParams();
   searchParams.set("paths", paths.sort().join(","));
   searchParams.set("version", manifest.version);
@@ -10336,13 +10362,22 @@ function getActiveMatches(matches, errors, isSpaMode) {
 }
 var CRITICAL_CSS_DATA_ATTRIBUTE = "data-react-router-critical-css";
 function Links({ nonce, crossOrigin }) {
-  let { isSpaMode, manifest, routeModules, criticalCss } = useFrameworkContext();
+  let {
+    isSpaMode,
+    manifest,
+    routeModules,
+    criticalCss,
+    nonce: contextNonce
+  } = useFrameworkContext();
   let { errors, matches: routerMatches } = useDataRouterStateContext();
   let matches = getActiveMatches(routerMatches, errors, isSpaMode);
   let keyedLinks = react__WEBPACK_IMPORTED_MODULE_0__.useMemo(
     () => getKeyedLinksForMatches(matches, routeModules, manifest),
     [matches, routeModules, manifest]
   );
+  if (nonce == null && contextNonce) {
+    nonce = contextNonce;
+  }
   return /* @__PURE__ */ react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, typeof criticalCss === "string" ? /* @__PURE__ */ react__WEBPACK_IMPORTED_MODULE_0__.createElement(
     "style",
     {
@@ -10381,6 +10416,7 @@ function Links({ nonce, crossOrigin }) {
 }
 function PrefetchPageLinks({ page, ...linkProps }) {
   let rsc = useIsRSCRouterContext();
+  let { nonce: contextNonce } = useFrameworkContext();
   let { router } = useDataRouterContext2();
   let matches = react__WEBPACK_IMPORTED_MODULE_0__.useMemo(
     () => matchRoutes(router.routes, page, router.basename),
@@ -10388,6 +10424,9 @@ function PrefetchPageLinks({ page, ...linkProps }) {
   );
   if (!matches) {
     return null;
+  }
+  if (linkProps.nonce == null && contextNonce) {
+    linkProps = { ...linkProps, nonce: contextNonce };
   }
   if (rsc) {
     return /* @__PURE__ */ react__WEBPACK_IMPORTED_MODULE_0__.createElement(RSCPrefetchPageLinksImpl, { page, matches, ...linkProps });
@@ -10662,12 +10701,16 @@ function Scripts(scriptProps) {
     isSpaMode,
     renderMeta,
     routeDiscovery,
-    ssr
+    ssr,
+    nonce: contextNonce
   } = useFrameworkContext();
   let { router, static: isStatic, staticContext } = useDataRouterContext2();
   let { matches: routerMatches } = useDataRouterStateContext();
   let isRSCRouterContext = useIsRSCRouterContext();
   let enableFogOfWar = isFogOfWarEnabled(routeDiscovery, ssr);
+  if (scriptProps.nonce == null && contextNonce) {
+    scriptProps = { ...scriptProps, nonce: contextNonce };
+  }
   if (renderMeta) {
     renderMeta.didRenderScripts = true;
   }
@@ -10863,10 +10906,12 @@ function RemixRootDefaultErrorBoundary({
   error,
   isOutsideRemixApp
 }) {
+  let { nonce } = useFrameworkContext();
   console.error(error);
   let heyDeveloper = /* @__PURE__ */ react__WEBPACK_IMPORTED_MODULE_0__.createElement(
     "script",
     {
+      nonce,
       dangerouslySetInnerHTML: {
         __html: `
         console.log(
@@ -10928,12 +10973,12 @@ function BoundaryShell({
 }
 
 // lib/dom/lib.tsx
-
+;
 var isBrowser2 = typeof window !== "undefined" && typeof window.document !== "undefined" && typeof window.document.createElement !== "undefined";
 try {
   if (isBrowser2) {
     window.__reactRouterVersion = // @ts-expect-error
-    "7.16.0";
+    "7.18.2";
   }
 } catch (e) {
 }
@@ -10992,7 +11037,7 @@ function deserializeErrors(errors) {
         val.internal === true
       );
     } else if (val && val.__type === "Error") {
-      if (val.__subType) {
+      if (typeof val.__subType === "string" && SUPPORTED_ERROR_TYPES.includes(val.__subType)) {
         let ErrorConstructor = window[val.__subType];
         if (typeof ErrorConstructor === "function") {
           try {
@@ -11124,7 +11169,6 @@ function HistoryRouter({
   );
 }
 HistoryRouter.displayName = "unstable_HistoryRouter";
-var ABSOLUTE_URL_REGEX2 = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
 var Link = react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(
   function LinkWithRef({
     onClick,
@@ -11143,7 +11187,7 @@ var Link = react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(
     ...rest
   }, forwardedRef) {
     let { basename, navigator, useTransitions } = react__WEBPACK_IMPORTED_MODULE_0__.useContext(NavigationContext);
-    let isAbsolute = typeof to === "string" && ABSOLUTE_URL_REGEX2.test(to);
+    let isAbsolute = typeof to === "string" && ABSOLUTE_URL_REGEX.test(to);
     let parsed = parseToInfo(to, basename);
     to = parsed.to;
     let href = useHref(to, { relative });
@@ -11290,7 +11334,7 @@ var Form = react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(
     let submit = useSubmit();
     let formAction = useFormAction(action, { relative });
     let formMethod = method.toLowerCase() === "get" ? "get" : "post";
-    let isAbsolute = typeof action === "string" && ABSOLUTE_URL_REGEX2.test(action);
+    let isAbsolute = typeof action === "string" && ABSOLUTE_URL_REGEX.test(action);
     let submitHandler = (event) => {
       onSubmit && onSubmit(event);
       if (event.defaultPrevented) return;
@@ -11372,6 +11416,9 @@ function ScrollRestoration({
       sessionStorage.removeItem(storageKey2);
     }
   }).toString();
+  if (props.nonce == null && remixContext?.nonce) {
+    props.nonce = remixContext.nonce;
+  }
   return /* @__PURE__ */ react__WEBPACK_IMPORTED_MODULE_0__.createElement(
     "script",
     {
@@ -11808,7 +11855,7 @@ function useViewTransitionState(to, { relative } = {}) {
 }
 
 // lib/dom/server.tsx
-
+;
 function StaticRouter({
   basename,
   children,
@@ -12072,14 +12119,13 @@ function createHref(to) {
 function encodeLocation(to) {
   let href = typeof to === "string" ? to : createPath(to);
   href = href.replace(/ $/, "%20");
-  let encoded = ABSOLUTE_URL_REGEX3.test(href) ? new URL(href) : new URL(href, "http://localhost");
+  let encoded = ABSOLUTE_URL_REGEX.test(href) ? new URL(href) : new URL(href, "http://localhost");
   return {
     pathname: encoded.pathname,
     search: encoded.search,
     hash: encoded.hash
   };
 }
-var ABSOLUTE_URL_REGEX3 = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
 
 
 
@@ -12089,17 +12135,17 @@ var ABSOLUTE_URL_REGEX3 = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
 /******/ 	});
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
+/******/ 	const __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -12108,7 +12154,7 @@ var ABSOLUTE_URL_REGEX3 = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
@@ -12123,7 +12169,7 @@ var ABSOLUTE_URL_REGEX3 = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
 /******/ 	(() => {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
 /******/ 		__webpack_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
+/******/ 			const getter = module && module.__esModule ?
 /******/ 				() => (module['default']) :
 /******/ 				() => (module);
 /******/ 			__webpack_require__.d(getter, { a: getter });
@@ -12133,8 +12179,8 @@ var ABSOLUTE_URL_REGEX3 = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
 /******/ 	
 /******/ 	/* webpack/runtime/create fake namespace object */
 /******/ 	(() => {
-/******/ 		var getProto = Object.getPrototypeOf ? (obj) => (Object.getPrototypeOf(obj)) : (obj) => (obj.__proto__);
-/******/ 		var leafPrototypes;
+/******/ 		const getProto = Object.getPrototypeOf ? (obj) => (Object.getPrototypeOf(obj)) : (obj) => (obj.__proto__);
+/******/ 		let leafPrototypes;
 /******/ 		// create a fake namespace object
 /******/ 		// mode & 1: value is a module id, require it
 /******/ 		// mode & 2: merge all properties of value into the ns
@@ -12148,9 +12194,9 @@ var ABSOLUTE_URL_REGEX3 = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
 /******/ 				if((mode & 4) && value.__esModule) return value;
 /******/ 				if((mode & 16) && typeof value.then === 'function') return value;
 /******/ 			}
-/******/ 			var ns = Object.create(null);
+/******/ 			const ns = Object.create(null);
 /******/ 			__webpack_require__.r(ns);
-/******/ 			var def = {};
+/******/ 			const def = {};
 /******/ 			leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
 /******/ 			for(var current = mode & 2 && value; (typeof current == 'object' || typeof current == 'function') && !~leafPrototypes.indexOf(current); current = getProto(current)) {
 /******/ 				Object.getOwnPropertyNames(current).forEach((key) => (def[key] = () => (value[key])));
@@ -12163,11 +12209,26 @@ var ABSOLUTE_URL_REGEX3 = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
+/******/ 		// define getter/value functions for harmony exports
 /******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			if(Array.isArray(definition)) {
+/******/ 				var i = 0;
+/******/ 				while(i < definition.length) {
+/******/ 					var key = definition[i++];
+/******/ 					var binding = definition[i++];
+/******/ 					if(!__webpack_require__.o(exports, key)) {
+/******/ 						if(binding === 0) {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
+/******/ 						} else {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, get: binding });
+/******/ 						}
+/******/ 					} else if(binding === 0) { i++; }
+/******/ 				}
+/******/ 			} else {
+/******/ 				for(var key in definition) {
+/******/ 					if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 					}
 /******/ 				}
 /******/ 			}
 /******/ 		};
@@ -12175,14 +12236,14 @@ var ABSOLUTE_URL_REGEX3 = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.hasOwn(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -12190,7 +12251,7 @@ var ABSOLUTE_URL_REGEX3 = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
 /******/ 	})();
 /******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
+let __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!***********************!*\

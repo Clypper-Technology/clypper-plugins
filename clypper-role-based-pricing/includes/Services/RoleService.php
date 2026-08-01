@@ -2,6 +2,8 @@
 
 namespace ClypperTechnology\RolePricing\Services;
 
+use ClypperTechnology\RolePricing\REST\DTOs\RoleDTO;
+use ClypperTechnology\RolePricing\Rules\RoleRules;
 use WP_User;
 
 defined( 'ABSPATH' ) || exit;
@@ -23,8 +25,26 @@ class RoleService
         return $users['avail_roles'][ $role['name'] ] ?? 0;
     }
 
-    public function get_all_roles(): array {
-        return wp_roles()->get_names();
+    /**
+     *  asdf
+     * @param RoleRules[] $rules
+     * @return RoleDTO[]
+     */
+    public function get_all_roles(array $rules): array {
+        $wp_roles = wp_roles()->get_names();
+        $roles = [];
+
+        foreach($wp_roles as $wp_role) {
+            $rule = array_find($rules, fn($rule) => $rule->role_name == $wp_role);
+
+            if($rule) {
+                $roles[] = RoleDTO::from($rule);
+            } else {
+                $roles[] = new RoleDTO(0, $wp_role, $wp_role, false);
+            }
+        }
+
+        return $roles;
     }
 
     /**

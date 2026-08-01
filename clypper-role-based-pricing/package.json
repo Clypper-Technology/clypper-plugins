@@ -10,15 +10,15 @@
         "packages-update": "wp-scripts packages-update"
     },
     "devDependencies": {
-        "@types/react": "^19.2.14",
-        "@types/react-dom": "^19.2.3",
-        "@wordpress/components": "^33.1.0",
-        "@wordpress/scripts": "^32.2.0",
-        "typescript": "^6.0.3"
+        "@types/react": "^19.2.18",
+        "@types/react-dom": "^19.2.4",
+        "@wordpress/components": "^38.0.0",
+        "@wordpress/scripts": "^34.0.0",
+        "typescript": "^7.0.2"
     },
     "dependencies": {
-        "@types/wordpress__components": "^23.0.12",
-        "@wordpress/api-fetch": "^7.46.0",
-        "react-router-dom": "^7.16.0"
+        "@types/wordpress__components": "^23.8.0",
+        "@wordpress/api-fetch": "^7.52.0",
+        "react-router-dom": "^7.18.2"
     }
 }

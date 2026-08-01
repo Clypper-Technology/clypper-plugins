@@ -32,28 +32,10 @@ class RuleService {
         return $this->get_rule_by_user_role($user_role);
     }
 
-
-    /**
-     * Add rules for single categories
-     */
-    public function add_categories_to_rule($cat_list, int $rule_id ): bool {
-        $role_rules = $this->get_rules_by_id( $rule_id );
-        $new_categories = [];
-
-        foreach ( $cat_list as $slug_name ) {
-            $new_category = get_term_by( 'slug', $slug_name, 'product_cat' );
-            $new_categories[] = new CategoryRule($new_category->term_id, $slug_name, esc_attr__( $new_category->name ));
-        }
-
-        $role_rules->add_single_categories($new_categories);
-
-        return $this->save_role_rules($role_rules);
-    }
-
     /**
      * @return WP_Post[]
      */
-    public function get_all_rules(): array {
+    private function get_all_rules(): array {
         return get_posts([
             'post_type'   => 'clypper_rbp',
             'numberposts' => -1,
@@ -159,7 +141,7 @@ class RuleService {
      * @throws InvalidArgumentException If rule already exists
      * @throws RuntimeException If creation fails
      */
-    public function add_rule(string $name): int {
+    public function add_rule(string $name): RoleRules {
         $rule = [
             'post_title'   => $name,
             'post_content' => '',
@@ -174,48 +156,8 @@ class RuleService {
             throw new RuntimeException('Failed to create rule in database');
         }
 
-        return $rule_id;
+        return new RoleRules($rule_id, $name, false);
     }
-
-
-    /**
-     * Update rule settings (global pricing and general categories)
-     *
-     * @param array $data Form data
-     * @return bool Success status
-     */
-    public function update_rule(array $data): bool {
-        $rule_id = intval( $data[ 'id' ]) ;
-        $role_rules = $this->get_rules_by_id( $rule_id );
-
-        if ( ! $role_rules ) {
-            return false;
-        }
-
-        $role_rules->rule_active = !empty( $data['rule_active'] );
-
-        // Global rule - only create if there's actually a value
-        $role_rules->global_rule = new Rule(
-            $data['reduce_regular_type'] ?? '',
-            $data['reduce_regular_value'] ?? '',
-            '',  // Future: could support bulk global discounts
-            ''
-        );
-
-        // Category rule - only create if there's actually a value
-        $role_rules->category_rule = new Rule(
-            $data['reduce_categories_type'] ?? 'percent',  // Default assumption
-            $data['reduce_categories_value'] ?? '',
-            '',  // Future: could support bulk category discounts
-            ''
-        );
-
-        $new_categories = explode(',', $data['selected_categories']);
-        $role_rules->replace_categories(array_map(fn($catId) => [$catId], $new_categories));
-
-        return $this->save_role_rules($role_rules);
-    }
-
 
     /**
      * Add product to rule

@@ -2,9 +2,9 @@
 
 namespace ClypperTechnology\RolePricing\REST;
 
-use ClypperTechnology\RolePricing\REST\DTOs\RoleDTO;
 use ClypperTechnology\RolePricing\Services\RoleService;
 use ClypperTechnology\RolePricing\Services\RuleService;
+use WP_REST_Request;
 
 defined('ABSPATH') || exit;
 
@@ -30,6 +30,14 @@ class RoleController extends  \WP_REST_Controller
                 'permission_callback' => [ $this, 'permissions_check' ],
             ],
         ]);
+
+        register_rest_route( $this->namespace, '/' . $this->resource_name, [
+            [
+                'methods'               => \WP_REST_Server::EDITABLE,
+                'callback'              => [ $this, 'update_items'],
+                'permission_callback' => [ $this, 'permissions_check' ],
+            ],
+        ]);
     }
 
     public function permissions_check( $request ): \WP_Error|bool
@@ -38,43 +46,31 @@ class RoleController extends  \WP_REST_Controller
     }
 
     public function get_items( $request ): \WP_REST_Response {
-         $status = $request->get_param( "status" );
+        $rules = $this->ruleService->get_all_role_rules();
+        $roles = $this->roleService->get_all_roles($rules);
 
-         if($status == "existing") {
-            $roles = $this->get_existing_roles();
-
-            return new \WP_REST_Response( $roles, 200 );
-         }
-
-        $roles = $this->roleService->get_all_roles();
-        $roleDTOs = [];
-
-        foreach ($roles as $slug => $role_name) {
-            $roleDTOs[] = new RoleDTO(0, $role_name, $slug);
-        }
-
-        return new \WP_REST_Response($roleDTOs, 200);
+        return new \WP_REST_Response($roles, 200);
     }
 
-    private function get_existing_roles()  {
-        $rules = $this->ruleService->get_all_role_rules();
-        $roles = $this->roleService->get_all_roles();
+    public function update_items( WP_REST_Request $request ): \WP_REST_Response {
+        $request_rule = $request->get_json_params();
+        $rule = $this->ruleService->get_rules_by_id($request_rule["id"]);
 
-        $existing_roles = [];
+        if($rule) {
+            $active = boolval($request["active"]);
 
-        foreach ($rules as $rule) {
-            if($rule->role_name == "guest") {
-                $existing_roles[] = new RoleDTO($rule->id, "Guest", "guest");
-                continue;
-            }
+            $rule->rule_active = $active;
+            $this->ruleService->save_role_rules($rule);
 
-            $slug = $rule->role_name;
-            $role_name = $roles[$slug];
-
-
-            $existing_roles[] = new RoleDTO($rule->id, $role_name, $slug);
+            return new \WP_REST_Response(null, 204);
         }
 
-        return $existing_roles;
+        $rule_name = $request_rule["name"];
+
+        $new_role = $this->ruleService->add_rule($rule_name);
+        $new_role->rule_active = true;
+        $this->ruleService->save_role_rules($new_role);
+
+        return new \WP_REST_Response(null, 204);
     }
 }
