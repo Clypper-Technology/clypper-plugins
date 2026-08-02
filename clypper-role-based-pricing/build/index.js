@@ -119,6 +119,54 @@ const RoleCard = props => {
 
 /***/ },
 
+/***/ "./src/components/editingSections/AddCategoryRule.tsx"
+/*!************************************************************!*\
+  !*** ./src/components/editingSections/AddCategoryRule.tsx ***!
+  \************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AddCategoryRule: () => (/* binding */ AddCategoryRule)
+/* harmony export */ });
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+
+
+const AddCategoryRule = props => {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.PanelRow, {
+    header: ""
+  });
+};
+
+/***/ },
+
+/***/ "./src/components/editingSections/AddProductRule.tsx"
+/*!***********************************************************!*\
+  !*** ./src/components/editingSections/AddProductRule.tsx ***!
+  \***********************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AddProductRule: () => (/* binding */ AddProductRule)
+/* harmony export */ });
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+
+
+const AddProductRule = props => {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.PanelRow, {
+    header: ""
+  });
+};
+
+/***/ },
+
 /***/ "./src/components/editingSections/CategoryRulesPanel.tsx"
 /*!***************************************************************!*\
   !*** ./src/components/editingSections/CategoryRulesPanel.tsx ***!
@@ -129,21 +177,50 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   CategoryRulesPanel: () => (/* binding */ CategoryRulesPanel)
 /* harmony export */ });
-/* harmony import */ var _wordpress_ui__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/ui */ "./node_modules/@wordpress/ui/build-module/collapsible-card/root.mjs");
-/* harmony import */ var _wordpress_ui__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/ui */ "./node_modules/@wordpress/ui/build-module/collapsible-card/header.mjs");
-/* harmony import */ var _wordpress_ui__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/ui */ "./node_modules/@wordpress/ui/build-module/collapsible-card/content.mjs");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_ui__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/ui */ "./node_modules/@wordpress/ui/build-module/badge/badge.mjs");
+/* harmony import */ var _wordpress_ui__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/ui */ "./node_modules/@wordpress/ui/build-module/collapsible-card/root.mjs");
+/* harmony import */ var _wordpress_ui__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/ui */ "./node_modules/@wordpress/ui/build-module/collapsible-card/header.mjs");
+/* harmony import */ var _wordpress_ui__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/ui */ "./node_modules/@wordpress/ui/build-module/collapsible-card/content.mjs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _AddCategoryRule__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./AddCategoryRule */ "./src/components/editingSections/AddCategoryRule.tsx");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__);
+
+
+
 
 
 const CategoryRulesPanel = props => {
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_0__.Root, {
-    defaultOpen: false,
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_1__.Header, {
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h2", {
-        children: "Category Rules"
+  const [addRule, setAddRule] = (0,react__WEBPACK_IMPORTED_MODULE_5__.useState)(false);
+  async function addProductRule(rule) {}
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_2__.Root, {
+    defaultOpen: true,
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_3__.Header, {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
+        className: "row",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("h2", {
+          children: "Category Rules"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_1__.Badge, {
+          intent: "draft",
+          children: `${props.rule.products.length}`
+        })]
       })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_2__.Content, {})]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_4__.Content, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
+        className: "row",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+          isDestructive: addRule,
+          variant: "primary",
+          onClick: () => setAddRule(!addRule),
+          children: addRule ? "Close" : "Add rule"
+        })
+      }), addRule && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_AddCategoryRule__WEBPACK_IMPORTED_MODULE_6__.AddCategoryRule, {
+        OnAddProduct: addProductRule
+      })]
+    })]
   });
 };
 
@@ -163,7 +240,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_ui__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/ui */ "./node_modules/@wordpress/ui/build-module/collapsible-card/root.mjs");
 /* harmony import */ var _wordpress_ui__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/ui */ "./node_modules/@wordpress/ui/build-module/collapsible-card/header.mjs");
 /* harmony import */ var _wordpress_ui__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/ui */ "./node_modules/@wordpress/ui/build-module/collapsible-card/content.mjs");
-/* harmony import */ var _addProductRule__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./addProductRule */ "./src/components/editingSections/addProductRule.tsx");
+/* harmony import */ var _AddProductRule__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./AddProductRule */ "./src/components/editingSections/AddProductRule.tsx");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react */ "react");
@@ -199,34 +276,10 @@ const ProductRulesPanel = props => {
           onClick: () => setAddRule(!addRule),
           children: addRule ? "Close" : "Add rule"
         })
-      }), addRule && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_addProductRule__WEBPACK_IMPORTED_MODULE_4__.AddProductRule, {
+      }), addRule && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_AddProductRule__WEBPACK_IMPORTED_MODULE_4__.AddProductRule, {
         OnAddProduct: addProductRule
       })]
     })]
-  });
-};
-
-/***/ },
-
-/***/ "./src/components/editingSections/addProductRule.tsx"
-/*!***********************************************************!*\
-  !*** ./src/components/editingSections/addProductRule.tsx ***!
-  \***********************************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   AddProductRule: () => (/* binding */ AddProductRule)
-/* harmony export */ });
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
-
-
-const AddProductRule = props => {
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.PanelRow, {
-    header: ""
   });
 };
 

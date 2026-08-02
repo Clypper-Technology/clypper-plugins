@@ -1,6 +1,6 @@
 import { RoleRules } from "@/types/roleRules"
 import { Badge, CollapsibleCard } from "@wordpress/ui"
-import { AddProductRule } from "./addProductRule";
+import { AddProductRule } from "./AddProductRule";
 import { ProductRule } from "@/types/productRule";
 import { Button } from "@wordpress/components";
 import { useState } from "react";
