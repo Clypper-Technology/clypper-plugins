@@ -8,15 +8,8 @@ use ClypperTechnology\RolePricing\Services\RuleService;
 defined( 'ABSPATH' ) || exit;
 
 class Admin {
-
-    private RuleService $rule_service;
-    private RoleService $role_service;
-
-    public function __construct( RuleService $rule_service, RoleService $role_service )
+    public function __construct()
     {
-        $this->rule_service = $rule_service;
-        $this->role_service = $role_service;
-
         add_action( 'admin_post_rrb2b_add_rule',    [ $this, 'add_rule' ] );
         add_action( 'admin_post_rrb2b_update_rule', [ $this, 'update_rule' ] );
         add_action( 'admin_menu',                   [ $this, 'create_admin_menu' ] );
@@ -63,10 +56,4 @@ class Admin {
           }
       );
   }
-}
-
-    private function admin_url( string $tab, array $args = [] ): string
-    {
-        return add_query_arg( $args, admin_url( "admin.php?page=rrb2b&tab={$tab}" ) );
-    }
 }
