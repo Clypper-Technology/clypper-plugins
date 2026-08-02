@@ -1,5 +1,8 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 class PdfInvoicesCompatability {
   public function __construct() {
     add_action( 'wpo_wcpdf_after_item_meta', function( $template_type, $item, $order ) {

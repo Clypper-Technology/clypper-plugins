@@ -211,24 +211,26 @@ class RuleService {
      */
     public function get_all_role_rules(): array {
         $posts = $this->get_all_rules();
+        $roles = array_map(fn($post) => RoleRules::from_post($post), $posts);
 
-        return array_map(fn($post) => RoleRules::from_post($post), $posts);
+        foreach($roles as $role) {
+            $this->role_rules[$role->role_name] = $role;
+        }
+
+        return $roles;
     }
 
     public function get_rule_by_user_role( string $user_role): ?RoleRules {
-        if (isset($this->role_rules[$user_role])) {
+        if(array_key_exists($user_role, $this->role_rules)) {
             return $this->role_rules[$user_role];
         }
 
         $all_rules = $this->get_all_role_rules();
         $rule = array_find($all_rules, fn( RoleRules $rule ) => $rule->role_name === $user_role );
 
-        if( $rule ) {
-            $this->role_rules[$user_role] = $rule;
-            return $rule;
-        }
+        $this->role_rules[$user_role] = $rule;
 
-        return null;
+        return $rule;
     }
 
     public function import_products_from_category( int $rule_id, string $category, bool $variations = false ): int

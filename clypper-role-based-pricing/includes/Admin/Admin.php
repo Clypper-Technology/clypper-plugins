@@ -50,31 +50,6 @@ class Admin {
         wp_enqueue_style( 'wp-components' );
     }
 
-    public function add_company_info_to_admin_email( $wp_new_user_notification_email, $user, $blogname )
-    {
-        $company_cvr  = get_user_meta( $user->ID, 'company_cvr', true );
-        $company_type = get_user_meta( $user->ID, 'company_type', true );
-
-        if ( ! $company_cvr && ! $company_type ) {
-            return $wp_new_user_notification_email;
-        }
-
-        $company_info = "\n\n" . __( 'Company Information:', 'clypper-role-pricing' ) . "\n";
-
-        if ( $company_cvr ) {
-            $company_info .= __( 'CVR Number:', 'clypper-role-pricing' ) . ' ' . $company_cvr . "\n";
-        }
-
-        if ( $company_type ) {
-            $company_info .= __( 'Industry:', 'clypper-role-pricing' ) . ' ' . $company_type . "\n";
-        }
-
-        $wp_new_user_notification_email['message'] .= $company_info;
-
-        return $wp_new_user_notification_email;
-    }
-
-
   public function create_admin_menu(): void
   {
       add_submenu_page(
@@ -88,4 +63,10 @@ class Admin {
           }
       );
   }
+}
+
+    private function admin_url( string $tab, array $args = [] ): string
+    {
+        return add_query_arg( $args, admin_url( "admin.php?page=rrb2b&tab={$tab}" ) );
+    }
 }

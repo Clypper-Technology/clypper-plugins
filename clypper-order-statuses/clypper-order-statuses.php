@@ -41,7 +41,7 @@ class ClypperOrderStatuses {
         ?>
         <style>
             .order-status.status-faktura {
-                background: #C5E0C5;
+                background: #d0ae53;
             }
             .order-status.status-vejle, .order-status.status-gadstrup {
                 color: #fff !important;
