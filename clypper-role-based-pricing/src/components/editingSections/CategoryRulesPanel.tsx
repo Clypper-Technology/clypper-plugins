@@ -1,5 +1,5 @@
 import { RoleRules } from "@/types/roleRules"
-import { PanelBody } from "@wordpress/components"
+import { CollapsibleCard } from "@wordpress/ui"
 
 interface CategoryRulesPanelProps {
   rule: RoleRules,
@@ -8,7 +8,15 @@ interface CategoryRulesPanelProps {
 
 export const CategoryRulesPanel = (props: CategoryRulesPanelProps) => {
   return (
-    <PanelBody title="Category Rules">
-    </PanelBody>
+    <CollapsibleCard.Root defaultOpen={false}>
+      <CollapsibleCard.Header>
+        <h2>Category Rules</h2>
+        
+      </CollapsibleCard.Header>
+
+      <CollapsibleCard.Content>
+
+      </CollapsibleCard.Content>
+    </CollapsibleCard.Root>
   )
 }

@@ -31,7 +31,7 @@ export const RoleCard = (props: RoleCardProps) => {
             <RoleStatus active={role.active} />
             <span>{role.name}</span>
           </div>
-          <Badge>
+          <Badge intent="draft">
             {`${role.rule_count} rules`}
           </Badge>
         </div>
