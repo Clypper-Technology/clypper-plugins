@@ -1,5 +1,6 @@
 import { Role } from "@/types/role";
 import { Button, Card, CardBody } from "@wordpress/components";
+import { Badge } from "@wordpress/ui";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RoleStatus } from "../feedback/roleStatus";
@@ -25,9 +26,14 @@ export const RoleCard = (props: RoleCardProps) => {
   return (
     <Card className="row-card">
       <CardBody className="row-card-body">
-        <div className="row">
-          <RoleStatus active={role.active} />
-          <span>{role.name}</span>
+        <div className="row space-between card-text">
+          <div className="row">
+            <RoleStatus active={role.active} />
+            <span>{role.name}</span>
+          </div>
+          <Badge>
+            {`${role.rule_count} rules`}
+          </Badge>
         </div>
         
         <div className="row">

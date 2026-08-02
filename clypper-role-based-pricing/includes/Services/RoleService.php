@@ -40,7 +40,7 @@ class RoleService
             if($rule) {
                 $roles[] = RoleDTO::from($rule);
             } else {
-                $roles[] = new RoleDTO(0, $wp_role, $wp_role, false);
+                $roles[] = new RoleDTO(-1, $wp_role, $wp_role, false, 0);
             }
         }
 

@@ -62,15 +62,8 @@ class RoleRules {
         ];
     }
 
-    /**
-     * Get product rules by product ID
-     * @return ?ProductRule
-     * @param int $product_id
-     */
-    public function get_rule_by_product_id( int $product_id ): ?ProductRule {
-        return array_find( $this->products, function( ProductRule $product_rule ) use ( $product_id ) {
-            return $product_rule->id === $product_id;
-        });
+    public function get_rule_count(): int {
+        return sizeof($this->products) + sizeof($this->categories);
     }
 
     public function get_applicable_rule( $product_id, array $category_ids ): ?ApplicableRule {
@@ -121,21 +114,19 @@ class RoleRules {
         $this->products = $products;
     }
 
-    public function replace_categories(array $categories): void {
-        $this->categories = $categories;
-    }
-
     public function replace_single_categories(array $categories): void {
         $this->single_categories = $categories;
     }
 
-    public function add_single_categories(array $categories): void
-    {
-        $this->single_categories= array_merge($this->single_categories, $categories);
-    }
-
-    public function is_guest(): bool {
-        return $this->role_name == self::GUEST_ROLE;
+    /**
+     * Get product rules by product ID
+     * @return ?ProductRule
+     * @param int $product_id
+     */
+    private function get_rule_by_product_id( int $product_id ): ?ProductRule {
+        return array_find( $this->products, function( ProductRule $product_rule ) use ( $product_id ) {
+            return $product_rule->id === $product_id;
+        });
     }
 
     private function has_categories(): bool {
@@ -165,4 +156,6 @@ class RoleRules {
     private function matches_any_category( array $category_ids ): bool {
         return ! empty(array_intersect($category_ids, $this->categories));
     }
+
+
 }

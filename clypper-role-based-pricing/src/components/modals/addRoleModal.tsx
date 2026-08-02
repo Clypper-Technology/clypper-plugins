@@ -22,7 +22,8 @@ export const AddRolesModal = (props: AddRolesModalProps) => {
 
   const addRole = async (role: Role) => {
     setIsLoadingSlug(role.slug);
-    const id = await RuleService.addRules(role.slug);
+    
+    await RuleService.addRules(role.slug);
 
     props.onRoleAdded(role);
     setIsLoadingSlug("");

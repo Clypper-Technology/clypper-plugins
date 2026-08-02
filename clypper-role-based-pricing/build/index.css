@@ -8,6 +8,10 @@
   align-items: center;
 }
 
+.card-text {
+  min-width: 200px;
+}
+
 .roles-list {
   display: flex;
   flex-direction: column;
@@ -25,6 +29,12 @@
   gap: 20px;
 }
 
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .space-between {
   justify-content: space-between;
 }
@@ -34,17 +44,21 @@
 }
 
 .status-indicator {
-  border-radius: 100%;
-  width: 12px;
-  height: 12px;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .active {
-  background-color: green;
+  background-color: #00a32a;
+  box-shadow: 0 0 0 3px rgba(0, 163, 42, 0.15);
 }
 
 .inactive {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: #c3c4c7;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.04);
 }
 
 /*# sourceMappingURL=index.css.map*/
