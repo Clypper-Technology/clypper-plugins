@@ -1,20 +1,25 @@
 import { RoleRules } from "@/types/roleRules"
 import { Badge, CollapsibleCard } from "@wordpress/ui"
-import { AddProductRule } from "./AddProductRule";
 import { ProductRule } from "@/types/productRule";
 import { Button } from "@wordpress/components";
 import { useState } from "react";
+import { AddProductRule } from "./AddProductRule";
 
 interface ProductRulesPanelProps {
   rule: RoleRules,
-  onProductAdded: (rule: RoleRules) => Promise<void>
+  onProductAdded: (rule: RoleRules) => void
 }
 
-export const ProductRulesPanel = (props: ProductRulesPanelProps) => {
+export const ProductRulesPanel = ({ rule, onProductAdded }: ProductRulesPanelProps) => {
   const [addRule, setAddRule] = useState<boolean>(false);
 
-  async function addProductRule(rule: ProductRule) {
+  function addProductRule(productRule: ProductRule) {
+    const updatedRule: RoleRules = {
+      ...rule,
+      products: [...rule.products, productRule],
+    }
 
+    onProductAdded(updatedRule)
   }
 
   return (
@@ -23,7 +28,7 @@ export const ProductRulesPanel = (props: ProductRulesPanelProps) => {
         <div className="row">
           <h2>Product Rules</h2>
           <Badge intent="draft">
-            {`${props.rule.products.length}`}
+            {`${rule.products.length}`}
           </Badge>
         </div>
       </CollapsibleCard.Header>
@@ -34,8 +39,12 @@ export const ProductRulesPanel = (props: ProductRulesPanelProps) => {
         </div>
         
         { addRule && (
-          <AddProductRule OnAddProduct={addProductRule} />
+          <AddProductRule onAddProduct={addProductRule} />
         )}
+
+        {rule.products.map(product => (
+          <h2 key={product.id}>{product.name}</h2>
+        ))}
 
       </CollapsibleCard.Content>
     </CollapsibleCard.Root>

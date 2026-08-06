@@ -1,5 +1,6 @@
 export enum ApiBase {
   Rules = '/rules',
   Roles = '/roles',
-  Base = '/rrb2b/v1'
+  Base = '/rrb2b/v1',
+  Product = '/products'
 }

@@ -11,12 +11,14 @@ export class RoleService {
     return response;
   }
 
-  public static async updateRole(role: Role): Promise<void> {
-    await apiFetch({
+  public static async updateRole(role: Role): Promise<number> {
+    const id = await apiFetch<number>({
       path: ApiPath.rolesPath(),
       method: "PATCH",
       data: role
     });
+
+    return id;
   }
 
   public static async getExistingRoles(): Promise<Role[]> {

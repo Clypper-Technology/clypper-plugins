@@ -26,6 +26,9 @@ export function Roles() {
     role.active = active;
 
     await RoleService.updateRole(role);
+
+    const roles = await RoleService.getRoles();
+    setAllRoles(roles);
   }
 
   return (

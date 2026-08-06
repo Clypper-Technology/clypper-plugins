@@ -1,10 +1,11 @@
 import { RuleService } from "@/services/ruleService";
 import { RoleRules } from "@/types/roleRules";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import {Spinner } from '@wordpress/components';
+import { useNavigate, useParams } from "react-router-dom";
+import {Icon, Spinner } from '@wordpress/components';
 import { CategoryRulesPanel } from "../editingSections/CategoryRulesPanel";
 import { ProductRulesPanel } from "../editingSections/ProductRulesPanel";
+import { arrowLeft } from "@wordpress/icons";
 
 
 export function Rules() {
@@ -12,6 +13,7 @@ export function Rules() {
   const  numericId = id ? parseInt(id) : 0;
   const [isLoading, setIsLoading] = useState(true);
   const [rule, setRule] = useState<RoleRules>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getRule = async () => {
@@ -27,12 +29,13 @@ export function Rules() {
   }, [numericId])
 
   const updateRule = async (rule: RoleRules) => {
-    
+    setRule(rule);
   }
 
   return(
     <div>
-      <div>
+      <div className="row">
+        <Icon icon={arrowLeft} onClick={(() => navigate(-1))} style={{ cursor: "pointer" }}/>
         <h1>{rule?.role_name}</h1>
       </div>
       { isLoading ? (

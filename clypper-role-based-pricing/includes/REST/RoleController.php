@@ -62,15 +62,15 @@ class RoleController extends  \WP_REST_Controller
             $rule->rule_active = $active;
             $this->ruleService->save_role_rules($rule);
 
-            return new \WP_REST_Response(null, 204);
+            return new \WP_REST_Response($rule, 204);
         }
 
         $rule_name = $request_rule["name"];
 
-        $new_role = $this->ruleService->add_rule($rule_name);
-        $new_role->rule_active = true;
-        $this->ruleService->save_role_rules($new_role);
+        $rule = $this->ruleService->add_rule($rule_name);
+        $rule->rule_active = true;
+        $this->ruleService->save_role_rules($rule);
 
-        return new \WP_REST_Response(null, 204);
+        return new \WP_REST_Response($rule, 204);
     }
 }

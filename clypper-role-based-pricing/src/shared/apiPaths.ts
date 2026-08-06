@@ -19,4 +19,8 @@ export class ApiPath {
   public static rolePath(roleId: string): string {
     return this.rolesPath() + "/" + roleId;
   }
+
+  public static productPathSearch(searchQuery: string): string {
+    return `${ApiBase.Base}${ApiBase.Product}?search=${searchQuery}`
+  }
 }
