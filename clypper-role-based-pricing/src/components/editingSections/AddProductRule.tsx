@@ -1,13 +1,18 @@
 import { ProductRule } from "@/types/productRule"
-import { ProductSearch } from "../controls/ProductSearch"
 import { Product } from "@/types/product"
 import { PricingRule } from "@/types/pricingRule"
+import { DisplayItem, ItemSearch } from "../controls/ItemSearch"
+import { ProductService } from "@/services/productService"
 
 export interface AddProductRuleProps {
-  onAddProduct: (rule: ProductRule) => void
+  onAddProduct: (rule: ProductRule) => void,
+  products: Product[]
 }
 
-export const AddProductRule = (props: AddProductRuleProps) => {
+export const AddProductRule = ({
+  onAddProduct,
+  products
+}: AddProductRuleProps) => {
   function addProduct(product: Product) {
     
     const rule: PricingRule = {
@@ -24,10 +29,21 @@ export const AddProductRule = (props: AddProductRuleProps) => {
       min_qty: 0
     }
 
-    props.onAddProduct(productRule);
+    onAddProduct(productRule);
+  }
+
+  const searchProducts = async (search: string): Promise<Product[]> => {
+    return await ProductService.getProductsByName(search);
+  }
+
+  const displayProduct = (product: Product): DisplayItem => {
+    return { 
+      label: product.name,
+      value: String(product.id)
+    };
   }
 
   return(
-    <ProductSearch onProductAdded={addProduct} />
+    <ItemSearch onItemAdded={addProduct} searchItems={searchProducts} displayItem={displayProduct} addedItems={products}/>
   )
 }

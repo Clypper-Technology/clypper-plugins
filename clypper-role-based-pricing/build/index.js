@@ -119,68 +119,64 @@ const RoleCard = props => {
 
 /***/ },
 
-/***/ "./src/components/controls/ProductSearch.tsx"
-/*!***************************************************!*\
-  !*** ./src/components/controls/ProductSearch.tsx ***!
-  \***************************************************/
+/***/ "./src/components/controls/ItemSearch.tsx"
+/*!************************************************!*\
+  !*** ./src/components/controls/ItemSearch.tsx ***!
+  \************************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   ProductSearch: () => (/* binding */ ProductSearch)
+/* harmony export */   ItemSearch: () => (/* binding */ ItemSearch)
 /* harmony export */ });
-/* harmony import */ var _services_productService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/services/productService */ "./src/services/productService.ts");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
 
 
 
-
-const ProductSearch = props => {
-  const [products, setProducts] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)([]);
-  const [options, setOptions] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)([]);
+const ItemSearch = ({
+  searchItems,
+  displayItem,
+  onItemAdded,
+  addedItems = []
+}) => {
+  const [items, setItems] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
+  const [options, setOptions] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
+  const [loading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const onFilterValueChange = async inputValue => {
     if (!inputValue) {
       setOptions([]);
       return;
     }
-    // replace with your actual product search call
-    const results = await _services_productService__WEBPACK_IMPORTED_MODULE_0__.ProductService.getProductsByName(inputValue);
-    setProducts(results);
-    setOptions(results.map(p => ({
-      value: String(p.id),
-      label: p.name
-    })));
+    setLoading(true);
+    const results = await searchItems(inputValue);
+    setItems(results);
+    setOptions(results.map(displayItem));
+    setLoading(false);
   };
-  const onChange = async value => {
-    if (!value) {
-      return;
-    }
-    const product = products.find(p => String(p.id) == value);
-    if (!product) return;
-    props.onProductAdded(product);
-  };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ComboboxControl, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.ComboboxControl, {
     label: "Search for product",
     options: options,
     onFilterValueChange: onFilterValueChange,
-    onChange: onChange,
+    isLoading: loading,
     __experimentalRenderItem: ({
-      item
+      item: option
     }) => {
-      const product = products.find(p => String(p.id) === item.value);
-      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+      const item = items.find(p => String(p.id) === option.value);
+      if (!item) return null;
+      const isAdded = addedItems.some(element => item.id == element.id);
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
         style: {
           display: 'flex',
           alignItems: 'center',
           gap: '8px'
         },
-        children: [product?.image_url && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("img", {
-          src: product.image_url,
+        children: [item.image_url && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("img", {
+          src: item.image_url,
           alt: "",
           style: {
             width: 45,
@@ -188,8 +184,19 @@ const ProductSearch = props => {
             objectFit: 'cover',
             borderRadius: 2
           }
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
-          children: item.label
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+          style: {
+            flex: 1
+          },
+          children: option.label
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+          variant: isAdded ? "secondary" : "primary",
+          disabled: isAdded,
+          onClick: e => {
+            e.stopPropagation();
+            onItemAdded(item);
+          },
+          children: isAdded ? "Added" : "Add"
         })]
       });
     }
@@ -232,12 +239,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AddProductRule: () => (/* binding */ AddProductRule)
 /* harmony export */ });
-/* harmony import */ var _controls_ProductSearch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../controls/ProductSearch */ "./src/components/controls/ProductSearch.tsx");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _controls_ItemSearch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../controls/ItemSearch */ "./src/components/controls/ItemSearch.tsx");
+/* harmony import */ var _services_productService__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/services/productService */ "./src/services/productService.ts");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
 
 
-const AddProductRule = props => {
+
+const AddProductRule = ({
+  onAddProduct,
+  products
+}) => {
   function addProduct(product) {
     const rule = {
       type: '',
@@ -251,10 +263,22 @@ const AddProductRule = props => {
       rule: rule,
       min_qty: 0
     };
-    props.onAddProduct(productRule);
+    onAddProduct(productRule);
   }
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_controls_ProductSearch__WEBPACK_IMPORTED_MODULE_0__.ProductSearch, {
-    onProductAdded: addProduct
+  const searchProducts = async search => {
+    return await _services_productService__WEBPACK_IMPORTED_MODULE_1__.ProductService.getProductsByName(search);
+  };
+  const displayProduct = product => {
+    return {
+      label: product.name,
+      value: String(product.id)
+    };
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_controls_ItemSearch__WEBPACK_IMPORTED_MODULE_0__.ItemSearch, {
+    onItemAdded: addProduct,
+    searchItems: searchProducts,
+    displayItem: displayProduct,
+    addedItems: products
   });
 };
 
@@ -379,10 +403,13 @@ const ProductRulesPanel = ({
           children: addRule ? "Close" : "Add rule"
         })
       }), addRule && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_AddProductRule__WEBPACK_IMPORTED_MODULE_6__.AddProductRule, {
-        onAddProduct: addProductRule
-      }), rule.products.map(product => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("h2", {
-        children: product.name
-      }, product.id))]
+        onAddProduct: addProductRule,
+        products: rule.products
+      }), rule.products.map(product => {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("h2", {
+          children: product.name
+        });
+      })]
     })]
   });
 };

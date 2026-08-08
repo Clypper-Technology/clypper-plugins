@@ -39,12 +39,14 @@ export const ProductRulesPanel = ({ rule, onProductAdded }: ProductRulesPanelPro
         </div>
         
         { addRule && (
-          <AddProductRule onAddProduct={addProductRule} />
+          <AddProductRule onAddProduct={addProductRule} products={rule.products}/>
         )}
 
-        {rule.products.map(product => (
-          <h2 key={product.id}>{product.name}</h2>
-        ))}
+        {rule.products.map(product => {
+          return (
+            <h2>{product.name}</h2>
+          )
+        })}
 
       </CollapsibleCard.Content>
     </CollapsibleCard.Root>
