@@ -19,6 +19,7 @@
     "dependencies": {
         "@types/wordpress__components": "^23.8.0",
         "@wordpress/api-fetch": "^7.52.0",
+        "@wordpress/dataviews": "^18.0.0",
         "@wordpress/ui": "^0.19.0",
         "react-router-dom": "^7.18.2"
     }

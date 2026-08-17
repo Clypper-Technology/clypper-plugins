@@ -39,7 +39,5 @@ export class RuleService {
       path: ApiPath.rulePath(id),
       method: "DELETE",
     })
-
-
   }
 }

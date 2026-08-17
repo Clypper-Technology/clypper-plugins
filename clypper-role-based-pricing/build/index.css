@@ -22,6 +22,13 @@
   padding-right: 20px;
 }
 
+.col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+
 .row {
   display: flex;
   flex-direction: row;

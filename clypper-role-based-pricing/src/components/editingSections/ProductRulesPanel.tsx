@@ -4,6 +4,9 @@ import { ProductRule } from "@/types/productRule";
 import { Button } from "@wordpress/components";
 import { useState } from "react";
 import { AddProductRule } from "./AddProductRule";
+import { ProductRuleList } from "../controls/ProductRuleList";
+import { Product } from "@/types/product";
+import { PricingRule } from "@/types/pricingRule";
 
 interface ProductRulesPanelProps {
   rule: RoleRules,
@@ -13,7 +16,22 @@ interface ProductRulesPanelProps {
 export const ProductRulesPanel = ({ rule, onProductAdded }: ProductRulesPanelProps) => {
   const [addRule, setAddRule] = useState<boolean>(false);
 
-  function addProductRule(productRule: ProductRule) {
+  function addProductRule(product: Product) {
+    const pricingRule: PricingRule = {
+      type: '',
+      value: '0',
+      quantity: '0',
+      quantity_type: '' 
+    };
+
+    const productRule: ProductRule = {
+      id: product.id,
+      name: product.name,
+      rule: pricingRule,
+      min_qty: 0,
+      image_url: product.image_url
+    }
+
     const updatedRule: RoleRules = {
       ...rule,
       products: [...rule.products, productRule],
@@ -34,20 +52,17 @@ export const ProductRulesPanel = ({ rule, onProductAdded }: ProductRulesPanelPro
       </CollapsibleCard.Header>
 
       <CollapsibleCard.Content>
-        <div className="row">
-          <Button isDestructive={addRule} variant="primary" onClick={() => setAddRule(!addRule)}>{ addRule ? "Close" : "Add rule"}</Button>
-        </div>
+        <div className="col">
+          <div className="row">
+           <Button isDestructive={addRule} variant="primary" onClick={() => setAddRule(!addRule)}>{ addRule ? "Close" : "Add rule"}</Button>
+         </div>
         
-        { addRule && (
-          <AddProductRule onAddProduct={addProductRule} products={rule.products}/>
-        )}
+         { addRule && (
+            <AddProductRule onAddProduct={addProductRule} products={rule.products}/>
+         )}
 
-        {rule.products.map(product => {
-          return (
-            <h2>{product.name}</h2>
-          )
-        })}
-
+          <ProductRuleList productRules={rule.products}/>
+        </div>
       </CollapsibleCard.Content>
     </CollapsibleCard.Root>
   )

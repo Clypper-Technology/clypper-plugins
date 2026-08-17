@@ -2,8 +2,11 @@
 
 namespace ClypperTechnology\RolePricing\REST;
 
+use ClypperTechnology\RolePricing\REST\DTOs\ProductRuleDTO;
+use ClypperTechnology\RolePricing\REST\DTOs\RoleRulesDTO;
 use ClypperTechnology\RolePricing\Rules\CategoryRule;
 use ClypperTechnology\RolePricing\Rules\ProductRule;
+use ClypperTechnology\RolePricing\Rules\RoleRules;
 use ClypperTechnology\RolePricing\Services\RuleService;
 
 defined('ABSPATH') || exit;
@@ -110,7 +113,7 @@ class RuleController extends \WP_REST_Controller
 
         $rule = $this->rule_service->get_rules_by_id($id);
 
-        return new \WP_REST_Response($rule, 200);
+        return new \WP_REST_Response(RoleRulesDTO::from($rule), 200);
     }
 
     public function create_item( $request ): \WP_REST_Response {

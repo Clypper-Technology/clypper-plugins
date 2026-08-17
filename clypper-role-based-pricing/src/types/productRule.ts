@@ -5,4 +5,5 @@ export interface ProductRule {
   name: string;
   rule: PricingRule;
   min_qty: number;
+  image_url: string;
 }

@@ -2,7 +2,7 @@ import { RuleService } from "@/services/ruleService";
 import { RoleRules } from "@/types/roleRules";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {Icon, Spinner } from '@wordpress/components';
+import {Button, Icon, Spinner } from '@wordpress/components';
 import { CategoryRulesPanel } from "../editingSections/CategoryRulesPanel";
 import { ProductRulesPanel } from "../editingSections/ProductRulesPanel";
 import { arrowLeft } from "@wordpress/icons";
@@ -28,7 +28,10 @@ export function Rules() {
     getRule();
   }, [numericId])
 
-  const updateRule = async (rule: RoleRules) => {
+  const updateRule = async (rule?: RoleRules) => {
+    if(rule) {
+    }
+
     setRule(rule);
   }
 
@@ -42,8 +45,9 @@ export function Rules() {
         <Spinner />
       ) : (
       <div className="roles-list">
-          <ProductRulesPanel rule={rule} onProductAdded={updateRule}/>
-          <CategoryRulesPanel rule={rule} onCategoryAdded={updateRule}/>
+        <Button onClick={(() => updateRule(rule))}></Button>
+        <ProductRulesPanel rule={rule} onProductAdded={updateRule}/>
+        <CategoryRulesPanel rule={rule} onCategoryAdded={updateRule}/>
       </div>
       )}
     </div>
