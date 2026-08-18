@@ -215,46 +215,89 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ProductRuleList: () => (/* binding */ ProductRuleList)
 /* harmony export */ });
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _listItems_ProductRuleListItem__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./listItems/ProductRuleListItem */ "./src/components/controls/listItems/ProductRuleListItem.tsx");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+
 
 const ProductRuleList = ({
   productRules,
   onRuleEdited
 }) => {
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("table", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("table", {
     className: "wp-list-table widefat fixed striped",
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("thead", {
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("tr", {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("th", {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("th", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("thead", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("tr", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
           children: "Name"
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("th", {
-          children: "Role"
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("th", {
-          children: "Discount"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+          children: "Price"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+          children: "Rule type"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+          children: "Value"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+          children: "Min quantity"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+          children: "Reduction type"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+          children: "Value"
         })]
       })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("tbody", {
-      children: productRules?.map(rule => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("tr", {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("td", {
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
-            src: rule.image_url,
-            alt: "",
-            style: {
-              width: 50,
-              height: 50,
-              objectFit: 'cover',
-              borderRadius: 2
-            }
-          })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("td", {
-          children: rule.name
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("td", {
-          children: rule.min_qty
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("td", {
-          children: [rule.rule.type, "%"]
-        })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("tbody", {
+      children: productRules?.map(rule => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_listItems_ProductRuleListItem__WEBPACK_IMPORTED_MODULE_0__.ProductRuleListItem, {
+        onRuleChanged: onRuleEdited,
+        rule: rule
       }, rule.id))
+    })]
+  });
+};
+
+/***/ },
+
+/***/ "./src/components/controls/listItems/ProductRuleListItem.tsx"
+/*!*******************************************************************!*\
+  !*** ./src/components/controls/listItems/ProductRuleListItem.tsx ***!
+  \*******************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ProductRuleListItem: () => (/* binding */ ProductRuleListItem)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+
+const ProductRuleListItem = ({
+  rule,
+  onRuleChanged
+}) => {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("tr", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("td", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
+        src: rule.image_url,
+        alt: "",
+        style: {
+          width: 50,
+          height: 50,
+          objectFit: "cover",
+          borderRadius: 2
+        }
+      })
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("td", {
+      children: rule.name
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("td", {
+      children: rule.price
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("td", {
+      children: rule.rule.type
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("td", {
+      children: rule.rule.value
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("td", {
+      children: rule.min_qty
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("td", {
+      children: rule.rule.quantity_type
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("td", {
+      children: rule.rule.value
     })]
   });
 };
@@ -417,26 +460,6 @@ const ProductRulesPanel = ({
   onProductAdded
 }) => {
   const [addRule, setAddRule] = (0,react__WEBPACK_IMPORTED_MODULE_5__.useState)(false);
-  function addProductRule(product) {
-    const pricingRule = {
-      type: '',
-      value: '0',
-      quantity: '0',
-      quantity_type: ''
-    };
-    const productRule = {
-      id: product.id,
-      name: product.name,
-      rule: pricingRule,
-      min_qty: 0,
-      image_url: product.image_url
-    };
-    const updatedRule = {
-      ...rule,
-      products: [...rule.products, productRule]
-    };
-    onProductAdded(updatedRule);
-  }
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_1__.Root, {
     defaultOpen: true,
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_2__.Header, {
@@ -461,7 +484,7 @@ const ProductRulesPanel = ({
             children: addRule ? "Close" : "Add rule"
           })
         }), addRule && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_AddProductRule__WEBPACK_IMPORTED_MODULE_6__.AddProductRule, {
-          onAddProduct: addProductRule,
+          onAddProduct: product => onProductAdded(product),
           products: rule.products
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_controls_ProductRuleList__WEBPACK_IMPORTED_MODULE_7__.ProductRuleList, {
           productRules: rule.products
@@ -571,8 +594,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _editingSections_CategoryRulesPanel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../editingSections/CategoryRulesPanel */ "./src/components/editingSections/CategoryRulesPanel.tsx");
 /* harmony import */ var _editingSections_ProductRulesPanel__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../editingSections/ProductRulesPanel */ "./src/components/editingSections/ProductRulesPanel.tsx");
 /* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/arrow-left.mjs");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _factories_productRuleFactory__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/factories/productRuleFactory */ "./src/factories/productRuleFactory.ts");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__);
+
 
 
 
@@ -602,32 +627,73 @@ function Rules() {
     if (rule) {}
     setRule(rule);
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
+  const onProductAdded = product => {
+    const productRule = (0,_factories_productRuleFactory__WEBPACK_IMPORTED_MODULE_7__.createProductRule)(product);
+    setRule(current => {
+      if (!current) {
+        return current;
+      }
+      return {
+        ...current,
+        products: [...current?.products, productRule]
+      };
+    });
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("div", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("div", {
       className: "row",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Icon, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Icon, {
         icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_6__["default"],
         onClick: () => navigate(-1),
         style: {
           cursor: "pointer"
         }
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("h1", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("h1", {
         children: rule?.role_name
       })]
-    }), isLoading ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Spinner, {}) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
+    }), isLoading ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Spinner, {}) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("div", {
       className: "roles-list",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
         onClick: () => updateRule(rule)
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_editingSections_ProductRulesPanel__WEBPACK_IMPORTED_MODULE_5__.ProductRulesPanel, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_editingSections_ProductRulesPanel__WEBPACK_IMPORTED_MODULE_5__.ProductRulesPanel, {
         rule: rule,
-        onProductAdded: updateRule
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_editingSections_CategoryRulesPanel__WEBPACK_IMPORTED_MODULE_4__.CategoryRulesPanel, {
+        onProductAdded: onProductAdded
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_editingSections_CategoryRulesPanel__WEBPACK_IMPORTED_MODULE_4__.CategoryRulesPanel, {
         rule: rule,
         onCategoryAdded: updateRule
       })]
     })]
   });
 }
+
+/***/ },
+
+/***/ "./src/factories/productRuleFactory.ts"
+/*!*********************************************!*\
+  !*** ./src/factories/productRuleFactory.ts ***!
+  \*********************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createProductRule: () => (/* binding */ createProductRule)
+/* harmony export */ });
+const createProductRule = product => {
+  const pricingRule = {
+    type: 'percent',
+    value: '0',
+    quantity: '0',
+    quantity_type: 'percent'
+  };
+  return {
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    rule: pricingRule,
+    min_qty: 0,
+    image_url: product.image_url
+  };
+};
 
 /***/ },
 

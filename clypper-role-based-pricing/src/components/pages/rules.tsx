@@ -6,6 +6,8 @@ import {Button, Icon, Spinner } from '@wordpress/components';
 import { CategoryRulesPanel } from "../editingSections/CategoryRulesPanel";
 import { ProductRulesPanel } from "../editingSections/ProductRulesPanel";
 import { arrowLeft } from "@wordpress/icons";
+import { Product } from "@/types/product";
+import { createProductRule } from "@/factories/productRuleFactory";
 
 
 export function Rules() {
@@ -35,6 +37,24 @@ export function Rules() {
     setRule(rule);
   }
 
+  const onProductAdded = (product: Product) => {
+    const productRule = createProductRule(product);
+
+    setRule((current) => {
+      if(!current) {
+        return current;
+      }
+
+      return {
+        ...current,
+        products: [
+          ...current?.products,
+          productRule
+        ]
+      }
+    });
+  }
+
   return(
     <div>
       <div className="row">
@@ -46,7 +66,7 @@ export function Rules() {
       ) : (
       <div className="roles-list">
         <Button onClick={(() => updateRule(rule))}></Button>
-        <ProductRulesPanel rule={rule} onProductAdded={updateRule}/>
+        <ProductRulesPanel rule={rule} onProductAdded={onProductAdded}/>
         <CategoryRulesPanel rule={rule} onCategoryAdded={updateRule}/>
       </div>
       )}

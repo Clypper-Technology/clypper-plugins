@@ -2,6 +2,7 @@
 
 namespace ClypperTechnology\RolePricing\REST;
 
+use ClypperTechnology\RolePricing\Factories\RoleRulesDTOFactory;
 use ClypperTechnology\RolePricing\REST\DTOs\ProductRuleDTO;
 use ClypperTechnology\RolePricing\REST\DTOs\RoleRulesDTO;
 use ClypperTechnology\RolePricing\Rules\CategoryRule;
@@ -113,7 +114,7 @@ class RuleController extends \WP_REST_Controller
 
         $rule = $this->rule_service->get_rules_by_id($id);
 
-        return new \WP_REST_Response(RoleRulesDTO::from($rule), 200);
+        return new \WP_REST_Response(RoleRulesDTOFactory::from_rules($rule), 200);
     }
 
     public function create_item( $request ): \WP_REST_Response {
