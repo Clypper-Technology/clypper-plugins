@@ -1,14 +1,15 @@
-import { ProductRule } from "@/types/productRule";
 import { ProductRuleListItem } from "./listItems/ProductRuleListItem";
+import type { FieldArrayWithId } from "react-hook-form";
+import type { RoleRules } from "@/types/roleRules";
 
-export interface ProductRuleListProps {
-  productRules?: ProductRule[];
-  onRuleEdited: (product: ProductRule) => void;
+interface ProductRuleListProps {
+  fields: FieldArrayWithId<RoleRules, "products", "id">[];
+  onRemove: (index: number) => void;
 }
 
 export const ProductRuleList = ({
-  productRules,
-  onRuleEdited,
+  fields,
+  onRemove,
 }: ProductRuleListProps) => {
   return (
     <table className="wp-list-table widefat fixed striped">
@@ -26,8 +27,12 @@ export const ProductRuleList = ({
       </thead>
 
       <tbody>
-        {productRules?.map((rule) => (
-          <ProductRuleListItem onRuleChanged={onRuleEdited} rule={rule} key={rule.id}/>
+        {fields.map((field, index) => (
+          <ProductRuleListItem
+            key={field.id}
+            index={index}
+            onRemove={() => onRemove(index)}
+          />
         ))}
       </tbody>
     </table>

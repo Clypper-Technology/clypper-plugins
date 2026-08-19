@@ -7,7 +7,6 @@ import { AddCategoryRule } from "./AddCategoryRule"
 
 interface CategoryRulesPanelProps {
   rule: RoleRules,
-  onCategoryAdded: (rule: RoleRules) => Promise<void>
 }
 
 export const CategoryRulesPanel = (props: CategoryRulesPanelProps) => {

@@ -1,18 +1,21 @@
 import { Product } from "@/types/product"
 import { DisplayItem, ItemSearch } from "../controls/ItemSearch"
 import { ProductService } from "@/services/productService"
+import { useFormContext } from "react-hook-form"
+import { RoleRules } from "@/types/roleRules"
 
-export interface AddProductRuleProps {
-  onAddProduct: (rule: Product) => void,
-  products: []
+interface AddProductRuleProps {
+  onAdd: (rule: Product) => void
 }
 
 export const AddProductRule = ({
-  onAddProduct,
-  products
+  onAdd
 }: AddProductRuleProps) => {
+  const { watch } = useFormContext<RoleRules>();
+  const products = watch("products");
+
   const searchProducts = async (search: string): Promise<Product[]> => {
-    return await ProductService.getProductsByName(search);
+    return ProductService.getProductsByName(search);
   }
 
   const displayProduct = (product: Product): DisplayItem => {
@@ -23,6 +26,10 @@ export const AddProductRule = ({
   }
 
   return(
-    <ItemSearch onItemAdded={onAddProduct} searchItems={searchProducts} displayItem={displayProduct} addedItems={products}/>
+    <ItemSearch 
+      onItemAdded={onAdd}
+      searchItems={searchProducts} 
+      displayItem={displayProduct}
+      addedItems={products}/>
   )
 }

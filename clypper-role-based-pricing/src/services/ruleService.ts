@@ -16,7 +16,7 @@ export class RuleService {
     return rule;
   }
 
-  public static async getRules(): Promise<RoleRules[]> {
+  public static async getAllRules(): Promise<RoleRules[]> {
     const rules = await apifetch<RoleRules[]>({ path: this.resource})
 
     return rules;
@@ -32,6 +32,10 @@ export class RuleService {
     })
 
     return id;
+  }
+
+  public static async updateRules(rule: RoleRules): Promise<void> {
+    
   }
 
   public static async deleteRule(id: number): Promise<void> {

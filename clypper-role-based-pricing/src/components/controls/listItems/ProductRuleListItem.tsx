@@ -1,15 +1,21 @@
-import { ProductRule } from "@/types/productRule";
+import { RoleRules } from "@/types/roleRules";
+import { ruleTypeFormValues } from "@/types/ruleType";
+import { SelectControl } from "@wordpress/components";
+import { Controller, useFormContext } from "react-hook-form";
 
 
 interface ProductRuleListItemProps {
-  rule: ProductRule;
-  onRuleChanged: (productRule: ProductRule) => void;
+  index: number
+  onRemove?: () => void
 }
 
 export const ProductRuleListItem = ({
-  rule,
-  onRuleChanged,
+  index,
+  onRemove
 }: ProductRuleListItemProps) => {
+  const { control, watch } = useFormContext<RoleRules>();
+  
+  const rule = watch(`products.${index}`);
 
   return (
     <tr>
@@ -25,9 +31,25 @@ export const ProductRuleListItem = ({
           }}
         />
       </td>
+
       <td>{rule.name}</td>
+
       <td>{rule.price}</td>
-      <td>{rule.rule.type}</td>
+
+      <td>
+        <Controller 
+          control={control}
+          name={`products.${index}.rule.type`}
+          render={({ field }) => (
+            <SelectControl 
+              value={field.value}
+              options={ruleTypeFormValues}
+              onChange={field.onChange}
+            />
+          )}
+        />
+      </td>
+
       <td>{rule.rule.value}</td>
       <td>{rule.min_qty}</td>
       <td>{rule.rule.quantity_type}</td>

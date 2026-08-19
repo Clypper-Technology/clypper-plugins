@@ -1,18 +1,29 @@
-import { RoleRules } from "@/types/roleRules"
 import { Badge, CollapsibleCard } from "@wordpress/ui"
 import { Button } from "@wordpress/components";
 import { useState } from "react";
 import { AddProductRule } from "./AddProductRule";
 import { ProductRuleList } from "../controls/ProductRuleList";
+import { useFieldArray, useFormContext } from "react-hook-form";
+import { RoleRules } from "@/types/roleRules";
+import { createProductRule } from "@/factories/productRuleFactory";
 import { Product } from "@/types/product";
 
 interface ProductRulesPanelProps {
-  rule: RoleRules,
-  onProductAdded: (rule: Product) => void
 }
 
-export const ProductRulesPanel = ({ rule, onProductAdded }: ProductRulesPanelProps) => {
+export const ProductRulesPanel = ({ 
+}: ProductRulesPanelProps) => {
   const [addRule, setAddRule] = useState<boolean>(false);
+  const { control } = useFormContext<RoleRules>();
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'products'
+  })
+
+  const onProductAdded = (product: Product) => {
+    append(createProductRule(product));
+  }
 
   return (
     <CollapsibleCard.Root defaultOpen>
@@ -20,7 +31,7 @@ export const ProductRulesPanel = ({ rule, onProductAdded }: ProductRulesPanelPro
         <div className="row">
           <h2>Product Rules</h2>
           <Badge intent="draft">
-            {`${rule.products.length}`}
+            {`${fields.length}`}
           </Badge>
         </div>
       </CollapsibleCard.Header>
@@ -32,10 +43,10 @@ export const ProductRulesPanel = ({ rule, onProductAdded }: ProductRulesPanelPro
           </div>
         
          { addRule && (
-            <AddProductRule onAddProduct={((product) => onProductAdded(product))} products={rule.products}/>
+            <AddProductRule onAdd={onProductAdded} />
          )}
 
-          <ProductRuleList productRules={rule.products}/>
+          <ProductRuleList fields={fields} onRemove={remove}/>
         </div>
       </CollapsibleCard.Content>
     </CollapsibleCard.Root>
