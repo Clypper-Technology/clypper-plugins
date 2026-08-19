@@ -660,6 +660,7 @@ function Rules() {
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const load = async () => {
       const rule = await _services_ruleService__WEBPACK_IMPORTED_MODULE_0__.RuleService.getRule(numericId);
+      console.log(rule);
       setRule(rule);
       methods.reset(rule);
       setIsLoading(false);
@@ -667,6 +668,7 @@ function Rules() {
     load();
   }, [numericId]);
   const onSubmit = async rule => {
+    console.log(rule);
     await _services_ruleService__WEBPACK_IMPORTED_MODULE_0__.RuleService.updateRules(rule);
   };
   if (isLoading || !rule) {
@@ -838,7 +840,13 @@ class RuleService {
     });
     return id;
   }
-  static async updateRules(rule) {}
+  static async updateRules(rule) {
+    await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default()({
+      path: _shared_apiPaths__WEBPACK_IMPORTED_MODULE_0__.ApiPath.rulePath(rule.id),
+      method: "POST",
+      data: rule
+    });
+  }
   static async deleteRule(id) {
     await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default()({
       path: _shared_apiPaths__WEBPACK_IMPORTED_MODULE_0__.ApiPath.rulePath(id),

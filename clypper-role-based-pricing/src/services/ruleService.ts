@@ -35,7 +35,11 @@ export class RuleService {
   }
 
   public static async updateRules(rule: RoleRules): Promise<void> {
-    
+    await apifetch({
+      path: ApiPath.rulePath(rule.id),
+      method: "POST",
+      data: rule,
+    });
   }
 
   public static async deleteRule(id: number): Promise<void> {

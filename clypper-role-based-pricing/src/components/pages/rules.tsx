@@ -22,6 +22,7 @@ export function Rules() {
     const load = async () => {
       const rule: RoleRules = await RuleService.getRule(numericId);
 
+      console.log(rule);
       setRule(rule);
       methods.reset(rule);
 
@@ -32,6 +33,7 @@ export function Rules() {
   }, [numericId])
   
   const onSubmit = async (rule: RoleRules) => {
+      console.log(rule);
       await RuleService.updateRules(rule);
   }
 

@@ -49,21 +49,11 @@ class RuleController extends \WP_REST_Controller
             ],
         ]);
 
-        register_rest_route( $this->namespace, '/' . $this->resource_name . '/(?P<id>\d+)/products', [
+        register_rest_route( $this->namespace, '/' . $this->resource_name . '/(?P<id>\d+)', [
             [
                 'methods'             => \WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_product_rule' ],
+                'callback'            => [ $this, 'update_rule' ],
                 'permission_callback' => [ $this, 'permissions_check' ],
-                'args'                => $this->get_update_product_args(),
-            ],
-        ]);
-
-        register_rest_route( $this->namespace, '/' . $this->resource_name . '/(?P<id>\d+)/categories', [
-            [
-                'methods'             => \WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_category_rule' ],
-                'permission_callback' => [ $this, 'permissions_check' ],
-                'args'                => $this->get_update_category_args(),
             ],
         ]);
 
@@ -111,10 +101,10 @@ class RuleController extends \WP_REST_Controller
 
     public function get_item($request): \WP_REST_Response {
         $id = $request->get_param("id");
-
         $rule = $this->rule_service->get_rules_by_id($id);
+        $rule_DTO = RoleRulesDTOFactory::from_rules($rule);
 
-        return new \WP_REST_Response(RoleRulesDTOFactory::from_rules($rule), 200);
+        return new \WP_REST_Response($rule_DTO->to_array(), 200);
     }
 
     public function create_item( $request ): \WP_REST_Response {
@@ -132,24 +122,13 @@ class RuleController extends \WP_REST_Controller
         return new \WP_REST_Response( null, 204 );
     }
 
-    public function update_product_rule( $request ): \WP_REST_Response
-    {
-        $this->rule_service->update_product_rule(
-            $request->get_param( 'id' ),
-            $request->get_param( 'rows' )
-        );
+    public function update_rule(\WP_REST_Request $request ): \WP_REST_Response {
+        $request_json = $request->get_json_params();
+        $rule = RoleRules::from_array($request_json);
 
-        return new \WP_REST_Response( null, 204 );
-    }
+        $this->rule_service->update_rule($rule);
 
-    public function update_category_rule( $request ): \WP_REST_Response
-    {
-        $this->rule_service->update_category_rule(
-            $request->get_param( 'id' ),
-            $request->get_param( 'rows' )
-        );
-
-        return new \WP_REST_Response( null, 204 );
+        return new \WP_REST_Response(null, 204);
     }
 
     public function copy_rules( $request ): \WP_REST_Response
@@ -176,27 +155,5 @@ class RuleController extends \WP_REST_Controller
         }
 
         return new \WP_REST_Response( [ 'imported' => $imported ], 200 );
-    }
-
-    private function get_update_product_args(): array
-    {
-        return [
-            'rows' => [
-                'required' => true,
-                'type'     => 'array',
-                'items'    => ProductRule::schema(),
-            ],
-        ];
-    }
-
-    private function get_update_category_args(): array
-    {
-        return [
-            'rows' => [
-                'required' => true,
-                'type'     => 'array',
-                'items'    => CategoryRule::schema(),
-            ],
-        ];
     }
 }

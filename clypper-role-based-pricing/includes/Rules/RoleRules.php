@@ -46,6 +46,19 @@ class RoleRules {
         );
     }
 
+    public static function from_array(array $json): self {
+        return new self(
+            id: $json['id'],
+            role_name: $json['role_name'],
+            rule_active: ($json['rule_active']) == 'on',
+            global_rule: isset($json['global_rule']) ? Rule::from_array($json['global_rule']) : null,
+            category_rule: isset($json['category_rule']) ? Rule::from_array($json['category_rule']) : null,
+            categories: array_Map(fn($id) => intval($id), $json['categories']),
+            products: array_map(fn($p) => ProductRule::from_array($p), $json['products']),
+            single_categories: array_map(fn($c) => CategoryRule::from_array($c), $json['single_categories'])
+        );
+    }
+
 
     /**
      * Convert to array for storage (matches your exact structure)
@@ -53,6 +66,7 @@ class RoleRules {
     public function to_array(): array {
         return [
             'id' => $this->id,
+            'role_name' => $this->role_name,
             'rule_active' => $this->rule_active ? 'on' : '',
             'global_rule' => $this->global_rule?->to_array(),
             'category_rule' => $this->category_rule?->to_array(),

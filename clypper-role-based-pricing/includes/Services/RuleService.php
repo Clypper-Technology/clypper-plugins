@@ -45,50 +45,8 @@ class RuleService {
         ]);
     }
 
-    /**
-     * Update single category rules
-     */
-    public function update_category_rule( int $rule_id, array $categories ): bool {
-        $role_rules = $this->get_rules_by_id( $rule_id );
-        $categories_to_add = [];
-
-        if ( ! $role_rules ) {
-            return false;
-        }
-
-        foreach ( $categories as $item ) {
-            if ( ! $item['remove'] ) {
-                $categories_to_add[] = CategoryRule::from_array( $item );
-            }
-        }
-
-        $role_rules->replace_single_categories($categories_to_add);
-        return $this->save_role_rules($role_rules);
-    }
-
-
-    public function update_product_rule( int $rule_id, array $products = []): bool {
-        $role_rules = $this->get_rules_by_id($rule_id);
-        $products_to_add = [];
-
-        if (!$role_rules) {
-            return false;
-        }
-
-        foreach ($products as $item) {
-            if ( ! $item['remove'] ) {
-                $products_to_add[] = new ProductRule(
-                    $item['product_id'],
-                    $item['product_name'],
-                    Rule::from_array( $item['rule'] ),
-                    $item['min_qty'],
-                );
-            }
-        }
-
-        $role_rules->replace_products($products_to_add);
-
-        return $this->save_role_rules($role_rules);
+    public function update_rule( RoleRules $rule ): bool {
+        return $this->save_role_rules($rule);
     }
 
     /**
