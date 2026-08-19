@@ -1,5 +1,6 @@
 import { ProductRule } from "@/types/productRule";
 
+
 interface ProductRuleListItemProps {
   rule: ProductRule;
   onRuleChanged: (productRule: ProductRule) => void;
@@ -9,7 +10,6 @@ export const ProductRuleListItem = ({
   rule,
   onRuleChanged,
 }: ProductRuleListItemProps) => {
-  
 
   return (
     <tr>
