@@ -201,23 +201,24 @@ const ItemSearch = ({
 
 /***/ },
 
-/***/ "./src/components/controls/ProductRuleList.tsx"
-/*!*****************************************************!*\
-  !*** ./src/components/controls/ProductRuleList.tsx ***!
-  \*****************************************************/
+/***/ "./src/components/controls/RuleList.tsx"
+/*!**********************************************!*\
+  !*** ./src/components/controls/RuleList.tsx ***!
+  \**********************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   ProductRuleList: () => (/* binding */ ProductRuleList)
+/* harmony export */   RuleList: () => (/* binding */ RuleList)
 /* harmony export */ });
-/* harmony import */ var _listItems_ProductRuleListItem__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./listItems/ProductRuleListItem */ "./src/components/controls/listItems/ProductRuleListItem.tsx");
+/* harmony import */ var _listItems_RuleListItem__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./listItems/RuleListItem */ "./src/components/controls/listItems/RuleListItem.tsx");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
 
 
-const ProductRuleList = ({
+const RuleList = ({
   fields,
+  ruleKey,
   onRemove
 }) => {
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("table", {
@@ -230,7 +231,7 @@ const ProductRuleList = ({
           }
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
           children: "Name"
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+        }), ruleKey == "products" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
           style: {
             width: 150
           },
@@ -261,7 +262,8 @@ const ProductRuleList = ({
         })]
       })
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("tbody", {
-      children: fields.map((field, index) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_listItems_ProductRuleListItem__WEBPACK_IMPORTED_MODULE_0__.ProductRuleListItem, {
+      children: fields.map((field, index) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_listItems_RuleListItem__WEBPACK_IMPORTED_MODULE_0__.RuleListItem, {
+        ruleKey: ruleKey,
         index: index,
         onRemove: () => onRemove(index)
       }, field.id))
@@ -271,15 +273,15 @@ const ProductRuleList = ({
 
 /***/ },
 
-/***/ "./src/components/controls/listItems/ProductRuleListItem.tsx"
-/*!*******************************************************************!*\
-  !*** ./src/components/controls/listItems/ProductRuleListItem.tsx ***!
-  \*******************************************************************/
+/***/ "./src/components/controls/listItems/RuleListItem.tsx"
+/*!************************************************************!*\
+  !*** ./src/components/controls/listItems/RuleListItem.tsx ***!
+  \************************************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   ProductRuleListItem: () => (/* binding */ ProductRuleListItem)
+/* harmony export */   RuleListItem: () => (/* binding */ RuleListItem)
 /* harmony export */ });
 /* harmony import */ var _types_ruleType__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/types/ruleType */ "./src/types/ruleType.ts");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
@@ -295,15 +297,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const ProductRuleListItem = ({
+const RuleListItem = ({
   index,
+  ruleKey,
   onRemove
 }) => {
   const {
     control,
     watch
   } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_4__.useFormContext)();
-  const rule = watch(`products.${index}`);
+  const rule = watch(`${ruleKey}.${index}`);
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("tr", {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("td", {
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("img", {
@@ -318,7 +321,7 @@ const ProductRuleListItem = ({
       })
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("td", {
       children: rule.name
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("td", {
+    }), ruleKey === "products" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("td", {
       children: rule.price
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("td", {
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(react_hook_form__WEBPACK_IMPORTED_MODULE_4__.Controller, {
@@ -537,7 +540,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _AddProductRule__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./AddProductRule */ "./src/components/editingSections/AddProductRule.tsx");
-/* harmony import */ var _controls_ProductRuleList__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../controls/ProductRuleList */ "./src/components/controls/ProductRuleList.tsx");
+/* harmony import */ var _controls_RuleList__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../controls/RuleList */ "./src/components/controls/RuleList.tsx");
 /* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
 /* harmony import */ var _factories_productRuleFactory__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/factories/productRuleFactory */ "./src/factories/productRuleFactory.ts");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
@@ -591,9 +594,10 @@ const ProductRulesPanel = ({}) => {
           })
         }), addRule && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_AddProductRule__WEBPACK_IMPORTED_MODULE_6__.AddProductRule, {
           onAdd: onProductAdded
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_controls_ProductRuleList__WEBPACK_IMPORTED_MODULE_7__.ProductRuleList, {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_controls_RuleList__WEBPACK_IMPORTED_MODULE_7__.RuleList, {
           fields: fields,
-          onRemove: remove
+          onRemove: remove,
+          ruleKey: "products"
         })]
       })
     })]

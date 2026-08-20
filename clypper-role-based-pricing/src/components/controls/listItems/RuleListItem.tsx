@@ -1,4 +1,5 @@
 import { RoleRules } from "@/types/roleRules";
+import { RuleKey } from "@/types/RuleKey";
 import { ruleTypeFormValues } from "@/types/ruleType";
 import { Button, SelectControl } from "@wordpress/components";
 import { trash } from "@wordpress/icons";
@@ -6,17 +7,19 @@ import { Input } from "@wordpress/ui";
 import { Controller, useFormContext } from "react-hook-form";
 
 
-interface ProductRuleListItemProps {
-  index: number
+interface RuleListItemProps {
+  index: number,
+  ruleKey: RuleKey,
   onRemove?: () => void
 }
 
-export const ProductRuleListItem = ({
+export const RuleListItem = ({
   index,
+  ruleKey,
   onRemove
-}: ProductRuleListItemProps) => {
+}: RuleListItemProps) => {
   const { control, watch } = useFormContext<RoleRules>();
-  const rule = watch(`products.${index}`);
+  const rule = watch(`${ruleKey}.${index}`);
 
   return (
     <tr>
@@ -34,8 +37,10 @@ export const ProductRuleListItem = ({
       </td>
 
       <td>{rule.name}</td>
-
-      <td>{rule.price}</td>
+      
+      {ruleKey === "products" && (
+        <td>{rule.price}</td>
+      )}
 
       <td>
         <Controller 

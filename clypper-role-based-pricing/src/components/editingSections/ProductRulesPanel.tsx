@@ -2,7 +2,7 @@ import { Badge, CollapsibleCard } from "@wordpress/ui"
 import { Button } from "@wordpress/components";
 import { useState } from "react";
 import { AddProductRule } from "./AddProductRule";
-import { ProductRuleList } from "../controls/ProductRuleList";
+import { RuleList } from "../controls/RuleList";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { RoleRules } from "@/types/roleRules";
 import { createProductRule } from "@/factories/productRuleFactory";
@@ -46,7 +46,7 @@ export const ProductRulesPanel = ({
             <AddProductRule onAdd={onProductAdded} />
          )}
 
-          <ProductRuleList fields={fields} onRemove={remove}/>
+          <RuleList fields={fields} onRemove={remove} ruleKey="products"/>
         </div>
       </CollapsibleCard.Content>
     </CollapsibleCard.Root>

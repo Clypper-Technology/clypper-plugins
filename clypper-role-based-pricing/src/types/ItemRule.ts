@@ -1,10 +1,10 @@
 import { PricingRule } from "./pricingRule";
 
-export interface ProductRule {
+export interface ItemRule {
   id: number;
   name: string;
   rule: PricingRule;
   min_qty: number;
   image_url: string;
-  price: number;
+  price?: number;
 }
