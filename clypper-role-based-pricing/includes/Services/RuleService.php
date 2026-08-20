@@ -3,7 +3,7 @@
 namespace ClypperTechnology\RolePricing\Services;
 
 use ClypperTechnology\RolePricing\Rules\CategoryRule;
-use ClypperTechnology\RolePricing\Rules\ProductRule;
+use ClypperTechnology\RolePricing\Rules\ItemRule;
 use ClypperTechnology\RolePricing\Rules\RoleRules;
 use ClypperTechnology\RolePricing\Rules\Rule;
 use InvalidArgumentException;
@@ -128,7 +128,7 @@ class RuleService {
             return false;
         }
 
-        $product = new ProductRule($id, $name);
+        $product = new ItemRule($id, $name);
 
         $role_rule->add_product($product);
 

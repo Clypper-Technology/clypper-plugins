@@ -3,10 +3,6 @@
 namespace ClypperTechnology\RolePricing\REST;
 
 use ClypperTechnology\RolePricing\Factories\RoleRulesDTOFactory;
-use ClypperTechnology\RolePricing\REST\DTOs\ProductRuleDTO;
-use ClypperTechnology\RolePricing\REST\DTOs\RoleRulesDTO;
-use ClypperTechnology\RolePricing\Rules\CategoryRule;
-use ClypperTechnology\RolePricing\Rules\ProductRule;
 use ClypperTechnology\RolePricing\Rules\RoleRules;
 use ClypperTechnology\RolePricing\Services\RuleService;
 

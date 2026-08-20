@@ -3,11 +3,11 @@
 namespace ClypperTechnology\RolePricing\Factories;
 
 use ClypperTechnology\RolePricing\REST\DTOs\ProductRuleDTO;
-use ClypperTechnology\RolePricing\Rules\ProductRule;
+use ClypperTechnology\RolePricing\Rules\ItemRule;
 
 final class ProductRuleDTOFactory
 {
-    public static function from_rule(ProductRule $rule): ProductRuleDTO {
+    public static function from_rule(ItemRule $rule): ProductRuleDTO {
         $product = wc_get_product($rule->id);
 
         if ( ! $product ) {
