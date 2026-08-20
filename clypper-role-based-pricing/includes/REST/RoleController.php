@@ -65,9 +65,9 @@ class RoleController extends  \WP_REST_Controller
             return new \WP_REST_Response($rule, 204);
         }
 
-        $rule_name = $request_rule["name"];
+        $role_slug = $request_rule["slug"];
 
-        $rule = $this->ruleService->add_rule($rule_name);
+        $rule = $this->ruleService->add_rule($role_slug);
         $rule->rule_active = true;
         $this->ruleService->save_role_rules($rule);
 

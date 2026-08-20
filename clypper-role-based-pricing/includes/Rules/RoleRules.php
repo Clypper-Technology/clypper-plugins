@@ -16,14 +16,14 @@ class RoleRules {
      * @param CategoryRule[] $single_categories
      */
     public function __construct(
-        public int $id,
-        public string $role_name,
-        public bool $rule_active = false,
-        public ?Rule $global_rule = null,
-        public ?Rule $category_rule = null,
-        public array $categories = [],           // General category mappings [['123' => '123']]
-        public array $products = [],             // ProductRule[]
-        public array $single_categories = []     // CategoryRule[]
+        public int    $id,
+        public string $role_slug,
+        public bool   $rule_active = false,
+        public ?Rule  $global_rule = null,
+        public ?Rule  $category_rule = null,
+        public array  $categories = [],           // General category mappings [['123' => '123']]
+        public array  $products = [],             // ProductRule[]
+        public array  $single_categories = []     // CategoryRule[]
     ) {}
 
 
@@ -36,7 +36,7 @@ class RoleRules {
 
         return new self(
             id: $post->ID,
-            role_name: $post->post_title,
+            role_slug: $post->post_title,
             rule_active: ($content['rule_active'] ?? '') === 'on',
             global_rule: isset($content['global_rule']) ? Rule::from_array($content['global_rule']) : null,
             category_rule: isset($content['category_rule']) ? Rule::from_array($content['category_rule']) : null,
@@ -49,7 +49,7 @@ class RoleRules {
     public static function from_array(array $json): self {
         return new self(
             id: $json['id'],
-            role_name: $json['role_name'],
+            role_slug: $json['role_slug'],
             rule_active: ($json['rule_active']) == 'on',
             global_rule: isset($json['global_rule']) ? Rule::from_array($json['global_rule']) : null,
             category_rule: isset($json['category_rule']) ? Rule::from_array($json['category_rule']) : null,
@@ -66,7 +66,7 @@ class RoleRules {
     public function to_array(): array {
         return [
             'id' => $this->id,
-            'role_name' => $this->role_name,
+            'role_slug' => $this->role_slug,
             'rule_active' => $this->rule_active ? 'on' : '',
             'global_rule' => $this->global_rule?->to_array(),
             'category_rule' => $this->category_rule?->to_array(),
@@ -170,6 +170,4 @@ class RoleRules {
     private function matches_any_category( array $category_ids ): bool {
         return ! empty(array_intersect($category_ids, $this->categories));
     }
-
-
 }

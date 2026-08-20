@@ -94,14 +94,14 @@ class RuleService {
     /**
      * Add rule
      *
-     * @param string $name rule name.
+     * @param string $role_slug rule name.
      * @return int Rule ID on success
      * @throws InvalidArgumentException If rule already exists
      * @throws RuntimeException If creation fails
      */
-    public function add_rule(string $name): RoleRules {
+    public function add_rule(string $role_slug): RoleRules {
         $rule = [
-            'post_title'   => $name,
+            'post_title'   => $role_slug,
             'post_content' => '',
             'post_status'  => 'publish',
             'post_type'    => 'clypper_rbp',
@@ -114,7 +114,7 @@ class RuleService {
             throw new RuntimeException('Failed to create rule in database');
         }
 
-        return new RoleRules($rule_id, $name, false);
+        return new RoleRules($rule_id, $role_slug, false);
     }
 
     /**
@@ -154,7 +154,7 @@ class RuleService {
     public function save_role_rules(RoleRules $role_rules): bool {
         $result = wp_update_post([
             'ID' => $role_rules->id,
-            'post_title' => $role_rules->role_name,
+            'post_title' => $role_rules->role_slug,
             'post_content' => wp_json_encode($role_rules->to_array(), JSON_UNESCAPED_UNICODE),
             'post_author' => get_current_user_id(),
         ], true);
@@ -172,7 +172,7 @@ class RuleService {
         $roles = array_map(fn($post) => RoleRules::from_post($post), $posts);
 
         foreach($roles as $role) {
-            $this->role_rules[$role->role_name] = $role;
+            $this->role_rules[$role->role_slug] = $role;
         }
 
         return $roles;
@@ -184,7 +184,7 @@ class RuleService {
         }
 
         $all_rules = $this->get_all_role_rules();
-        $rule = array_find($all_rules, fn( RoleRules $rule ) => $rule->role_name === $user_role );
+        $rule = array_find($all_rules, fn( RoleRules $rule ) => $rule->role_slug === $user_role );
 
         $this->role_rules[$user_role] = $rule;
 

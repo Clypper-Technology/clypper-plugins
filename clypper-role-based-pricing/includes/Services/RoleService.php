@@ -35,13 +35,13 @@ class RoleService
         $wp_roles = wp_roles()->get_names();
         $roles = [];
 
-        foreach($wp_roles as $wp_role) {
-            $rule = array_find($rules, fn($rule) => $rule->role_name == $wp_role);
+        foreach($wp_roles as $role_slug => $role_name) {
+            $rule = array_find($rules, fn($rule) => $rule->role_slug == $role_slug);
 
             if($rule) {
-                $roles[] = RoleDTO::from($rule);
+                $roles[] = RoleDTO::from($rule, $role_name);
             } else {
-                $roles[] = new RoleDTO(-1, $wp_role, $wp_role, false, 0);
+                $roles[] = new RoleDTO(-1, $role_name, $role_slug, false, 0);
             }
         }
 

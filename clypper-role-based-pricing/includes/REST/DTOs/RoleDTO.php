@@ -26,11 +26,11 @@ class RoleDTO
         $this->rule_count = $rule_count;
     }
 
-    public static function from(RoleRules $rule): self {
+    public static function from(RoleRules $rule, string $name): self {
         return new self(
             $rule->id,
-            $rule->role_name,
-            $rule->role_name,
+            $name,
+            $rule->role_slug,
             $rule->rule_active,
             $rule->get_rule_count()
         );

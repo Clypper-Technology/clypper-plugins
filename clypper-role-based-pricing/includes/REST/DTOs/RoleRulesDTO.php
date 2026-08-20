@@ -11,6 +11,7 @@ final class RoleRulesDTO
      */
     public function __construct(
         public RoleRules $rules,
+        public string $role_name = "",
         public array $products,
     ) {
     }
@@ -19,6 +20,7 @@ final class RoleRulesDTO
     {
         return [
             ...$this->rules->to_array(),
+            'role_name' => $this->role_name,
             'products' => array_map(fn ($p) => $p->to_array(), $this->products),
         ];
     }
