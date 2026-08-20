@@ -1,6 +1,7 @@
 import { RoleRules } from "@/types/roleRules";
 import { ruleTypeFormValues } from "@/types/ruleType";
-import { SelectControl } from "@wordpress/components";
+import { Button, SelectControl } from "@wordpress/components";
+import { trash } from "@wordpress/icons";
 import { Input } from "@wordpress/ui";
 import { Controller, useFormContext } from "react-hook-form";
 
@@ -97,6 +98,14 @@ export const ProductRuleListItem = ({
               onChange={field.onChange}
             />
           )}
+        />
+      </td>
+      <td>
+        <Button
+          icon={trash}
+          label="Delete"
+          isDestructive
+          onClick={onRemove}
         />
       </td>
     </tr>

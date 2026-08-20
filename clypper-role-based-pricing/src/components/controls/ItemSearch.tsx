@@ -29,10 +29,7 @@ export const ItemSearch = <T extends SearchItem>({
   const [loading, setLoading] = useState<boolean>(false);
 
   const onFilterValueChange = async (inputValue: string) => {
-    if (!inputValue) {
-      setOptions([]);
-      return;
-    }
+    
     setLoading(true);
     const results = await searchItems(inputValue);
     setItems(results);

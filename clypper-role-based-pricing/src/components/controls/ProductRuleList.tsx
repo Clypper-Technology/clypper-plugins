@@ -15,14 +15,15 @@ export const ProductRuleList = ({
     <table className="wp-list-table widefat fixed striped">
       <thead>
         <tr>
-          <th></th>
+          <th style={{width: 70}}></th>
           <th>Name</th>
-          <th>Price</th>
+          <th style={{width: 150}}>Price</th>
           <th>Rule type</th>
-          <th>Value</th>
-          <th>Min quantity</th>
+          <th style={{width: 130}}>Value</th>
+          <th style={{width: 130}}>Min quantity</th>
           <th>Reduction type</th>
-          <th>Value</th>
+          <th style={{width: 130}}>Value</th>
+          <th style={{width: 50}}></th>
         </tr>
       </thead>
 
