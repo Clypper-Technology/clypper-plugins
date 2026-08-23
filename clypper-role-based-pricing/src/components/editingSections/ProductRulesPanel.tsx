@@ -5,8 +5,8 @@ import { AddProductRule } from "./AddProductRule";
 import { RuleList } from "../controls/RuleList";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { RoleRules } from "@/types/roleRules";
-import { createProductRule } from "@/factories/productRuleFactory";
 import { Product } from "@/types/product";
+import { createRuleFromProduct } from "@/factories/itemRuleFactory";
 
 interface ProductRulesPanelProps {
 }
@@ -22,7 +22,7 @@ export const ProductRulesPanel = ({
   })
 
   const onProductAdded = (product: Product) => {
-    append(createProductRule(product));
+    append(createRuleFromProduct(product));
   }
 
   return (

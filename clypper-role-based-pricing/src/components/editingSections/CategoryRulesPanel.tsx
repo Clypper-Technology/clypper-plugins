@@ -1,19 +1,27 @@
-import { CategoryRule } from "@/types/categoryRule"
-import { RoleRules } from "@/types/roleRules"
 import { Button } from "@wordpress/components"
 import { Badge, CollapsibleCard } from "@wordpress/ui"
-import { useState } from "react"
 import { AddCategoryRule } from "./AddCategoryRule"
+import { useFieldArray, useFormContext } from "react-hook-form"
+import { RoleRules } from "@/types/roleRules"
+import { Category } from "@/types/category"
+import { createRuleFromCategory } from "@/factories/itemRuleFactory"
+import { useState } from "react"
+import { RuleList } from "../controls/RuleList"
 
 interface CategoryRulesPanelProps {
-  rule: RoleRules,
 }
 
 export const CategoryRulesPanel = (props: CategoryRulesPanelProps) => {
   const [addRule, setAddRule] = useState<boolean>(false);
+  const { control } = useFormContext<RoleRules>();
 
-  async function addProductRule(rule: CategoryRule) {
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'single_categories'
+  })
 
+  const onCategoryAdded = (category: Category) => {
+    append(createRuleFromCategory(category));
   }
 
   return (
@@ -22,7 +30,7 @@ export const CategoryRulesPanel = (props: CategoryRulesPanelProps) => {
         <div className="row">
           <h2>Category Rules</h2>
           <Badge intent="draft">
-            {`${props.rule.products.length}`}
+            {`${fields.length}`}
           </Badge>
         </div>
       </CollapsibleCard.Header>
@@ -33,8 +41,10 @@ export const CategoryRulesPanel = (props: CategoryRulesPanelProps) => {
         </div>
         
         { addRule && (
-          <AddCategoryRule OnAddProduct={addProductRule} />
+          <AddCategoryRule onAdd={onCategoryAdded} />
         )}
+
+        <RuleList fields={fields} ruleKey="single_categories" onRemove={remove}/>
 
       </CollapsibleCard.Content>
     </CollapsibleCard.Root>

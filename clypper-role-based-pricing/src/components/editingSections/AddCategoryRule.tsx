@@ -1,11 +1,13 @@
-import { CategoryRule } from "@/types/categoryRule"
+import { Category } from "@/types/category"
 import { PanelRow } from "@wordpress/components"
 
 export interface AddCategoryRuleProps {
-  OnAddProduct: (rule: CategoryRule) => Promise<void>
+  onAdd: (category: Category) => void
 }
 
-export const AddCategoryRule = (props: AddCategoryRuleProps) => {
+export const AddCategoryRule = ({
+  onAdd,
+}: AddCategoryRuleProps) => {
 
   return(
     <PanelRow header="">

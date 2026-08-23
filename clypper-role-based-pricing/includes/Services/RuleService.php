@@ -2,10 +2,8 @@
 
 namespace ClypperTechnology\RolePricing\Services;
 
-use ClypperTechnology\RolePricing\Rules\CategoryRule;
 use ClypperTechnology\RolePricing\Rules\ItemRule;
 use ClypperTechnology\RolePricing\Rules\RoleRules;
-use ClypperTechnology\RolePricing\Rules\Rule;
 use InvalidArgumentException;
 use RuntimeException;
 use WP_Post;

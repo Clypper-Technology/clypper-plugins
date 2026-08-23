@@ -21,7 +21,7 @@ final class RoleRulesDTO
         return [
             ...$this->rules->to_array(),
             'role_name' => $this->role_name,
-            'products' => array_map(fn ($p) => $p->to_array(), $this->products),
+            'products' => array_map(fn ($p) => $p->to_array(), array_values($this->products)),
         ];
     }
 }

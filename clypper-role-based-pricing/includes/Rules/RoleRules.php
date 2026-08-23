@@ -39,8 +39,8 @@ class RoleRules {
             global_rule: isset($content['global_rule']) ? Rule::from_array($content['global_rule']) : null,
             category_rule: isset($content['category_rule']) ? Rule::from_array($content['category_rule']) : null,
             categories: array_Map(fn($id) => intval($id), $content['categories'] ?? []),
-            products: array_map(fn($p) => ItemRule::from_array($p), $content['products'] ?? []),
-            single_categories: array_map(fn($c) => ItemRule::from_array($c), $content['single_categories'] ?? [])
+            products: isset($content['products']) ? self::key_by_item_id($content['products']) : [],
+            single_categories: isset($content['single_categories']) ? self::key_by_item_id($content['single_categories']) : [],
         );
     }
 
@@ -52,8 +52,8 @@ class RoleRules {
             global_rule: isset($json['global_rule']) ? Rule::from_array($json['global_rule']) : null,
             category_rule: isset($json['category_rule']) ? Rule::from_array($json['category_rule']) : null,
             categories: array_Map(fn($id) => intval($id), $json['categories']),
-            products: array_map(fn($p) => ItemRule::from_array($p), $json['products']),
-            single_categories: array_map(fn($c) => ItemRule::from_array($c), $json['single_categories'])
+            products: isset($json['products']) ? self::key_by_item_id($json['products']) : [],
+            single_categories: isset($json['single_categories']) ? self::key_by_item_id($json['single_categories']) : [],
         );
     }
 
@@ -69,9 +69,29 @@ class RoleRules {
             'global_rule' => $this->global_rule?->to_array(),
             'category_rule' => $this->category_rule?->to_array(),
             'categories' => $this->categories,
-            'products' => array_map(fn($p) => $p->to_array(), $this->products),
-            'single_categories' => array_map(fn($c) => $c->to_array(), $this->single_categories),
+            'products' => array_map(fn($p) => $p->to_array(), array_values($this->products)),
+            'single_categories' => array_map(fn($c) => $c->to_array(), array_values($this->single_categories)),
         ];
+    }
+
+    /**
+     * @param array
+     * @return ItemRule[]
+     */
+    private static function key_by_item_id(array $items): array {
+        if(!$items) {
+            return [];
+        }
+
+        $item_list = [];
+
+        foreach($items as $item_array) {
+            $item = ItemRule::from_array($item_array);
+
+            $item_list[$item->id] = $item;
+        }
+
+        return $item_list;
     }
 
     public function get_rule_count(): int {
@@ -119,7 +139,7 @@ class RoleRules {
     }
 
     public function add_product(ItemRule $product): void {
-        $this->products[] = $product;
+        $this->products[$product->id] = $product;
     }
 
     /**
@@ -129,9 +149,7 @@ class RoleRules {
      */
     private function get_rule_by_product_id( int $product_id ): ?ItemRule
     {
-        return array_find( $this->products, function( ItemRule $product_rule ) use ( $product_id ) {
-            return $product_rule->id === $product_id;
-        });
+        return $this->products[$product_id] ?? null;
     }
 
     private function has_categories(): bool {
@@ -151,7 +169,12 @@ class RoleRules {
      * @return ?ItemRule
      */
     private function get_single_category_rule( array $category_ids ): ?ItemRule {
-        return array_find($this->single_categories, fn($category) => in_array($category->id, $category_ids, true));
+        foreach ($category_ids as $cat_id) {
+            if (isset($this->single_categories[$cat_id])) {
+                return $this->single_categories[$cat_id];
+            }
+        }
+        return null;
     }
 
     /**

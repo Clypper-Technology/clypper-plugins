@@ -52,7 +52,7 @@ export function Rules() {
           <div className="roles-list">
             <Button type="submit">Save</Button>
             <ProductRulesPanel />
-            <CategoryRulesPanel rule={rule}/>
+            <CategoryRulesPanel />
           </div>
         </form>
       </FormProvider>
