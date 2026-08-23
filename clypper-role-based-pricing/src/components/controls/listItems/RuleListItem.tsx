@@ -6,7 +6,6 @@ import { trash } from "@wordpress/icons";
 import { Input } from "@wordpress/ui";
 import { Controller, useFormContext } from "react-hook-form";
 
-
 interface RuleListItemProps {
   index: number,
   ruleKey: RuleKey,
@@ -20,7 +19,6 @@ export const RuleListItem = ({
 }: RuleListItemProps) => {
   const { control, watch } = useFormContext<RoleRules>();
   const rule = watch(`${ruleKey}.${index}`);
-
   return (
     <tr>
       <td>
@@ -35,17 +33,15 @@ export const RuleListItem = ({
           }}
         />
       </td>
-
       <td>{rule.name}</td>
-      
+
       {ruleKey === "products" && (
         <td>{rule.price}</td>
       )}
-
       <td>
         <Controller 
           control={control}
-          name={`products.${index}.rule.type`}
+          name={`${ruleKey}.${index}.rule.type`}
           render={({ field }) => (
             <SelectControl 
               value={field.value}
@@ -55,11 +51,10 @@ export const RuleListItem = ({
           )}
         />
       </td>
-
       <td>
         <Controller 
           control={control}
-          name={`products.${index}.rule.value`}
+          name={`${ruleKey}.${index}.rule.value`}
           render={({field}) => (
             <Input
               value={field.value}
@@ -71,7 +66,7 @@ export const RuleListItem = ({
       <td>
         <Controller 
           control={control}
-          name={`products.${index}.min_qty`}
+          name={`${ruleKey}.${index}.min_qty`}
           render={({field}) => (
             <Input 
               value={field.value}
@@ -83,7 +78,7 @@ export const RuleListItem = ({
       <td>
         <Controller 
           control={control}
-          name={`products.${index}.rule.quantity_type`}
+          name={`${ruleKey}.${index}.rule.quantity_type`}
           render={({ field }) => (
             <SelectControl 
               value={field.value}
@@ -96,7 +91,7 @@ export const RuleListItem = ({
       <td>
       <Controller 
           control={control}
-          name={`products.${index}.rule.quantity`}
+          name={`${ruleKey}.${index}.rule.quantity`}
           render={({field}) => (
             <Input 
               value={field.value}

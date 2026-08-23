@@ -23,4 +23,8 @@ export class ApiPath {
   public static productPathSearch(searchQuery: string): string {
     return `${ApiBase.Base}${ApiBase.Product}?search=${searchQuery}`
   }
+
+  public static categoryPathSearch(searchQuery?: string): string {
+    return `${ApiBase.WooCommerce}${ApiBase.Categories}?search=${searchQuery}`;
+  }
 }

@@ -2,5 +2,7 @@ export enum ApiBase {
   Rules = '/rules',
   Roles = '/roles',
   Base = '/rrb2b/v1',
-  Product = '/products'
+  Categories = '/products/categories',
+  Product = '/products',
+  WooCommerce = '/wc/v3'
 }
