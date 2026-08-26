@@ -50,10 +50,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_ui__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/ui */ "./node_modules/@wordpress/ui/build-module/badge/badge.mjs");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/development/chunk-62JRHF6Z.mjs");
-/* harmony import */ var _feedback_roleStatus__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../feedback/roleStatus */ "./src/components/feedback/roleStatus.tsx");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/development/chunk-62JRHF6Z.mjs");
+/* harmony import */ var _feedback_roleStatus__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../feedback/roleStatus */ "./src/components/feedback/roleStatus.tsx");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__);
 
@@ -62,15 +62,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const RoleCard = props => {
-  const [isLoading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
-  const role = props.role;
-  const navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_3__.useNavigate)();
-  async function changeStatus(role) {
-    setLoading(true);
-    await props.onRoleChanged(role);
-    setLoading(false);
-  }
+const RoleCard = ({
+  role,
+  onRoleChanged
+}) => {
+  const navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_2__.useNavigate)();
+  const [isPending, startTransition] = (0,react__WEBPACK_IMPORTED_MODULE_4__.useTransition)();
+  const handleRoleChange = () => {
+    startTransition(async () => {
+      await onRoleChanged(role);
+    });
+  };
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Card, {
     className: "row-card",
     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.CardBody, {
@@ -79,7 +81,7 @@ const RoleCard = props => {
         className: "row space-between card-text",
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
           className: "row",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_feedback_roleStatus__WEBPACK_IMPORTED_MODULE_4__.RoleStatus, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_feedback_roleStatus__WEBPACK_IMPORTED_MODULE_3__.RoleStatus, {
             active: role.active
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("span", {
             children: role.name
@@ -94,22 +96,22 @@ const RoleCard = props => {
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
             onClick: () => navigate(`/role/${role.id}`),
             variant: "primary",
-            isBusy: isLoading,
-            disabled: isLoading,
+            disabled: isPending,
+            isBusy: isPending,
             children: "Edit"
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
             isDestructive: true,
             variant: "primary",
-            onClick: () => changeStatus(role),
-            isBusy: isLoading,
-            disabled: isLoading,
+            onClick: handleRoleChange,
+            disabled: isPending,
+            isBusy: isPending,
             children: "Disable"
           })]
         }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
           variant: "primary",
-          onClick: () => changeStatus(role),
-          isBusy: isLoading,
-          disabled: isLoading,
+          onClick: handleRoleChange,
+          disabled: isPending,
+          isBusy: isPending,
           children: "Activate"
         })
       })]
@@ -146,19 +148,19 @@ const ItemSearch = ({
 }) => {
   const [items, setItems] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
   const [options, setOptions] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
-  const [loading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
-  const onFilterValueChange = async inputValue => {
-    setLoading(true);
-    const results = await searchItems(inputValue);
-    setItems(results);
-    setOptions(results.map(displayItem));
-    setLoading(false);
+  const [isPending, setTransition] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useTransition)();
+  const onInputChange = inputValue => {
+    setTransition(async () => {
+      const results = await searchItems(inputValue);
+      setItems(results);
+      setOptions(results.map(displayItem));
+    });
   };
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.ComboboxControl, {
     label: "Search for product",
     options: options,
-    onFilterValueChange: onFilterValueChange,
-    isLoading: loading,
+    onFilterValueChange: onInputChange,
+    isLoading: isPending,
     __experimentalRenderItem: ({
       item: option
     }) => {
@@ -696,20 +698,15 @@ __webpack_require__.r(__webpack_exports__);
 
 function Roles() {
   const [allRoles, setAllRoles] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
-  const [loading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
+  const [isPending, setTransition] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useTransition)();
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    const getRoles = async () => {
-      setLoading(true);
+    setTransition(async () => {
       const roles = await _services_roleService__WEBPACK_IMPORTED_MODULE_0__.RoleService.getRoles();
       setAllRoles(roles);
-      setLoading(false);
-    };
-    getRoles();
+    });
   }, []);
   const setActiveStatus = async (role, active) => {
-    role.active = active;
-    await _services_roleService__WEBPACK_IMPORTED_MODULE_0__.RoleService.updateRole(role);
-    const roles = await _services_roleService__WEBPACK_IMPORTED_MODULE_0__.RoleService.getRoles();
+    const roles = await _services_roleService__WEBPACK_IMPORTED_MODULE_0__.RoleService.setRoleActive(role, active);
     setAllRoles(roles);
   };
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -719,7 +716,7 @@ function Roles() {
       })
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
       className: "roles-list",
-      children: loading ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Spinner, {}) : allRoles.map(role => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_cards_roleCard__WEBPACK_IMPORTED_MODULE_3__.RoleCard, {
+      children: isPending ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Spinner, {}) : allRoles.map(role => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_cards_roleCard__WEBPACK_IMPORTED_MODULE_3__.RoleCard, {
         role: role,
         onRoleChanged: async role => await setActiveStatus(role, !role.active)
       }))
@@ -772,7 +769,6 @@ function Rules() {
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const load = async () => {
       const rule = await _services_ruleService__WEBPACK_IMPORTED_MODULE_0__.RuleService.getRule(numericId);
-      console.log(rule);
       setRule(rule);
       methods.reset(rule);
       setIsLoading(false);
@@ -780,7 +776,6 @@ function Rules() {
     load();
   }, [numericId]);
   const onSubmit = async rule => {
-    console.log(rule);
     await _services_ruleService__WEBPACK_IMPORTED_MODULE_0__.RuleService.updateRules(rule);
   };
   if (isLoading || !rule) {
@@ -930,6 +925,11 @@ class RoleService {
       path: _shared_apiPaths__WEBPACK_IMPORTED_MODULE_0__.ApiPath.rolesPath()
     });
     return response;
+  }
+  static async setRoleActive(role, active) {
+    role.active = active;
+    await this.updateRole(role);
+    return this.getRoles();
   }
   static async updateRole(role) {
     const id = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default()({
@@ -5904,11 +5904,11 @@ if (typeof process === "undefined" || "development" !== "test") {
 }
 var global_css_defense_default = { "button": "_6defc79820e382c6__button", "input": "d2cff2e5dea83bd1__input", "textarea": "_547d86373d02e108__textarea", "div": "_8c15fd0ed9f28ba4__div", "p": "_43cec3e1eec1066d__p", "heading": "e97669c6d9a38497__heading", "a": "_2c0831b0499dbd6e__a" };
 
-// packages/ui/src/utils/css/focus.module.css
+// packages/ui/src/utils/css/focus.module.scss
 if (typeof process === "undefined" || "development" !== "test") {
-  registerStyle("5f8e7aa0bc", "@layer wp-ui{@layer utilities, components, compositions, overrides;@layer utilities{._08e8a2e44959f892__outset-ring--focus:focus,._970d04df7376df67__outset-ring--focus-within-except-active:focus-within:not(:has(:active)),.c5cb3ee4bddaa8e4__outset-ring--focus-within-visible:focus-within:has(:focus-visible),.cd83dfc2126a0846__outset-ring--focus-within:focus-within,.d0541bc9dd9dc7b6__outset-ring--focus-visible:focus-visible,.e25b2bdd7aa21721__outset-ring--focus-except-active:focus:not(:active),:focus-visible .ecadb9e080e2dfa5__outset-ring--focus-parent-visible{--_gcd-a-outline:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px)) solid var(--wpds-color-stroke-focus,var(--wp-admin-theme-color,#3858e9));--_gcd-div-outline:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px)) solid var(--wpds-color-stroke-focus,var(--wp-admin-theme-color,#3858e9));outline:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px)) solid var(--wpds-color-stroke-focus,var(--wp-admin-theme-color,#3858e9));outline-offset:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px))}}}");
+  registerStyle("2ffedd8246", "@layer wp-ui{@layer utilities, components, compositions, overrides;@layer utilities{._64de9947bf305b7a__outset-ring--focus-within-visible:focus-within:has(:focus-visible),.af79fb116edb0dd7__outset-ring--focus:focus,.dfcfdc28396e5d98__outset-ring--focus-visible:focus-visible,.e5cd9ee879f6403a__outset-ring--focus-within:focus-within,:focus-visible ._81935a08e952f267__outset-ring--focus-parent-visible{--focus-color:var(--wpds-color-stroke-focus,var(--wp-admin-theme-color,#3858e9));--_gcd-a-outline:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px)) solid var(--wpds-color-stroke-focus,var(--wp-admin-theme-color,#3858e9));--_gcd-div-outline:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px)) solid var(--wpds-color-stroke-focus,var(--wp-admin-theme-color,#3858e9));outline:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px)) solid var(--focus-color);outline-offset:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px))}._3c9f5ee9fc9c136d__outset-ring--focus-within-except-active:focus-within,.abc777e9713fa711__outset-ring--focus-except-active:focus{outline:none}._3c9f5ee9fc9c136d__outset-ring--focus-within-except-active:focus-within:not(:has(:active)),.abc777e9713fa711__outset-ring--focus-except-active:focus:not(:active){--focus-color:var(--wpds-color-stroke-focus,var(--wp-admin-theme-color,#3858e9));--_gcd-a-outline:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px)) solid var(--wpds-color-stroke-focus,var(--wp-admin-theme-color,#3858e9));--_gcd-div-outline:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px)) solid var(--wpds-color-stroke-focus,var(--wp-admin-theme-color,#3858e9));outline:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px)) solid var(--focus-color);outline-offset:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px))}}}");
 }
-var focus_default = { "outset-ring--focus": "_08e8a2e44959f892__outset-ring--focus", "outset-ring--focus-except-active": "e25b2bdd7aa21721__outset-ring--focus-except-active", "outset-ring--focus-visible": "d0541bc9dd9dc7b6__outset-ring--focus-visible", "outset-ring--focus-within": "cd83dfc2126a0846__outset-ring--focus-within", "outset-ring--focus-within-except-active": "_970d04df7376df67__outset-ring--focus-within-except-active", "outset-ring--focus-within-visible": "c5cb3ee4bddaa8e4__outset-ring--focus-within-visible", "outset-ring--focus-parent-visible": "ecadb9e080e2dfa5__outset-ring--focus-parent-visible" };
+var focus_module_default = { "outset-ring--focus": "af79fb116edb0dd7__outset-ring--focus", "outset-ring--focus-visible": "dfcfdc28396e5d98__outset-ring--focus-visible", "outset-ring--focus-within": "e5cd9ee879f6403a__outset-ring--focus-within", "outset-ring--focus-within-visible": "_64de9947bf305b7a__outset-ring--focus-within-visible", "outset-ring--focus-parent-visible": "_81935a08e952f267__outset-ring--focus-parent-visible", "outset-ring--focus-except-active": "abc777e9713fa711__outset-ring--focus-except-active", "outset-ring--focus-within-except-active": "_3c9f5ee9fc9c136d__outset-ring--focus-within-except-active" };
 
 // packages/ui/src/collapsible-card/header.tsx
 
@@ -5954,7 +5954,7 @@ var Header2 = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.forwardRef)(
                         // While the interactive trigger element is the whole header,
                         // the focus ring will be displayed only on the icon to visually
                         // emulate it being the button.
-                        focus_default["outset-ring--focus-parent-visible"]
+                        focus_module_default["outset-ring--focus-parent-visible"]
                       ),
                       children: /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(
                         _icon_index_mjs__WEBPACK_IMPORTED_MODULE_7__.Icon,
@@ -6534,11 +6534,11 @@ if (typeof process === "undefined" || "development" !== "test") {
 }
 var global_css_defense_default = { "button": "_6defc79820e382c6__button", "input": "d2cff2e5dea83bd1__input", "textarea": "_547d86373d02e108__textarea", "div": "_8c15fd0ed9f28ba4__div", "p": "_43cec3e1eec1066d__p", "heading": "e97669c6d9a38497__heading", "a": "_2c0831b0499dbd6e__a" };
 
-// packages/ui/src/utils/css/focus.module.css
+// packages/ui/src/utils/css/focus.module.scss
 if (typeof process === "undefined" || "development" !== "test") {
-  registerStyle("5f8e7aa0bc", "@layer wp-ui{@layer utilities, components, compositions, overrides;@layer utilities{._08e8a2e44959f892__outset-ring--focus:focus,._970d04df7376df67__outset-ring--focus-within-except-active:focus-within:not(:has(:active)),.c5cb3ee4bddaa8e4__outset-ring--focus-within-visible:focus-within:has(:focus-visible),.cd83dfc2126a0846__outset-ring--focus-within:focus-within,.d0541bc9dd9dc7b6__outset-ring--focus-visible:focus-visible,.e25b2bdd7aa21721__outset-ring--focus-except-active:focus:not(:active),:focus-visible .ecadb9e080e2dfa5__outset-ring--focus-parent-visible{--_gcd-a-outline:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px)) solid var(--wpds-color-stroke-focus,var(--wp-admin-theme-color,#3858e9));--_gcd-div-outline:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px)) solid var(--wpds-color-stroke-focus,var(--wp-admin-theme-color,#3858e9));outline:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px)) solid var(--wpds-color-stroke-focus,var(--wp-admin-theme-color,#3858e9));outline-offset:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px))}}}");
+  registerStyle("2ffedd8246", "@layer wp-ui{@layer utilities, components, compositions, overrides;@layer utilities{._64de9947bf305b7a__outset-ring--focus-within-visible:focus-within:has(:focus-visible),.af79fb116edb0dd7__outset-ring--focus:focus,.dfcfdc28396e5d98__outset-ring--focus-visible:focus-visible,.e5cd9ee879f6403a__outset-ring--focus-within:focus-within,:focus-visible ._81935a08e952f267__outset-ring--focus-parent-visible{--focus-color:var(--wpds-color-stroke-focus,var(--wp-admin-theme-color,#3858e9));--_gcd-a-outline:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px)) solid var(--wpds-color-stroke-focus,var(--wp-admin-theme-color,#3858e9));--_gcd-div-outline:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px)) solid var(--wpds-color-stroke-focus,var(--wp-admin-theme-color,#3858e9));outline:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px)) solid var(--focus-color);outline-offset:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px))}._3c9f5ee9fc9c136d__outset-ring--focus-within-except-active:focus-within,.abc777e9713fa711__outset-ring--focus-except-active:focus{outline:none}._3c9f5ee9fc9c136d__outset-ring--focus-within-except-active:focus-within:not(:has(:active)),.abc777e9713fa711__outset-ring--focus-except-active:focus:not(:active){--focus-color:var(--wpds-color-stroke-focus,var(--wp-admin-theme-color,#3858e9));--_gcd-a-outline:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px)) solid var(--wpds-color-stroke-focus,var(--wp-admin-theme-color,#3858e9));--_gcd-div-outline:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px)) solid var(--wpds-color-stroke-focus,var(--wp-admin-theme-color,#3858e9));outline:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px)) solid var(--focus-color);outline-offset:var(--wpds-border-width-focus,var(--wp-admin-border-width-focus,2px))}}}");
 }
-var focus_default = { "outset-ring--focus": "_08e8a2e44959f892__outset-ring--focus", "outset-ring--focus-except-active": "e25b2bdd7aa21721__outset-ring--focus-except-active", "outset-ring--focus-visible": "d0541bc9dd9dc7b6__outset-ring--focus-visible", "outset-ring--focus-within": "cd83dfc2126a0846__outset-ring--focus-within", "outset-ring--focus-within-except-active": "_970d04df7376df67__outset-ring--focus-within-except-active", "outset-ring--focus-within-visible": "c5cb3ee4bddaa8e4__outset-ring--focus-within-visible", "outset-ring--focus-parent-visible": "ecadb9e080e2dfa5__outset-ring--focus-parent-visible" };
+var focus_module_default = { "outset-ring--focus": "af79fb116edb0dd7__outset-ring--focus", "outset-ring--focus-visible": "dfcfdc28396e5d98__outset-ring--focus-visible", "outset-ring--focus-within": "e5cd9ee879f6403a__outset-ring--focus-within", "outset-ring--focus-within-visible": "_64de9947bf305b7a__outset-ring--focus-within-visible", "outset-ring--focus-parent-visible": "_81935a08e952f267__outset-ring--focus-parent-visible", "outset-ring--focus-except-active": "abc777e9713fa711__outset-ring--focus-except-active", "outset-ring--focus-within-except-active": "_3c9f5ee9fc9c136d__outset-ring--focus-within-except-active" };
 
 // packages/ui/src/form/primitives/input/style.module.css
 if (typeof process === "undefined" || "development" !== "test") {
@@ -6554,7 +6554,7 @@ var Input = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.forwardRef)(funct
     _input_layout_index_mjs__WEBPACK_IMPORTED_MODULE_3__.InputLayout,
     {
       className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__["default"])(
-        focus_default["outset-ring--focus-within"],
+        focus_module_default["outset-ring--focus-within"],
         className
       ),
       style,
@@ -6821,16 +6821,14 @@ var isNameInFieldArray = (names, name) => name
     .split('.')
     .some((part, index, arr) => !isNaN(Number(part)) && names.has(arr.slice(0, index).join('.')));
 
-var isPlainObject = (tempObject) => {
-    const prototypeCopy = tempObject.constructor && tempObject.constructor.prototype;
-    return (isObject(prototypeCopy) && prototypeCopy.hasOwnProperty('isPrototypeOf'));
-};
-
 var isWeb = typeof window !== 'undefined' &&
     typeof window.HTMLElement !== 'undefined' &&
     typeof document !== 'undefined';
 
 function cloneObject(data) {
+    if (data === null || typeof data !== 'object') {
+        return data;
+    }
     if (data instanceof Date) {
         return new Date(data);
     }
@@ -6839,7 +6837,7 @@ function cloneObject(data) {
         return data;
     }
     const isArray = Array.isArray(data);
-    if (!isArray && !(isObject(data) && isPlainObject(data))) {
+    if (!isArray && data.constructor !== Object) {
         return data;
     }
     const copy = isArray ? [] : Object.create(Object.getPrototypeOf(data));
@@ -6964,6 +6962,11 @@ var getProxyFormState = (formState, control, localProxyFormState, isRoot = true)
 const useIsomorphicLayoutEffect = isWeb
     ? react__WEBPACK_IMPORTED_MODULE_0__.useLayoutEffect
     : react__WEBPACK_IMPORTED_MODULE_0__.useEffect;
+
+var isPlainObject = (tempObject) => {
+    const prototypeCopy = tempObject.constructor && tempObject.constructor.prototype;
+    return (isObject(prototypeCopy) && prototypeCopy.hasOwnProperty('isPrototypeOf'));
+};
 
 var isPrimitive = (value) => isNullOrUndefined(value) || !isObjectType(value);
 
@@ -7222,17 +7225,17 @@ function useWatch(props) {
     // Optimize: Check control reference first before expensive deepEqual
     const controlChanged = _prevControl.current !== control;
     const prevName = _prevName.current;
-    // Cache the computed output to avoid duplicate calls within the same render
-    // We include shouldReturnImmediate in deps to ensure proper recomputation
-    const computedOutput = react__WEBPACK_IMPORTED_MODULE_0__.useMemo(() => {
+    // `null`/`undefined` are valid watched values, so a boolean flag (rather
+    // than a sentinel return value) decides whether to return the freshly
+    // computed output instead of the possibly-stale state value.
+    const shouldReturnImmediate = react__WEBPACK_IMPORTED_MODULE_0__.useMemo(() => {
         if (disabled) {
-            return null;
+            return false;
         }
         const nameChanged = !controlChanged && !deepEqual(prevName, name);
-        const shouldReturnImmediate = controlChanged || nameChanged;
-        return shouldReturnImmediate ? getCurrentOutput() : null;
-    }, [disabled, controlChanged, name, prevName, getCurrentOutput]);
-    return computedOutput !== null ? computedOutput : value;
+        return controlChanged || nameChanged;
+    }, [disabled, controlChanged, name, prevName]);
+    return shouldReturnImmediate ? getCurrentOutput() : value;
 }
 
 /**
@@ -7448,16 +7451,12 @@ function useController(props) {
  */
 const Controller = (props) => props.render(useController(props));
 
-var generateId = () => {
-    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-        return crypto.randomUUID();
-    }
-    const d = typeof performance === 'undefined' ? Date.now() : performance.now() * 1000;
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-        const r = ((Math.random() * 16 + d) % 16) | 0;
-        return (c == 'x' ? r : (r & 0x3) | 0x8).toString(16);
+var generateId = () => typeof crypto !== 'undefined' && crypto.randomUUID
+    ? crypto.randomUUID()
+    : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0;
+        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
     });
-};
 
 var getFocusFieldName = (name, index, options = {}) => options.shouldFocus || isUndefined(options.shouldFocus)
     ? options.focusName ||
@@ -7554,23 +7553,25 @@ const defaultResult = {
 };
 const validResult = { value: true, isValid: true };
 var getCheckboxValue = (options) => {
-    if (Array.isArray(options)) {
-        if (options.length > 1) {
-            const values = options
-                .filter((option) => option && option.checked && !option.disabled)
-                .map((option) => option.value);
-            return { value: values, isValid: !!values.length };
-        }
-        return options[0].checked && !options[0].disabled
-            ? // @ts-expect-error expected to work in the browser
-                options[0].attributes && !isUndefined(options[0].attributes.value)
-                    ? isUndefined(options[0].value) || options[0].value === ''
-                        ? validResult
-                        : { value: options[0].value, isValid: true }
-                    : validResult
-            : defaultResult;
+    if (!Array.isArray(options)) {
+        return defaultResult;
     }
-    return defaultResult;
+    if (options.length > 1) {
+        const values = options
+            .filter((option) => option && option.checked && !option.disabled)
+            .map((option) => option.value);
+        return { value: values, isValid: !!values.length };
+    }
+    const option = options[0];
+    if (!option || !option.checked || option.disabled) {
+        return defaultResult;
+    }
+    if (!option.attributes || !('value' in option.attributes)) {
+        return validResult;
+    }
+    return isUndefined(option.value) || option.value === ''
+        ? validResult
+        : { value: option.value, isValid: true };
 };
 
 const defaultReturn = {
@@ -7788,7 +7789,8 @@ var validateField = async (field, disabledFieldNames, formValues, validateAllFie
             }
         }
     }
-    setCustomValidity(true);
+    const fieldError = error[name];
+    setCustomValidity(fieldError ? fieldError.message : true);
     return error;
 };
 
@@ -8067,8 +8069,8 @@ function useFieldArray(props) {
         setFields([...updatedFieldArrayValues]);
         control._setFieldArray(name, updatedFieldArrayValues, updateAt, {
             argA: index,
-            argB: updateValue,
-        }, true, false);
+            argB: fillEmptyArray(value),
+        });
     };
     const replace = (value) => {
         if (disabled) {
@@ -8128,10 +8130,7 @@ function useFieldArray(props) {
             }
             else {
                 const field = get(control._fields, name);
-                if (field &&
-                    field._f &&
-                    !(getValidationModes(control._options.reValidateMode).isOnSubmit &&
-                        getValidationModes(control._options.mode).isOnSubmit)) {
+                if (field && field._f) {
                     validateField(field, control._names.disabled, control._formValues, control._options.criteriaMode === VALIDATION_MODE.all, control._options.shouldUseNativeValidation, true).then((error) => !isEmptyObject(error) &&
                         control._subjects.state.next({
                             errors: updateFieldArrayRootError(control._formState.errors, error, name),
@@ -8249,12 +8248,15 @@ function useFieldArray(props) {
  */
 const FieldArray = (props) => props.render(useFieldArray(props));
 
+const isFileLike = (value) => (typeof Blob !== 'undefined' && value instanceof Blob) ||
+    (typeof File !== 'undefined' && value instanceof File);
 const flatten = (obj) => {
     const output = {};
     for (const key of Object.keys(obj)) {
         if (isObjectType(obj[key]) &&
             obj[key] !== null &&
-            !isDateObject(obj[key])) {
+            !isDateObject(obj[key]) &&
+            !isFileLike(obj[key])) {
             const nested = flatten(obj[key]);
             for (const nestedKey of Object.keys(nested)) {
                 output[`${key}.${nestedKey}`] = nested[nestedKey];
@@ -8350,10 +8352,11 @@ const useFormContext = () => react__WEBPACK_IMPORTED_MODULE_0__.useContext(HookF
  * }
  * ```
  */
-const FormProvider = ({ children, watch, getValues, getFieldState, setError, clearErrors, setValue, setValues, trigger, formState, resetField, reset, resetDefaultValues, handleSubmit, unregister, control, register, setFocus, subscribe, }) => {
+const FormProvider = ({ children, watch, getValues, getErrors, getFieldState, setError, clearErrors, setValue, setValues, trigger, formState, resetField, reset, resetDefaultValues, handleSubmit, unregister, control, register, setFocus, subscribe, }) => {
     const memoizedValue = react__WEBPACK_IMPORTED_MODULE_0__.useMemo(() => ({
         watch,
         getValues,
+        getErrors,
         getFieldState,
         setError,
         clearErrors,
@@ -8374,6 +8377,7 @@ const FormProvider = ({ children, watch, getValues, getFieldState, setError, cle
         clearErrors,
         control,
         formState,
+        getErrors,
         getFieldState,
         getValues,
         handleSubmit,
@@ -8561,6 +8565,24 @@ function extractFormValues(fieldsState, formValues) {
     return values;
 }
 
+const hasOwn = (value, key) => value !== null &&
+    isObjectType(value) &&
+    Object.prototype.hasOwnProperty.call(value, key);
+var has = (object, path) => {
+    if (!path) {
+        return false;
+    }
+    let result = object;
+    for (const key of isKey(path) ? [path] : stringToPath(path)) {
+        if (!hasOwn(result, key)) {
+            // `get` also resolves a path held as a single literal key, eg `{ 'a.b': 1 }`
+            return hasOwn(object, path);
+        }
+        result = result[key];
+    }
+    return true;
+};
+
 var isMultipleSelect = (element) => element.type === `select-multiple`;
 
 var isRadioOrCheckbox = (ref) => isRadioInput(ref) || isCheckBoxInput(ref);
@@ -8660,6 +8682,18 @@ function getDirtyFields(data, formValues, dirtyFieldsFromValues, fieldRefs) {
     return dirtyFieldsFromValues;
 }
 
+var getFieldArrayItemNames = (names, name) => {
+    const segments = name.split('.');
+    const matches = [];
+    let prefix = segments[0];
+    for (let i = 1; i < segments.length; prefix += '.' + segments[i++]) {
+        if (!isNaN(+segments[i]) && names.has(prefix)) {
+            matches.push(`${prefix}.${segments[i]}`);
+        }
+    }
+    return matches;
+};
+
 var getFieldValueAs = (value, { valueAsNumber, valueAsDate, setValueAs }) => isUndefined(value)
     ? value
     : valueAsNumber
@@ -8735,10 +8769,11 @@ var hasPromiseValidation = (fieldReference) => {
 
 var hasValidation = (options) => options.mount &&
     (options.required ||
-        options.min ||
-        options.max ||
-        options.maxLength ||
-        options.minLength ||
+        (!isUndefined(options.required) && options.required !== false) ||
+        !isUndefined(options.min) ||
+        !isUndefined(options.max) ||
+        !isUndefined(options.maxLength) ||
+        !isUndefined(options.minLength) ||
         options.pattern ||
         options.validate);
 
@@ -8942,7 +8977,7 @@ function createFormControl(props = {}) {
                 _proxyFormState.validatingFields ||
                 _proxySubscribeFormState.isValidating ||
                 _proxySubscribeFormState.validatingFields)) {
-            (names || Array.from(_names.mount)).forEach((name) => {
+            (names || _names.mount).forEach((name) => {
                 if (name) {
                     isValidating
                         ? set(_formState.validatingFields, name, isValidating)
@@ -8961,17 +8996,16 @@ function createFormControl(props = {}) {
     const _setFieldArray = (name, values = [], method, args, shouldSetValues = true, shouldUpdateFieldsAndState = true) => {
         if (args && method && !_options.disabled) {
             _state.action = true;
+            const fields = get(_fields, name);
             if (!_state.actionArrayLengths.has(name)) {
-                const preActionFields = get(_fields, name);
-                _state.actionArrayLengths.set(name, Array.isArray(preActionFields) ? preActionFields.length : 0);
+                _state.actionArrayLengths.set(name, Array.isArray(fields) ? fields.length : 0);
             }
-            if (shouldUpdateFieldsAndState && Array.isArray(get(_fields, name))) {
-                const fieldValues = method(get(_fields, name), args.argA, args.argB);
+            if (shouldUpdateFieldsAndState && Array.isArray(fields)) {
+                const fieldValues = method(fields, args.argA, args.argB);
                 shouldSetValues && set(_fields, name, fieldValues);
             }
-            if (shouldUpdateFieldsAndState &&
-                Array.isArray(get(_formState.errors, name))) {
-                const fieldArrayErrors = get(_formState.errors, name);
+            const fieldArrayErrors = get(_formState.errors, name);
+            if (shouldUpdateFieldsAndState && Array.isArray(fieldArrayErrors)) {
                 const rootError = fieldArrayErrors.root;
                 const errors = method(fieldArrayErrors, args.argA, args.argB) || fieldArrayErrors;
                 if (rootError) {
@@ -8980,11 +9014,12 @@ function createFormControl(props = {}) {
                 shouldSetValues && set(_formState.errors, name, errors);
                 unsetEmptyArray(_formState.errors, name);
             }
+            const touchedFieldsArray = get(_formState.touchedFields, name);
             if ((_proxyFormState.touchedFields ||
                 _proxySubscribeFormState.touchedFields) &&
                 shouldUpdateFieldsAndState &&
-                Array.isArray(get(_formState.touchedFields, name))) {
-                const touchedFields = method(get(_formState.touchedFields, name), args.argA, args.argB);
+                Array.isArray(touchedFieldsArray)) {
+                const touchedFields = method(touchedFieldsArray, args.argA, args.argB);
                 shouldSetValues && set(_formState.touchedFields, name, touchedFields);
             }
             if (_proxyFormState.dirtyFields || _proxySubscribeFormState.dirtyFields) {
@@ -9169,10 +9204,6 @@ function createFormControl(props = {}) {
                 ...(shouldUpdateValid && isBoolean(isValid) ? { isValid } : {}),
                 errors: _formState.errors,
                 name,
-            };
-            _formState = {
-                ..._formState,
-                ...updatedFormState,
             };
             _subjects.state.next(updatedFormState);
         }
@@ -9442,6 +9473,11 @@ function createFormControl(props = {}) {
                 name: _state.mount || watched ? name : undefined,
                 values,
             });
+            if (!isFieldArray) {
+                for (const itemName of getFieldArrayItemNames(_names.array, name)) {
+                    _subjects.state.next({ name: itemName, values });
+                }
+            }
         }
     };
     const setValue = (name, value, options = {}) => _setValue(name, value, options, false);
@@ -9454,10 +9490,9 @@ function createFormControl(props = {}) {
                 ..._formValues,
                 ...updatedFormValues,
             };
-            const flattenedUpdates = flatten(updatedFormValues);
             for (const fieldName of _names.mount) {
-                if (fieldName in flattenedUpdates) {
-                    _setValue(fieldName, flattenedUpdates[fieldName], options, true, true);
+                if (has(updatedFormValues, fieldName)) {
+                    _setValue(fieldName, get(updatedFormValues, fieldName), options, true, true);
                 }
             }
             _subjects.state.next({
@@ -9657,13 +9692,22 @@ function createFormControl(props = {}) {
                 ? get(values, fieldNames)
                 : fieldNames.map((name) => get(values, name));
     };
-    const getFieldState = (name, formState) => ({
-        invalid: !!get((formState || _formState).errors, name),
-        isDirty: !!get((formState || _formState).dirtyFields, name),
-        error: get((formState || _formState).errors, name),
-        isValidating: !!get(_formState.validatingFields, name),
-        isTouched: !!get((formState || _formState).touchedFields, name),
-    });
+    const getErrors = (fieldNames) => isUndefined(fieldNames)
+        ? { ..._formState.errors }
+        : isString(fieldNames)
+            ? get(_formState.errors, fieldNames)
+            : fieldNames.map((name) => get(_formState.errors, name));
+    const getFieldState = (name, formState) => {
+        const targetFormState = formState || _formState;
+        const error = get(targetFormState.errors, name);
+        return {
+            invalid: !!error,
+            isDirty: !!get(targetFormState.dirtyFields, name),
+            error,
+            isValidating: !!get(_formState.validatingFields, name),
+            isTouched: !!get(targetFormState.touchedFields, name),
+        };
+    };
     const clearErrors = (name) => {
         const names = name ? convertToArrayPayload(name) : undefined;
         names === null || names === void 0 ? void 0 : names.forEach((inputName) => unset(_formState.errors, inputName));
@@ -9783,12 +9827,13 @@ function createFormControl(props = {}) {
                 !options.keepDefaultValue &&
                 unset(_defaultValues, fieldName);
         }
-        _subjects.state.next({
-            values: cloneObject(_formValues),
-        });
+        _valuesSubscriberCount &&
+            _subjects.state.next({
+                values: cloneObject(_formValues),
+            });
         _subjects.state.next({
             ..._formState,
-            ...(!options.keepDirty ? {} : { isDirty: _getDirty() }),
+            ...(options.keepDirty ? {} : { isDirty: _getDirty() }),
         });
         !options.keepIsValid && _setValid();
     };
@@ -10014,7 +10059,7 @@ function createFormControl(props = {}) {
                     ..._names.mount,
                     ...collectDirtyFieldNames(getDirtyFields(_defaultValues, _formValues, undefined, fieldRefs), _formState.dirtyFields),
                 ]);
-                for (const fieldName of Array.from(fieldsToCheck)) {
+                for (const fieldName of fieldsToCheck) {
                     const isDirty = get(_formState.dirtyFields, fieldName);
                     const existingValue = get(_formValues, fieldName);
                     const newValue = get(values, fieldName);
@@ -10257,6 +10302,7 @@ function createFormControl(props = {}) {
         setValue,
         setValues,
         getValues,
+        getErrors,
         reset,
         resetField,
         resetDefaultValues,

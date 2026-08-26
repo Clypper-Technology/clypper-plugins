@@ -1,5 +1,5 @@
 import { Button, ComboboxControl } from "@wordpress/components"
-import { useState } from "react"
+import { useState, useTransition } from "react"
 
 export interface SearchItem {
   id: number,
@@ -26,23 +26,22 @@ export const ItemSearch = <T extends SearchItem>({
 }: ItemSearchProps<T>) => {
   const [items, setItems] = useState<T[]>([]);
   const [options, setOptions] = useState<DisplayItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isPending, setTransition] = useTransition();
 
-  const onFilterValueChange = async (inputValue: string) => {
-    
-    setLoading(true);
-    const results = await searchItems(inputValue);
-    setItems(results);
-    setOptions(results.map(displayItem));
-    setLoading(false);
+  const onInputChange = (inputValue: string) => {
+    setTransition(async () => {
+      const results = await searchItems(inputValue);
+      setItems(results);
+      setOptions(results.map(displayItem));
+    })
   };
 
   return (
     <ComboboxControl
       label="Search for product"
       options={options}
-      onFilterValueChange={onFilterValueChange}
-      isLoading={loading}
+      onFilterValueChange={onInputChange}
+      isLoading={isPending}
       __experimentalRenderItem={({ item: option }) => {
         const item = items.find(p => String(p.id) === option.value);
         if (!item) return null;

@@ -1,50 +1,49 @@
 import { Role } from "@/types/role";
 import { Button, Card, CardBody } from "@wordpress/components";
 import { Badge } from "@wordpress/ui";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RoleStatus } from "../feedback/roleStatus";
+import { useTransition } from "react";
 
 interface RoleCardProps {
   role: Role,
   onRoleChanged: (role: Role) => Promise<void>
 }
 
-export const RoleCard = (props: RoleCardProps) => {
-  const [isLoading, setLoading] = useState(false);
-  const role = props.role;
+export const RoleCard = ({
+  role,
+  onRoleChanged
+}: RoleCardProps) => {
   const navigate = useNavigate();
-  
-  async function changeStatus(role: Role) {
-    setLoading(true);
+  const [isPending, startTransition] = useTransition();
 
-    await props.onRoleChanged(role);
-
-    setLoading(false);
+  const handleRoleChange = () => {
+    startTransition(async () => {
+      await onRoleChanged(role);
+    });
   }
 
   return (
     <Card className="row-card">
       <CardBody className="row-card-body">
-        <div className="row space-between card-text">
-          <div className="row">
-            <RoleStatus active={role.active} />
-            <span>{role.name}</span>
-          </div>
-          <Badge intent="draft">
-            {`${role.rule_count} rules`}
-          </Badge>
-        </div>
-        
-        <div className="row">
-
-          { role.active ? (<>
-            <Button onClick={() => navigate(`/role/${role.id}`)} variant="primary" isBusy={isLoading} disabled={isLoading}>Edit</Button>
-            <Button isDestructive variant="primary" onClick={() => changeStatus(role)} isBusy={isLoading} disabled={isLoading}>Disable</Button>
-          </>) : (
-            <Button variant="primary" onClick={() => changeStatus(role)} isBusy={isLoading} disabled={isLoading}>Activate</Button>
-          )}
-        </div>
+            <div className="row space-between card-text">
+              <div className="row">
+                <RoleStatus active={role.active} />
+                <span>{role.name}</span>
+              </div>
+              <Badge intent="draft">
+                {`${role.rule_count} rules`}
+              </Badge>
+            </div>
+            
+            <div className="row">
+              { role.active ? (<>
+                <Button onClick={() => navigate(`/role/${role.id}`)} variant="primary" disabled={isPending} isBusy={isPending}>Edit</Button>
+                <Button isDestructive variant="primary" onClick={handleRoleChange} disabled={isPending} isBusy={isPending}>Disable</Button>
+              </>) : (
+                <Button variant="primary" onClick={handleRoleChange} disabled={isPending} isBusy={isPending}>Activate</Button>
+              )}
+            </div>
       </CardBody>
     </Card>
   );
