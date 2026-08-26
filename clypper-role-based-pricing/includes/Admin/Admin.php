@@ -23,11 +23,11 @@ class Admin {
             return;
         }
 
-        $asset = include RRB2B_PLUGIN_PATH . 'build/index.asset.php';
+        $asset = include CRBP_PLUGIN_PATH . 'build/index.asset.php';
 
         wp_enqueue_script(
             'clypper-rbp-admin',
-            RRB2B_PLUGIN_URL . 'build/index.js',
+            CRBP_PLUGIN_URL . 'build/index.js',
             $asset['dependencies'],
             $asset['version'],
             [ 'in_footer' => true ]
@@ -35,7 +35,7 @@ class Admin {
 
         wp_enqueue_style(
                 'clypper-rbp-admin',
-                RRB2B_PLUGIN_URL . 'build/index.css',
+                CRBP_PLUGIN_URL . 'build/index.css',
                 [ 'wp-components' ],
                 $asset['version']
             );
@@ -47,8 +47,8 @@ class Admin {
   {
       add_submenu_page(
           'woocommerce',
-          __( 'Roles & Rules B2B', 'clypper-role-pricing' ),
-          __( 'Roles & Rules B2B', 'clypper-role-pricing' ),
+          __( 'Roles & Rules B2B', 'clypper-role-based-pricing' ),
+          __( 'Roles & Rules B2B', 'clypper-role-based-pricing' ),
           'manage_woocommerce',
           'crbp',
           function (): void {

@@ -833,12 +833,6 @@ class RoleService {
     });
     return id;
   }
-  static async getExistingRoles() {
-    const response = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default()({
-      path: _shared_apiPaths__WEBPACK_IMPORTED_MODULE_0__.ApiPath.rolesPath("existing")
-    });
-    return response;
-  }
 }
 
 /***/ },
@@ -887,12 +881,6 @@ class RuleService {
       path: _shared_apiPaths__WEBPACK_IMPORTED_MODULE_0__.ApiPath.rulePath(rule.id),
       method: "POST",
       data: rule
-    });
-  }
-  static async deleteRule(id) {
-    await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default()({
-      path: _shared_apiPaths__WEBPACK_IMPORTED_MODULE_0__.ApiPath.rulePath(id),
-      method: "DELETE"
     });
   }
 }
@@ -950,7 +938,7 @@ __webpack_require__.r(__webpack_exports__);
 let ApiBase = /*#__PURE__*/function (ApiBase) {
   ApiBase["Rules"] = "/rules";
   ApiBase["Roles"] = "/roles";
-  ApiBase["Base"] = "/rrb2b/v1";
+  ApiBase["Base"] = "/crbp/v1";
   ApiBase["Categories"] = "/products/categories";
   ApiBase["Product"] = "/products";
   ApiBase["WooCommerce"] = "/wc/v3";

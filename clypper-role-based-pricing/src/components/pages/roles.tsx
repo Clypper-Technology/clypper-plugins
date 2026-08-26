@@ -31,7 +31,7 @@ export function Roles() {
         { isPending ? (
           <Spinner />
         ) : (
-          allRoles.map(role => (
+         allRoles.map(role => (
             <RoleCard role={role} onRoleChanged={(async (role) => await setActiveStatus(role, !role.active))}/>
           ))
         )}  

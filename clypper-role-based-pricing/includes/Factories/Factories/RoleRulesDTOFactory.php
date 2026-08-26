@@ -1,9 +1,11 @@
 <?php
 
-namespace ClypperTechnology\RolePricing\Factories;
+namespace ClypperTechnology\RolePricing\Factories\Factories;
 
 use ClypperTechnology\RolePricing\REST\DTOs\RoleRulesDTO;
 use ClypperTechnology\RolePricing\Rules\RoleRules;
+
+defined( 'ABSPATH' ) || exit;
 
 final class RoleRulesDTOFactory
 {

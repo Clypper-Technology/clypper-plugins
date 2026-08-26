@@ -4,6 +4,7 @@ namespace ClypperTechnology\RolePricing\REST\DTOs;
 
 use ClypperTechnology\RolePricing\Rules\ItemRule;
 
+defined('ABSPATH') || exit;
 
 class ProductRuleDTO
 {

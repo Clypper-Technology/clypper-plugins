@@ -4,6 +4,8 @@ namespace ClypperTechnology\RolePricing\REST\DTOs;
 
 use ClypperTechnology\RolePricing\Rules\RoleRules;
 
+defined('ABSPATH') || exit;
+
 class RoleDTO
 {
     public int $id;

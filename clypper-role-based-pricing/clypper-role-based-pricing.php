@@ -5,12 +5,12 @@
  * Description: Enables role-based pricing, dynamic discounts, VAT exemptions and much more to create tailored B2B and B2C shopping experiences.
  * Version: 1.0.0
  * Author: Clypper Technology
- * Text Domain: clypper-role-pricing
+ * Text Domain: clypper-role-based-pricing
  * Author URI:        https://clyppertechnology.com
  * Domain Path: /languages
  *
- * Tested up to: 6.8.1
- * Requires at least: 5.0
+ * Tested up to: 6.8.0
+ * Requires at least: 6.8.0
  * Requires PHP: 5.6
  * WC requires at least: 3.5
  * WC tested up to: 9.8.5
@@ -21,8 +21,8 @@
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
 use ClypperTechnology\RolePricing\Admin\Admin;
-use ClypperTechnology\RolePricing\Admin\Layout;
 use ClypperTechnology\RolePricing\REST\ProductController;
+use ClypperTechnology\RolePricing\REST\RoleController;
 use ClypperTechnology\RolePricing\REST\RuleController;
 use ClypperTechnology\RolePricing\PriceRules;
 use ClypperTechnology\RolePricing\Services\RoleService;
@@ -34,39 +34,29 @@ require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
 
 const CAS_ROLES_RULES_VS   = '1.0.0';
 
-define( 'RRB2B_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'RRB2B_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+define( 'CRBP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'CRBP_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 
-register_activation_hook( __FILE__, 'rrb2b_install' );
-register_deactivation_hook( __FILE__, 'rrb2b_deactivate' );
-register_uninstall_hook( __FILE__, 'rrb2b_uninstall' );
+register_activation_hook( __FILE__, 'crbp_install');
+register_deactivation_hook( __FILE__, 'crbp_deactivate');
+register_uninstall_hook( __FILE__, 'crbp_uninstall');
 
-function rrb2b_install(): void
+function crbp_install(): void
 {
-    global $wp_version;
-
-    if ( version_compare( $wp_version, '4.1', '<' ) ) {
-        wp_die( 'This plugin requires WordPress 4.1 or higher.' );
-    }
-
-    set_transient( 'rrb2b-admin-notice-activated', true );
-    flush_rewrite_rules();
 }
 
-add_action( 'init', 'clypper_rbp_migrate_post_type' );
-
-function rrb2b_deactivate(): void
+function crbp_deactivate(): void
 {
-    flush_rewrite_rules();
 }
 
-function rrb2b_uninstall(): void {}
-
-function rrb2b_load_textdomain(): void
-{
-    load_plugin_textdomain( 'clypper-role-pricing', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+function crbp_uninstall(): void {
 }
-add_action( 'plugins_loaded', 'rrb2b_load_textdomain' );
+
+function crbp_load_textdomain(): void
+{
+    load_plugin_textdomain( 'clypper-role-based-pricing', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+}
+add_action( 'plugins_loaded', 'crbp_load_textdomain');
 
 add_action( 'before_woocommerce_init', function() {
     if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
@@ -74,49 +64,24 @@ add_action( 'before_woocommerce_init', function() {
     }
 });
 
-function clypper_rbp_migrate_post_type(): void
-{
-    global $wpdb;
-
-    $wpdb->update(
-        $wpdb->posts,
-        [ 'post_type' => 'clypper_rbp' ],
-        [ 'post_type' => 'rrb2b' ]
-    );
-
-    flush_rewrite_rules();
-}
-
 $role_service = new RoleService();
 $rule_service = new RuleService( $role_service );
 
 add_action( 'rest_api_init', function() use ( $rule_service, $role_service ) {
-    $namespace = 'rrb2b/v1';
+    $namespace = 'crbp/v1';
 
     ( new ProductController( $namespace ) )->register_routes();
     ( new RuleController( $namespace, $rule_service ) )->register_routes();
-    ( new \ClypperTechnology\RolePricing\REST\RoleController( $namespace, $role_service, $rule_service ) )->register_routes();
+    ( new RoleController( $namespace, $role_service, $rule_service ) )->register_routes();
 });
 
 add_action( 'woocommerce_loaded', function() use ( &$rule_service, &$role_service ) {
     new PriceRules( $rule_service );
 
     if ( is_admin() ) {
-        new Admin( $rule_service, $role_service );
+        new Admin();
     }
 });
-
-function rrb2b_plugin_roles_page(): void
-{
-    global $rule_service, $role_service;
-
-    if ( ! class_exists( 'WooCommerce' ) ) {
-        return;
-    }
-
-    $main = new Layout( $role_service, $rule_service );
-    $main->rrb2b_get_main_page();
-}
 
 add_action( 'init', function() {
     if ( post_type_exists( 'clypper_rbp' ) ) {
@@ -125,8 +90,8 @@ add_action( 'init', function() {
 
     register_post_type( 'clypper_rbp', [
         'labels' => [
-            'name'          => _x( 'Rules', 'Post Type General Name', 'clypper-role-pricing' ),
-            'singular_name' => _x( 'Rule', 'Post Type Singular Name', 'clypper-role-pricing' ),
+            'name'          => _x( 'Rules', 'Post Type General Name', 'clypper-role-based-pricing' ),
+            'singular_name' => _x( 'Rule', 'Post Type Singular Name', 'clypper-role-based-pricing' ),
         ],
         'public'              => false,
         'publicly_queryable'  => false,

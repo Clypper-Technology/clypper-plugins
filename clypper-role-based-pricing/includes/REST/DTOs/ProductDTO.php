@@ -2,6 +2,8 @@
 
 namespace ClypperTechnology\RolePricing\REST\DTOs;
 
+defined('ABSPATH') || exit;
+
 class ProductDTO
 {
     public int $id;

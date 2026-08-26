@@ -41,11 +41,4 @@ export class RuleService {
       data: rule,
     });
   }
-
-  public static async deleteRule(id: number): Promise<void> {
-    await apifetch({
-      path: ApiPath.rulePath(id),
-      method: "DELETE",
-    })
-  }
 }

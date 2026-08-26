@@ -28,12 +28,4 @@ export class RoleService {
 
     return id;
   }
-
-  public static async getExistingRoles(): Promise<Role[]> {
-    const response = await apiFetch<Role[]>({
-      path: ApiPath.rolesPath("existing"),
-    })
-
-    return response;
-  }
 }

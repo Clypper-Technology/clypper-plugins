@@ -28,7 +28,7 @@ class PriceRules
     {
         $this->rule_service = $rule_service;
 
-        add_filter('woocommerce_product_is_on_sale', [$this, 'rrb2b_product_is_on_sale'], 999, 2);
+        add_filter('woocommerce_product_is_on_sale', [$this, 'product_is_on_sale'], 999, 2);
         add_action('woocommerce_before_shop_loop_item', [$this, 'show_discount_banner_shop_archive'], 999);
         add_filter('flatsome_custom_single_product_1', [$this, 'show_discount_banner_product_page'], 999, 3);
         add_filter('woocommerce_get_price_html', [$this, 'modify_price_html_with_quantity_discount'], 999, 2);
@@ -126,7 +126,7 @@ class PriceRules
      * @param bool $is_on_sale bool value.
      * @param var $product product.
      */
-    public function rrb2b_product_is_on_sale(bool $is_on_sale, $product): bool
+    public function product_is_on_sale(bool $is_on_sale, $product): bool
     {
         if (is_admin() || self::$processing || !$this->user_has_rule()) {
             return $is_on_sale;

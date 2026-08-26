@@ -1,10 +1,10 @@
 === Roles & Rules B2B for WooCommerce ===
-Contributors: Consortia, Tommy Hansen  
+Contributors: Casper Holten
 Tags: WooCommerce, B2B, B2C, pricing, roles, dynamic pricing, registration  
-Requires at least: 5.0  
-Tested up to: 6.7.2  
-Stable tag: 2.5.5
-Requires PHP: 5.6  
+Requires at least: 6.8.0
+Tested up to: 7.1
+Stable tag: 1.0.0
+Requires PHP: 8.2
 License: GPLv3  
 License URI: http://www.gnu.org/licenses/gpl-3.0.html  
 

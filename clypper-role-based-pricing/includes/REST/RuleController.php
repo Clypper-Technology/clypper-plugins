@@ -2,7 +2,7 @@
 
 namespace ClypperTechnology\RolePricing\REST;
 
-use ClypperTechnology\RolePricing\Factories\RoleRulesDTOFactory;
+use ClypperTechnology\RolePricing\Factories\Factories\RoleRulesDTOFactory;
 use ClypperTechnology\RolePricing\Rules\RoleRules;
 use ClypperTechnology\RolePricing\Services\RuleService;
 
