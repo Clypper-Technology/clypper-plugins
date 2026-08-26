@@ -3,10 +3,12 @@ import { RoleRules } from "@/types/roleRules";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {Button, Icon, Spinner } from '@wordpress/components';
-import { CategoryRulesPanel } from "../editingSections/CategoryRulesPanel";
-import { ProductRulesPanel } from "../editingSections/ProductRulesPanel";
 import { arrowLeft } from "@wordpress/icons";
 import { FormProvider, useForm } from "react-hook-form";
+import { RulesPanel } from "../editingSections/RulesPanel";
+import { ProductService } from "@/services/productService";
+import { createRuleFromCategory, createRuleFromProduct } from "@/factories/itemRuleFactory";
+import { CategoryService } from "@/services/categoryService";
 
 
 export function Rules() {
@@ -38,6 +40,14 @@ export function Rules() {
   if (isLoading || !rule) {
     return <Spinner />
   }
+
+  const searchProducts = async (search: string) => {
+    return ProductService.getProductsByName(search);
+  }
+
+  const searchCategories = async (search: string) => {
+    return CategoryService.getCategoriesByName(search);
+  }
   
   return(
     <div>
@@ -49,8 +59,16 @@ export function Rules() {
           </div>
           <div className="roles-list">
             <Button type="submit">Save</Button>
-            <ProductRulesPanel />
-            <CategoryRulesPanel />
+            <RulesPanel 
+              title="Product Rules"
+              createRule={(product) => createRuleFromProduct(product)}
+              onSearch={searchProducts}
+              ruleKey="products" />
+            <RulesPanel
+              title="Category Rules"
+              createRule={(category) => createRuleFromCategory(category)}
+              onSearch={searchCategories}
+              ruleKey="single_categories" />
           </div>
         </form>
       </FormProvider>
