@@ -26,24 +26,24 @@ export const RoleCard = ({
   return (
     <Card className="row-card">
       <CardBody className="row-card-body">
-            <div className="row space-between card-text">
-              <div className="row">
-                <RoleStatus active={role.active} />
-                <span>{role.name}</span>
-              </div>
-              <Badge intent="draft">
-                {`${role.rule_count} rules`}
-              </Badge>
-            </div>
-            
-            <div className="row">
-              { role.active ? (<>
-                <Button onClick={() => navigate(`/role/${role.id}`)} variant="primary" disabled={isPending} isBusy={isPending}>Edit</Button>
-                <Button isDestructive variant="primary" onClick={handleRoleChange} disabled={isPending} isBusy={isPending}>Disable</Button>
-              </>) : (
-                <Button variant="primary" onClick={handleRoleChange} disabled={isPending} isBusy={isPending}>Activate</Button>
-              )}
-            </div>
+        <div className="row space-between card-text">
+          <div className="row">
+            <RoleStatus active={role.active} />
+            <span>{role.name}</span>
+          </div>
+          <Badge intent="draft">
+            {`${role.rule_count} rules`}
+          </Badge>
+        </div>
+
+        <div className="row">
+          { role.active ? (<>
+            <Button onClick={() => navigate(`/role/${role.id}`)} variant="secondary" disabled={isPending} isBusy={isPending}>Edit</Button>
+            <Button isDestructive onClick={handleRoleChange} disabled={isPending} isBusy={isPending}>Disable</Button>
+          </>) : (
+            <Button variant="primary" onClick={handleRoleChange} disabled={isPending} isBusy={isPending}>Activate</Button>
+          )}
+        </div>
       </CardBody>
     </Card>
   );

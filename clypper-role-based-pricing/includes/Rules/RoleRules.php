@@ -95,7 +95,7 @@ class RoleRules {
     }
 
     public function get_rule_count(): int {
-        return sizeof($this->products) + sizeof($this->categories);
+        return sizeof($this->products) + sizeof($this->single_categories);
     }
 
     public function get_applicable_rule( $product_id, array $category_ids ): ?ApplicableRule {

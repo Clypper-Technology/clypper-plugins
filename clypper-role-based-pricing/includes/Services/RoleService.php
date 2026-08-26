@@ -33,6 +33,7 @@ class RoleService
     public function get_all_roles(array $rules): array {
         //TODO Could be nice to have a user count in the RoleDTO????
         $wp_roles = wp_roles()->get_names();
+        $wp_roles['guest'] = 'Guest';
         $roles = [];
 
         foreach($wp_roles as $role_slug => $role_name) {
