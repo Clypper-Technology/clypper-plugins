@@ -395,91 +395,43 @@ const RuleListItem = ({
 
 /***/ },
 
-/***/ "./src/components/editingSections/AddCategoryRule.tsx"
-/*!************************************************************!*\
-  !*** ./src/components/editingSections/AddCategoryRule.tsx ***!
-  \************************************************************/
+/***/ "./src/components/editingSections/AddRule.tsx"
+/*!****************************************************!*\
+  !*** ./src/components/editingSections/AddRule.tsx ***!
+  \****************************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   AddCategoryRule: () => (/* binding */ AddCategoryRule)
-/* harmony export */ });
-/* harmony import */ var _services_categoryService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/services/categoryService */ "./src/services/categoryService.ts");
-/* harmony import */ var _controls_ItemSearch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../controls/ItemSearch */ "./src/components/controls/ItemSearch.tsx");
-/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
-
-
-
-
-const AddCategoryRule = ({
-  onAdd
-}) => {
-  const {
-    watch
-  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_2__.useFormContext)();
-  const products = watch("single_categories");
-  const searchCategories = async search => {
-    return _services_categoryService__WEBPACK_IMPORTED_MODULE_0__.CategoryService.getCategoriesByName(search);
-  };
-  const displayProduct = category => {
-    return {
-      label: category.name,
-      value: String(category.id)
-    };
-  };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_controls_ItemSearch__WEBPACK_IMPORTED_MODULE_1__.ItemSearch, {
-    onItemAdded: onAdd,
-    searchItems: searchCategories,
-    displayItem: displayProduct,
-    addedItems: products
-  });
-};
-
-/***/ },
-
-/***/ "./src/components/editingSections/AddProductRule.tsx"
-/*!***********************************************************!*\
-  !*** ./src/components/editingSections/AddProductRule.tsx ***!
-  \***********************************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   AddProductRule: () => (/* binding */ AddProductRule)
+/* harmony export */   AddRule: () => (/* binding */ AddRule)
 /* harmony export */ });
 /* harmony import */ var _controls_ItemSearch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../controls/ItemSearch */ "./src/components/controls/ItemSearch.tsx");
-/* harmony import */ var _services_productService__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/services/productService */ "./src/services/productService.ts");
-/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
 
 
 
-
-const AddProductRule = ({
-  onAdd
+const AddRule = ({
+  onAdd,
+  onSearch,
+  ruleKey: key
 }) => {
   const {
     watch
-  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_2__.useFormContext)();
-  const products = watch("products");
-  const searchProducts = async search => {
-    return _services_productService__WEBPACK_IMPORTED_MODULE_1__.ProductService.getProductsByName(search);
-  };
-  const displayProduct = product => {
+  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_1__.useFormContext)();
+  const items = watch(key);
+  const displayItem = item => {
     return {
-      label: product.name,
-      value: String(product.id)
+      label: item.name,
+      value: String(item.id)
     };
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_controls_ItemSearch__WEBPACK_IMPORTED_MODULE_0__.ItemSearch, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_controls_ItemSearch__WEBPACK_IMPORTED_MODULE_0__.ItemSearch, {
     onItemAdded: onAdd,
-    searchItems: searchProducts,
-    displayItem: displayProduct,
-    addedItems: products
+    searchItems: onSearch,
+    displayItem: displayItem,
+    addedItems: items
   });
 };
 
@@ -501,14 +453,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_ui__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/ui */ "./node_modules/@wordpress/ui/build-module/collapsible-card/root.mjs");
 /* harmony import */ var _wordpress_ui__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/ui */ "./node_modules/@wordpress/ui/build-module/collapsible-card/header.mjs");
 /* harmony import */ var _wordpress_ui__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/ui */ "./node_modules/@wordpress/ui/build-module/collapsible-card/content.mjs");
-/* harmony import */ var _AddCategoryRule__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./AddCategoryRule */ "./src/components/editingSections/AddCategoryRule.tsx");
-/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
-/* harmony import */ var _factories_itemRuleFactory__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/factories/itemRuleFactory */ "./src/factories/itemRuleFactory.ts");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _controls_RuleList__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../controls/RuleList */ "./src/components/controls/RuleList.tsx");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
+/* harmony import */ var _factories_itemRuleFactory__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/factories/itemRuleFactory */ "./src/factories/itemRuleFactory.ts");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _controls_RuleList__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../controls/RuleList */ "./src/components/controls/RuleList.tsx");
+/* harmony import */ var _AddRule__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./AddRule */ "./src/components/editingSections/AddRule.tsx");
+/* harmony import */ var _services_categoryService__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @/services/categoryService */ "./src/services/categoryService.ts");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__);
+
 
 
 
@@ -518,45 +472,50 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const CategoryRulesPanel = props => {
-  const [addRule, setAddRule] = (0,react__WEBPACK_IMPORTED_MODULE_8__.useState)(false);
+  const [addRule, setAddRule] = (0,react__WEBPACK_IMPORTED_MODULE_7__.useState)(false);
   const {
     control
-  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_6__.useFormContext)();
+  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_5__.useFormContext)();
   const {
     fields,
     append,
     remove
-  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_6__.useFieldArray)({
+  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_5__.useFieldArray)({
     control,
     name: 'single_categories'
   });
   const onCategoryAdded = category => {
-    append((0,_factories_itemRuleFactory__WEBPACK_IMPORTED_MODULE_7__.createRuleFromCategory)(category));
+    append((0,_factories_itemRuleFactory__WEBPACK_IMPORTED_MODULE_6__.createRuleFromCategory)(category));
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsxs)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_2__.Root, {
+  const search = async search => {
+    return await _services_categoryService__WEBPACK_IMPORTED_MODULE_10__.CategoryService.getCategoriesByName(search);
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_2__.Root, {
     defaultOpen: true,
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_3__.Header, {
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsxs)("div", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_3__.Header, {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)("div", {
         className: "row",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("h2", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)("h2", {
           children: "Category Rules"
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_1__.Badge, {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_1__.Badge, {
           intent: "draft",
           children: `${fields.length}`
         })]
       })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsxs)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_4__.Content, {
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("div", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_4__.Content, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)("div", {
         className: "row",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
           isDestructive: addRule,
           variant: "primary",
           onClick: () => setAddRule(!addRule),
           children: addRule ? "Close" : "Add rule"
         })
-      }), addRule && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_AddCategoryRule__WEBPACK_IMPORTED_MODULE_5__.AddCategoryRule, {
-        onAdd: onCategoryAdded
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_controls_RuleList__WEBPACK_IMPORTED_MODULE_9__.RuleList, {
+      }), addRule && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(_AddRule__WEBPACK_IMPORTED_MODULE_9__.AddRule, {
+        onAdd: onCategoryAdded,
+        onSearch: search,
+        ruleKey: "single_categories"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(_controls_RuleList__WEBPACK_IMPORTED_MODULE_8__.RuleList, {
         fields: fields,
         ruleKey: "single_categories",
         onRemove: remove
@@ -585,12 +544,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _AddProductRule__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./AddProductRule */ "./src/components/editingSections/AddProductRule.tsx");
-/* harmony import */ var _controls_RuleList__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../controls/RuleList */ "./src/components/controls/RuleList.tsx");
-/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
-/* harmony import */ var _factories_itemRuleFactory__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/factories/itemRuleFactory */ "./src/factories/itemRuleFactory.ts");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _controls_RuleList__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../controls/RuleList */ "./src/components/controls/RuleList.tsx");
+/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
+/* harmony import */ var _factories_itemRuleFactory__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/factories/itemRuleFactory */ "./src/factories/itemRuleFactory.ts");
+/* harmony import */ var _AddRule__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./AddRule */ "./src/components/editingSections/AddRule.tsx");
+/* harmony import */ var _services_productService__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @/services/productService */ "./src/services/productService.ts");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__);
+
 
 
 
@@ -603,44 +564,49 @@ const ProductRulesPanel = ({}) => {
   const [addRule, setAddRule] = (0,react__WEBPACK_IMPORTED_MODULE_5__.useState)(false);
   const {
     control
-  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_8__.useFormContext)();
+  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_7__.useFormContext)();
   const {
     fields,
     append,
     remove
-  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_8__.useFieldArray)({
+  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_7__.useFieldArray)({
     control,
     name: 'products'
   });
-  const onProductAdded = product => {
-    append((0,_factories_itemRuleFactory__WEBPACK_IMPORTED_MODULE_9__.createRuleFromProduct)(product));
+  const productAdded = product => {
+    append((0,_factories_itemRuleFactory__WEBPACK_IMPORTED_MODULE_8__.createRuleFromProduct)(product));
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsxs)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_1__.Root, {
+  const search = async search => {
+    return await _services_productService__WEBPACK_IMPORTED_MODULE_10__.ProductService.getProductsByName(search);
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_1__.Root, {
     defaultOpen: true,
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_2__.Header, {
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsxs)("div", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_2__.Header, {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)("div", {
         className: "row",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("h2", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)("h2", {
           children: "Product Rules"
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_0__.Badge, {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_0__.Badge, {
           intent: "draft",
           children: `${fields.length}`
         })]
       })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_3__.Content, {
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsxs)("div", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(_wordpress_ui__WEBPACK_IMPORTED_MODULE_3__.Content, {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)("div", {
         className: "col",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("div", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)("div", {
           className: "row",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
             isDestructive: addRule,
             variant: "primary",
             onClick: () => setAddRule(!addRule),
             children: addRule ? "Close" : "Add rule"
           })
-        }), addRule && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_AddProductRule__WEBPACK_IMPORTED_MODULE_6__.AddProductRule, {
-          onAdd: onProductAdded
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_controls_RuleList__WEBPACK_IMPORTED_MODULE_7__.RuleList, {
+        }), addRule && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(_AddRule__WEBPACK_IMPORTED_MODULE_9__.AddRule, {
+          onAdd: productAdded,
+          onSearch: search,
+          ruleKey: "products"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(_controls_RuleList__WEBPACK_IMPORTED_MODULE_6__.RuleList, {
           fields: fields,
           onRemove: remove,
           ruleKey: "products"

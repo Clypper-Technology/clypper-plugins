@@ -1,12 +1,13 @@
 import { Button } from "@wordpress/components"
 import { Badge, CollapsibleCard } from "@wordpress/ui"
-import { AddCategoryRule } from "./AddCategoryRule"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RoleRules } from "@/types/roleRules"
 import { Category } from "@/types/category"
 import { createRuleFromCategory } from "@/factories/itemRuleFactory"
 import { useState } from "react"
 import { RuleList } from "../controls/RuleList"
+import { AddRule } from "./AddRule"
+import { CategoryService } from "@/services/categoryService"
 
 interface CategoryRulesPanelProps {
 }
@@ -22,6 +23,10 @@ export const CategoryRulesPanel = (props: CategoryRulesPanelProps) => {
 
   const onCategoryAdded = (category: Category) => {
     append(createRuleFromCategory(category));
+  }
+
+  const search = async (search: strign) => {
+    return await CategoryService.getCategoriesByName(search)
   }
 
   return (
@@ -41,7 +46,7 @@ export const CategoryRulesPanel = (props: CategoryRulesPanelProps) => {
         </div>
         
         { addRule && (
-          <AddCategoryRule onAdd={onCategoryAdded} />
+          <AddRule onAdd={onCategoryAdded} onSearch={search} ruleKey="single_categories"/>
         )}
 
         <RuleList fields={fields} ruleKey="single_categories" onRemove={remove}/>

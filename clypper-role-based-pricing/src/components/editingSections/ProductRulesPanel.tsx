@@ -1,12 +1,13 @@
 import { Badge, CollapsibleCard } from "@wordpress/ui"
 import { Button } from "@wordpress/components";
 import { useState } from "react";
-import { AddProductRule } from "./AddProductRule";
 import { RuleList } from "../controls/RuleList";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { RoleRules } from "@/types/roleRules";
 import { Product } from "@/types/product";
 import { createRuleFromProduct } from "@/factories/itemRuleFactory";
+import { AddRule } from "./AddRule";
+import { ProductService } from "@/services/productService";
 
 interface ProductRulesPanelProps {
 }
@@ -21,8 +22,12 @@ export const ProductRulesPanel = ({
     name: 'products'
   })
 
-  const onProductAdded = (product: Product) => {
+  const productAdded = (product: Product) => {
     append(createRuleFromProduct(product));
+  }
+
+  const search = async (search: string) => {
+    return await ProductService.getProductsByName(search);
   }
 
   return (
@@ -43,7 +48,7 @@ export const ProductRulesPanel = ({
           </div>
         
          { addRule && (
-            <AddProductRule onAdd={onProductAdded} />
+           <AddRule onAdd={productAdded} onSearch={search} ruleKey="products"/>
          )}
 
           <RuleList fields={fields} onRemove={remove} ruleKey="products"/>
